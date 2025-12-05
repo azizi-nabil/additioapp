@@ -1,0 +1,76 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:checkKotlinGradlePluginConfigurationErrors
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+
+> Task :app:kspDebugKotlin FAILED
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt:18:1 Expecting an expression
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt:18:1 Expecting ')'
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt:18:9 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt:18:12 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt:18:13 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt:18:20 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt:18:21 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt:18:31 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt:18:36 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt:18:37 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt:18:42 imports are only allowed in the beginning of file
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/StudentAdapter.kt:7:13 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/StudentAdapter.kt:7:20 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/StudentAdapter.kt:7:28 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/StudentAdapter.kt:7:31 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/StudentAdapter.kt:8:9 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/StudentAdapter.kt:9:5 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/StudentAdapter.kt:10:1 Expecting a top level declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AddGradeItemDialog.kt:24:9 Expecting member declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AddGradeItemDialog.kt:24:16 Expecting member declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AddGradeItemDialog.kt:24:23 Expecting member declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AddGradeItemDialog.kt:24:24 Expecting member declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AddGradeItemDialog.kt:24:30 Expecting member declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AddGradeItemDialog.kt:24:31 Expecting member declaration
+e: file:///D:/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AddGradeItemDialog.kt:26:1 Expecting a top level declaration
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:kspDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 34s
+26 actionable tasks: 2 executed, 24 up-to-date

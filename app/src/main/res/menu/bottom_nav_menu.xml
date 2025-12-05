@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home_filled"
+        android:title="Home" />
+    <item
+        android:id="@+id/plannerFragment"
+        android:icon="@drawable/ic_calendar_filled"
+        android:title="Planner" />
+    <item
+        android:id="@+id/classesFragment"
+        android:icon="@drawable/ic_school_filled"
+        android:title="Classes" />
+    <item
+        android:id="@+id/analyticsFragment"
+        android:icon="@drawable/ic_analytics_filled"
+        android:title="Analytics" />
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_settings_filled"
+        android:title="Settings" />
+</menu>

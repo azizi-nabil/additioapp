@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="?attr/colorSurface">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Order Number -->
+        <TextView
+            android:id="@+id/textStudentOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1."
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imgAvatar"
+            app:layout_constraintBottom_toBottomOf="@id/imgAvatar" />
+
+        <!-- Avatar Icon -->
+        <ImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_person_24dp"
+            app:tint="?attr/colorPrimary"
+            android:background="@drawable/bg_circle_primary_container"
+            android:padding="8dp"
+            app:layout_constraintStart_toEndOf="@id/textStudentOrder"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <!-- Name -->
+        <TextView
+            android:id="@+id/textStudentName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="Student Name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary"
+            app:layout_constraintStart_toEndOf="@id/imgAvatar"
+            app:layout_constraintTop_toTopOf="@id/imgAvatar"
+            app:layout_constraintEnd_toStartOf="@id/btnMoreOptions" />
+
+        <!-- ID -->
+        <TextView
+            android:id="@+id/textStudentId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="ID: 123456"
+            android:textSize="14sp"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintStart_toEndOf="@id/imgAvatar"
+            app:layout_constraintTop_toBottomOf="@id/textStudentName"
+            app:layout_constraintEnd_toStartOf="@id/btnMoreOptions" />
+
+        <!-- Action Button -->
+        <ImageView
+            android:id="@+id/btnMoreOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_more_vert_24dp"
+            app:tint="?attr/colorOnSurfaceVariant"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <!-- LINE 1: TD, TP and Bad Behavior (all negative/red) -->
+        <LinearLayout
+            android:id="@+id/layoutRow1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="@id/textStudentName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textStudentId">
+
+            <!-- TD Badge -->
+            <LinearLayout
+                android:id="@+id/layoutStatsTD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/badgeTD"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:text="TD"
+                    android:gravity="center"
+                    android:background="@drawable/bg_badge_soft_red"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:textSize="9sp"/>
+
+                <TextView
+                    android:id="@+id/textStatsTD"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 (0%)"
+                    android:layout_marginStart="4dp"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <!-- TP Badge -->
+            <LinearLayout
+                android:id="@+id/layoutStatsTP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/badgeTP"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:text="TP"
+                    android:gravity="center"
+                    android:background="@drawable/bg_badge_soft_red"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:textSize="9sp"/>
+
+                <TextView
+                    android:id="@+id/textStatsTP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 (0%)"
+                    android:layout_marginStart="4dp"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <!-- Behavior Negative (thumbs down - in red line) -->
+            <TextView
+                android:id="@+id/textStudentBehaviorNeg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_red_dark"
+                app:drawableStartCompat="@drawable/ic_thumb_down_24dp"
+                android:drawablePadding="4dp"
+                app:drawableTint="@android:color/holo_red_dark"
+                android:gravity="center_vertical"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <!-- LINE 2: C (Cours) and Good Behavior (all positive/green) -->
+        <LinearLayout
+            android:id="@+id/layoutRow2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@id/textStudentName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutRow1">
+
+            <!-- Cours Badge -->
+            <LinearLayout
+                android:id="@+id/layoutStatsCours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/badgeCours"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:text="C"
+                    android:gravity="center"
+                    android:background="@drawable/bg_badge_soft_green"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:textSize="11sp"/>
+
+                <TextView
+                    android:id="@+id/textStatsCours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 (0%)"
+                    android:layout_marginStart="4dp"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <!-- Behavior Positive (thumbs up - in green line) -->
+            <TextView
+                android:id="@+id/textStudentBehaviorPos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_green_dark"
+                app:drawableStartCompat="@drawable/ic_thumb_up_24dp"
+                android:drawablePadding="4dp"
+                app:drawableTint="@android:color/holo_green_dark"
+                android:gravity="center_vertical"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <!-- LINE 3: Report and Marks Buttons -->
+        <LinearLayout
+            android:id="@+id/layoutActions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@id/textStudentName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutRow2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAbsenceReport"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Report"
+                android:textSize="12sp"
+                android:minWidth="0dp"
+                android:paddingHorizontal="8dp"
+                app:icon="@drawable/ic_assignment"
+                app:iconSize="16dp"
+                android:visibility="gone"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGradesReport"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Marks"
+                android:textSize="12sp"
+                android:minWidth="0dp"
+                android:paddingHorizontal="8dp"
+                app:icon="@drawable/ic_grade"
+                app:iconSize="16dp"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

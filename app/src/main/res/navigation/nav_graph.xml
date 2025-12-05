@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.additioapp.ui.fragments.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/plannerFragment"
+        android:name="com.example.additioapp.ui.fragments.PlannerFragment"
+        android:label="Planner"
+        tools:layout="@layout/fragment_planner" />
+    <fragment
+        android:id="@+id/classesFragment"
+        android:name="com.example.additioapp.ui.fragments.ClassesFragment"
+        android:label="Classes"
+        tools:layout="@layout/fragment_classes" />
+    <fragment
+        android:id="@+id/gradebookFragment"
+        android:name="com.example.additioapp.ui.fragments.GradebookFragment"
+        android:label="Gradebook"
+        tools:layout="@layout/fragment_gradebook" />
+    <fragment
+        android:id="@+id/reportsFragment"
+        android:name="com.example.additioapp.ui.fragments.ReportsFragment"
+        android:label="Reports"
+        tools:layout="@layout/fragment_reports" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.additioapp.ui.fragments.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/classDetailFragment"
+        android:name="com.example.additioapp.ui.fragments.ClassDetailFragment"
+        android:label="Class Detail"
+        tools:layout="@layout/fragment_class_detail">
+        <argument
+            android:name="classId"
+            app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/gradeEntryFragment"
+        android:name="com.example.additioapp.ui.fragments.GradeEntryFragment"
+        android:label="Grade Entry"
+        tools:layout="@layout/fragment_grade_entry">
+        <argument
+            android:name="classId"
+            app:argType="long" />
+        <argument
+            android:name="gradeItemId"
+            app:argType="long" />
+        <argument
+            android:name="gradeItemName"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/attendanceHistoryFragment"
+        android:name="com.example.additioapp.ui.fragments.AttendanceHistoryFragment"
+        android:label="Attendance History"
+        tools:layout="@layout/fragment_attendance_history">
+        <argument
+            android:name="classId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/attendanceFragment"
+        android:name="com.example.additioapp.ui.fragments.AttendanceFragment"
+        android:label="Attendance"
+        tools:layout="@layout/fragment_attendance">
+        <argument
+            android:name="classId"
+            app:argType="long" />
+        <argument
+            android:name="selectedDate"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/analyticsFragment"
+        android:name="com.example.additioapp.ui.fragments.AnalyticsFragment"
+        android:label="Analytics"
+        tools:layout="@layout/fragment_analytics" />
+</navigation>

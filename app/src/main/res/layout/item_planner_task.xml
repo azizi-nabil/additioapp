@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="10dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textTaskTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grade quizzes"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textTaskDue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Due today"
+            android:textAppearance="?attr/textAppearanceCaption"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textTaskTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Assessments"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:textColor="#1565C0"
+        android:background="@drawable/bg_chip"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"/>
+</LinearLayout>
