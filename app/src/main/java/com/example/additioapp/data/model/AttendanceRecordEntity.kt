@@ -15,7 +15,7 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index("studentId")]
+    indices = [Index("studentId"), Index("sessionId")]
 )
 data class AttendanceRecordEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,

@@ -265,9 +265,6 @@ class AttendanceFragment : Fragment() {
         
         // Load attendance records ONCE - don't observe for changes
         refreshJob = lifecycleScope.launch {
-            // Load Session Type (sync ViewModel if needed, but we rely on local variable)
-            // attendanceViewModel.loadSessionType(classId, selectedDate.timeInMillis) 
-
             var records = withContext(Dispatchers.IO) {
                 attendanceViewModel.getAttendanceForSessionOnce(sessionId)
             }
@@ -290,18 +287,20 @@ class AttendanceFragment : Fragment() {
                         status = "P"
                     )
                 }
-                // Save to DB in background
+                // Save to DB in background using BATCH INSERT
                 val recordsToSave = records
-                launch {
-                    recordsToSave.forEach { attendanceViewModel.setAttendance(it) }
+                launch(Dispatchers.IO) {
+                    attendanceViewModel.insertAttendanceList(recordsToSave)
                     // Ensure session is created with current type
                     attendanceViewModel.saveSessionType(classId, selectedDate.timeInMillis, currentSessionType)
                 }
             }
 
+            // Use HashMap for O(1) lookup instead of O(n) find
+            val recordMap = records.associateBy { it.studentId }
+            
             val items = students.map { student ->
-                val record = records.find { it.studentId == student.id }
-                StudentAttendanceItem(student, record)
+                StudentAttendanceItem(student, recordMap[student.id])
             }
             adapter.submitList(items)
             updateSummary(items, summaryText)

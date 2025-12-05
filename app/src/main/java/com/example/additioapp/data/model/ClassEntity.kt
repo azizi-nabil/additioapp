@@ -1,9 +1,13 @@
 package com.example.additioapp.data.model
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "classes")
+@Entity(
+    tableName = "classes",
+    indices = [Index("year"), Index("isArchived")]
+)
 data class ClassEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,

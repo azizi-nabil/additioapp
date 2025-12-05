@@ -62,11 +62,16 @@
                             android:id="@+id/btnYearSelector"
                             style="@style/Widget.Material3.Button.OutlinedButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="40dp"
+                            android:layout_height="36dp"
+                            android:minWidth="0dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="4dp"
                             android:text="2024-2025"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             app:icon="@drawable/ic_arrow_drop_down_24dp"
-                            app:iconGravity="textEnd"/>
+                            app:iconSize="18dp"
+                            app:iconGravity="textEnd"
+                            app:iconPadding="0dp"/>
 
                         <View
                             android:layout_width="0dp"
@@ -281,6 +286,7 @@
                             android:textSize="40sp"/>
 
                         <TextView
+                            android:id="@+id/textEmptyTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="No classes yet"
@@ -289,6 +295,7 @@
                             android:layout_marginTop="8dp"/>
 
                         <TextView
+                            android:id="@+id/textEmptySubtitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Tap + Add to create your first class"

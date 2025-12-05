@@ -37,7 +37,26 @@ class BehaviorAdapter(
         private val textOrder: TextView = itemView.findViewById(R.id.textStudentOrder)
 
         fun bind(item: StudentBehaviorItem, orderNumber: Int) {
-            textName.text = item.student.name
+            // Check preferences
+            val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(itemView.context)
+            val nameLang = prefs.getString("pref_name_language", "french") ?: "french"
+            val listSize = prefs.getString("pref_list_size", "normal") ?: "normal"
+            
+            // Apply list size
+            val nameSize = when (listSize) {
+                "compact" -> 12f
+                "comfortable" -> 16f
+                else -> 14f // normal
+            }
+            textName.textSize = nameSize
+            
+            // Use proper display name
+            val displayName = if (nameLang == "arabic" && !item.student.displayNameAr.isNullOrEmpty()) {
+                item.student.displayNameAr
+            } else {
+                item.student.displayNameFr
+            }
+            textName.text = displayName
             textOrder.text = "$orderNumber."
 
             textPositive.text = item.positivePoints.toString()

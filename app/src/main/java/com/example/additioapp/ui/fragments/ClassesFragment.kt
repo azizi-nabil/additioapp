@@ -17,6 +17,8 @@ import com.example.additioapp.ui.AdditioViewModelFactory
 import com.example.additioapp.ui.dialogs.AddClassDialog
 import com.example.additioapp.ui.viewmodel.ClassViewModel
 import com.example.additioapp.ui.viewmodel.StudentViewModel
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class ClassesFragment : Fragment() {
 
@@ -45,6 +47,8 @@ class ClassesFragment : Fragment() {
         val emptyState = view.findViewById<View>(R.id.emptyState)
         val containerClasses = view.findViewById<LinearLayout>(R.id.containerClassesList)
         val containerQuickStats = view.findViewById<LinearLayout>(R.id.containerQuickStats)
+        val textEmptyTitle = view.findViewById<TextView>(R.id.textEmptyTitle)
+        val textEmptySubtitle = view.findViewById<TextView>(R.id.textEmptySubtitle)
 
         // Stats Views
         val textTotalClasses = view.findViewById<TextView>(R.id.textTotalClasses)
@@ -53,19 +57,45 @@ class ClassesFragment : Fragment() {
 
         var selectedYear: String? = null
         var availableYears: List<String> = emptyList()
+        var allClassesList: List<com.example.additioapp.data.model.ClassEntity> = emptyList()
 
-        // Observe all classes to update stats
-        viewModel.allClasses.observe(viewLifecycleOwner) { classes ->
-            val activeClasses = classes.filter { !it.isArchived }
-            val archivedClasses = classes.filter { it.isArchived }
+        // Function to update stats based on selected year
+        fun updateStats() {
+            val yearClasses = if (selectedYear != null) {
+                allClassesList.filter { it.year == selectedYear }
+            } else {
+                allClassesList
+            }
+            val activeClasses = yearClasses.filter { !it.isArchived }
+            val archivedClasses = yearClasses.filter { it.isArchived }
             
             textTotalClasses.text = activeClasses.size.toString()
             textArchivedClasses.text = archivedClasses.size.toString()
         }
 
+        // Observe all classes (including archived) to update stats
+        viewModel.allClassesIncludingArchived.observe(viewLifecycleOwner) { classes ->
+            allClassesList = classes
+            updateStats()
+        }
+
         // Observe students for total count
         studentViewModel.allStudents.observe(viewLifecycleOwner) { students ->
             textTotalStudents.text = students.size.toString()
+        }
+
+        // Update empty state and Add button based on filter
+        fun updateEmptyStateAndAddButton(checkedId: Int) {
+            val isArchive = checkedId == R.id.chipFilterArchived
+            btnAddInline.visibility = if (isArchive) View.GONE else View.VISIBLE
+            
+            if (isArchive) {
+                textEmptyTitle.text = "No archived classes"
+                textEmptySubtitle.text = "Long-press a class to archive it"
+            } else {
+                textEmptyTitle.text = "No classes yet"
+                textEmptySubtitle.text = "Tap + Add to create your first class"
+            }
         }
 
         viewModel.distinctYears.observe(viewLifecycleOwner) { years ->
@@ -75,10 +105,13 @@ class ClassesFragment : Fragment() {
                     selectedYear = years.first()
                 }
                 btnYearSelector.text = selectedYear
+                updateStats()
+                updateEmptyStateAndAddButton(chipGroupFilter.checkedChipId)
                 updateList(chipGroupFilter.checkedChipId, selectedYear, containerClasses, emptyState, containerQuickStats)
             } else {
                 btnYearSelector.text = "No Years"
                 selectedYear = null
+                updateStats()
                 updateList(chipGroupFilter.checkedChipId, null, containerClasses, emptyState, containerQuickStats)
             }
         }
@@ -93,6 +126,7 @@ class ClassesFragment : Fragment() {
             popup.setOnMenuItemClickListener { item ->
                 selectedYear = item.title.toString()
                 btnYearSelector.text = selectedYear
+                updateStats()
                 updateList(chipGroupFilter.checkedChipId, selectedYear, containerClasses, emptyState, containerQuickStats)
                 true
             }
@@ -100,6 +134,7 @@ class ClassesFragment : Fragment() {
         }
 
         chipGroupFilter.setOnCheckedChangeListener { _, checkedId ->
+            updateEmptyStateAndAddButton(checkedId)
             updateList(checkedId, selectedYear, containerClasses, emptyState, containerQuickStats)
         }
 
@@ -194,9 +229,9 @@ class ClassesFragment : Fragment() {
     private fun showClassOptions(classSummary: ClassWithSummary) {
         val classEntity = classSummary.classEntity
         val options = if (classEntity.isArchived) {
-            arrayOf("Edit", "Unarchive", "Delete")
+            arrayOf("Edit", "Duplicate", "Unarchive", "Delete")
         } else {
-            arrayOf("Edit", "Archive", "Delete")
+            arrayOf("Edit", "Duplicate", "Archive", "Delete")
         }
 
         androidx.appcompat.app.AlertDialog.Builder(requireContext())
@@ -208,6 +243,9 @@ class ClassesFragment : Fragment() {
                             viewModel.updateClass(updatedClass)
                         }
                         dialog.show(parentFragmentManager, "EditClassDialog")
+                    }
+                    "Duplicate" -> {
+                        duplicateClass(classEntity)
                     }
                     "Archive" -> {
                         viewModel.updateClass(classEntity.copy(isArchived = true))
@@ -228,6 +266,37 @@ class ClassesFragment : Fragment() {
                 }
             }
             .show()
+    }
+
+    private fun duplicateClass(classEntity: com.example.additioapp.data.model.ClassEntity) {
+        lifecycleScope.launch {
+            // Create new class with "(Copy)" suffix
+            val newClass = classEntity.copy(
+                id = 0,
+                name = "${classEntity.name} (Copy)"
+            )
+            
+            // Insert new class and get its ID
+            val newClassId = viewModel.insertClassAndGetId(newClass)
+            
+            // Get all students from original class
+            val students = studentViewModel.getStudentsForClassOnce(classEntity.id)
+            
+            // Copy students to new class
+            students.forEach { student ->
+                val newStudent = student.copy(
+                    id = 0,
+                    classId = newClassId
+                )
+                studentViewModel.insertStudent(newStudent)
+            }
+            
+            android.widget.Toast.makeText(
+                requireContext(),
+                "Duplicated \"${classEntity.name}\" with ${students.size} students",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun renderQuickStats(container: LinearLayout, classes: List<ClassWithSummary>) {

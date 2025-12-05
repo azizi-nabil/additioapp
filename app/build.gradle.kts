@@ -12,15 +12,16 @@ android {
         applicationId = "com.example.additioapp"
         minSdk = 24
         targetSdk = 34
-        versionCode = 3
-        versionName = "2.0.0"
+        versionCode = 5
+        versionName = "2.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }

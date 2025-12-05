@@ -3,6 +3,7 @@ package com.example.additioapp.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.additioapp.R
@@ -28,11 +29,17 @@ class StudentAdapter(
     private val onStudentClick: (StudentEntity) -> Unit,
     private val onReportClick: (StudentEntity) -> Unit = {},
     private val onGradesClick: (StudentEntity) -> Unit = {},
-    private val onBehaviorClick: (StudentEntity, String) -> Unit = { _, _ -> }
+    private val onBehaviorClick: (StudentEntity, String) -> Unit = { _, _ -> },
+    private val onSelectionChanged: ((Int) -> Unit)? = null
 ) : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() {
 
     private var originalItems: List<StudentEntity> = emptyList()
     private var filteredItems: List<StudentEntity> = emptyList()
+    
+    // Selection mode
+    var isSelectionMode = false
+        private set
+    private val selectedItems = mutableSetOf<Long>()
 
     fun submitList(newItems: List<StudentEntity>, newStats: Map<Long, StudentStats> = attendanceStats) {
         items = newItems
@@ -47,11 +54,52 @@ class StudentAdapter(
             originalItems
         } else {
             originalItems.filter {
-                it.name.contains(query, ignoreCase = true) || it.studentId.contains(query, ignoreCase = true)
+                it.name.contains(query, ignoreCase = true) || 
+                it.studentId.contains(query, ignoreCase = true) ||
+                it.matricule.contains(query, ignoreCase = true)
             }
         }
         notifyDataSetChanged()
     }
+
+    // Selection mode methods
+    fun enterSelectionMode(initialStudentId: Long? = null) {
+        isSelectionMode = true
+        selectedItems.clear()
+        initialStudentId?.let { selectedItems.add(it) }
+        onSelectionChanged?.invoke(selectedItems.size)
+        notifyDataSetChanged()
+    }
+
+    fun exitSelectionMode() {
+        isSelectionMode = false
+        selectedItems.clear()
+        onSelectionChanged?.invoke(0)
+        notifyDataSetChanged()
+    }
+
+    fun toggleSelection(studentId: Long) {
+        if (selectedItems.contains(studentId)) {
+            selectedItems.remove(studentId)
+        } else {
+            selectedItems.add(studentId)
+        }
+        onSelectionChanged?.invoke(selectedItems.size)
+        notifyDataSetChanged()
+    }
+
+    fun selectAll() {
+        selectedItems.clear()
+        filteredItems.forEach { selectedItems.add(it.id) }
+        onSelectionChanged?.invoke(selectedItems.size)
+        notifyDataSetChanged()
+    }
+
+    fun getSelectedStudents(): List<StudentEntity> {
+        return filteredItems.filter { selectedItems.contains(it.id) }
+    }
+
+    fun getSelectedCount(): Int = selectedItems.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -60,7 +108,20 @@ class StudentAdapter(
     }
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
-        holder.bind(filteredItems[position], attendanceStats[filteredItems[position].id], onStudentClick, onReportClick, onGradesClick, onBehaviorClick)
+        val student = filteredItems[position]
+        val isSelected = selectedItems.contains(student.id)
+        holder.bind(
+            student, 
+            attendanceStats[student.id], 
+            isSelectionMode,
+            isSelected,
+            onStudentClick, 
+            onReportClick, 
+            onGradesClick, 
+            onBehaviorClick,
+            { enterSelectionMode(student.id) },
+            { toggleSelection(student.id) }
+        )
     }
 
     override fun getItemCount(): Int = filteredItems.size
@@ -69,6 +130,8 @@ class StudentAdapter(
         private val nameTextView: TextView = itemView.findViewById(R.id.textStudentName)
         private val idTextView: TextView = itemView.findViewById(R.id.textStudentId)
         private val orderTextView: TextView = itemView.findViewById(R.id.textStudentOrder)
+        private val checkBox: CheckBox? = itemView.findViewById(R.id.checkboxSelect)
+        private val iconNotes: TextView? = itemView.findViewById(R.id.iconNotes)
         private val layoutStatsCours: View = itemView.findViewById(R.id.layoutStatsCours)
         private val statsCoursTextView: TextView = itemView.findViewById(R.id.textStatsCours)
         private val layoutStatsTD: View = itemView.findViewById(R.id.layoutStatsTD)
@@ -83,15 +146,79 @@ class StudentAdapter(
 
         fun bind(
             student: StudentEntity, 
-            stats: StudentStats?, 
+            stats: StudentStats?,
+            isSelectionMode: Boolean,
+            isSelected: Boolean,
             onStudentClick: (StudentEntity) -> Unit, 
             onReportClick: (StudentEntity) -> Unit, 
             onGradesClick: (StudentEntity) -> Unit,
-            onBehaviorClick: (StudentEntity, String) -> Unit
+            onBehaviorClick: (StudentEntity, String) -> Unit,
+            onLongPress: () -> Unit,
+            onToggleSelection: () -> Unit
         ) {
             orderTextView.text = "${adapterPosition + 1}."
-            nameTextView.text = student.name
-            idTextView.text = "ID: ${student.studentId}"
+            
+            // Check preferences
+            val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(itemView.context)
+            val nameLang = prefs.getString("pref_name_language", "french") ?: "french"
+            val listSize = prefs.getString("pref_list_size", "normal") ?: "normal"
+            
+            // Apply list size
+            val (nameSize, idSize, padding) = when (listSize) {
+                "compact" -> Triple(12f, 11f, 8)
+                "comfortable" -> Triple(16f, 14f, 16)
+                else -> Triple(14f, 12f, 12) // normal
+            }
+            nameTextView.textSize = nameSize
+            idTextView.textSize = idSize
+            val paddingPx = (padding * itemView.context.resources.displayMetrics.density).toInt()
+            (itemView as? com.google.android.material.card.MaterialCardView)?.setContentPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+            
+            val displayName = if (nameLang == "arabic" && !student.displayNameAr.isNullOrEmpty()) {
+                student.displayNameAr
+            } else {
+                student.displayNameFr
+            }
+            nameTextView.text = displayName
+            idTextView.text = "ID: ${student.displayMatricule}"
+            
+            // Show notes indicator if student has notes
+            iconNotes?.visibility = if (student.hasNotes) View.VISIBLE else View.GONE
+
+            // Selection mode UI
+            if (isSelectionMode) {
+                checkBox?.visibility = View.VISIBLE
+                checkBox?.isChecked = isSelected
+                orderTextView.visibility = View.GONE
+                
+                // Use soft red for selected items (indicates dangerous delete action)
+                val cardView = itemView as? com.google.android.material.card.MaterialCardView
+                if (isSelected) {
+                    cardView?.setCardBackgroundColor(android.graphics.Color.parseColor("#FFEBEE")) // Soft red
+                    cardView?.strokeColor = android.graphics.Color.parseColor("#EF5350") // Red border
+                    cardView?.strokeWidth = 2
+                } else {
+                    cardView?.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(itemView.context, android.R.color.white))
+                    cardView?.strokeWidth = 0
+                }
+                
+                itemView.setOnClickListener { onToggleSelection() }
+                checkBox?.setOnClickListener { onToggleSelection() }
+            } else {
+                checkBox?.visibility = View.GONE
+                orderTextView.visibility = View.VISIBLE
+                
+                // Reset card styling
+                val cardView = itemView as? com.google.android.material.card.MaterialCardView
+                cardView?.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(itemView.context, android.R.color.white))
+                cardView?.strokeWidth = 0
+                
+                itemView.setOnClickListener { onStudentClick(student) }
+                itemView.setOnLongClickListener { 
+                    onLongPress()
+                    true
+                }
+            }
             
             if (stats != null) {
                 val coursPct = if (stats.coursTotal > 0) (stats.coursPresent.toFloat() / stats.coursTotal) * 100 else 0f
@@ -110,7 +237,6 @@ class StudentAdapter(
                 if (stats.tdAbsent > 0) {
                     layoutStatsTD.visibility = View.VISIBLE
                     val tdText = if (stats.tdExcused > 0) {
-                        // Format: "5:3 (25%)" with 3 in green
                         val text = "${stats.tdAbsent}:${stats.tdExcused} (${"%.0f".format(tdPct)}%)"
                         val spannable = android.text.SpannableString(text)
                         val colonIndex = text.indexOf(':')
@@ -136,7 +262,6 @@ class StudentAdapter(
                 if (stats.tpAbsent > 0) {
                     layoutStatsTP.visibility = View.VISIBLE
                     val tpText = if (stats.tpExcused > 0) {
-                        // Format: "5:3 (25%)" with 3 in green
                         val text = "${stats.tpAbsent}:${stats.tpExcused} (${"%.0f".format(tpPct)}%)"
                         val spannable = android.text.SpannableString(text)
                         val colonIndex = text.indexOf(':')
@@ -176,7 +301,7 @@ class StudentAdapter(
 
                 // Show report button if any absence
                 if (stats.tdAbsent > 0 || stats.tpAbsent > 0) {
-                    btnReport.visibility = View.VISIBLE
+                    btnReport.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
                     btnReport.setOnClickListener { onReportClick(student) }
                 } else {
                     btnReport.visibility = View.GONE
@@ -184,7 +309,7 @@ class StudentAdapter(
 
                 // Show grades button if any grades
                 if (stats.hasGrades) {
-                    btnGrades.visibility = View.VISIBLE
+                    btnGrades.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
                     btnGrades.setOnClickListener { onGradesClick(student) }
                 } else {
                     btnGrades.visibility = View.GONE
@@ -198,13 +323,9 @@ class StudentAdapter(
                 btnReport.visibility = View.GONE
                 btnGrades.visibility = View.GONE
             }
-
-            itemView.setOnClickListener { onStudentClick(student) }
             
-            btnMoreOptions.setOnClickListener { view ->
-                // You can implement a popup menu here if needed, or just trigger the click
-                onStudentClick(student)
-            }
+            btnMoreOptions.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
+            btnMoreOptions.setOnClickListener { onStudentClick(student) }
         }
     }
 }

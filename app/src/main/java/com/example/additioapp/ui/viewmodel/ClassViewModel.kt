@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 class ClassViewModel(private val repository: AppRepository) : ViewModel() {
 
     val allClasses: LiveData<List<ClassEntity>> = repository.allClasses
+    val allClassesIncludingArchived: LiveData<List<ClassEntity>> = repository.allClassesIncludingArchived
     val allClassesWithSummary: LiveData<List<com.example.additioapp.data.model.ClassWithSummary>> = repository.allClassesWithSummary
     val distinctYears: LiveData<List<String>> = repository.distinctYears
 
@@ -31,6 +32,10 @@ class ClassViewModel(private val repository: AppRepository) : ViewModel() {
 
     fun insertClass(classEntity: ClassEntity) = viewModelScope.launch {
         repository.insertClass(classEntity)
+    }
+
+    suspend fun insertClassAndGetId(classEntity: ClassEntity): Long {
+        return repository.insertClassAndGetId(classEntity)
     }
 
     fun updateClass(classEntity: ClassEntity) = viewModelScope.launch {

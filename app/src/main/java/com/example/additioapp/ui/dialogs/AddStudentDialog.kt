@@ -20,12 +20,20 @@ class AddStudentDialog(
         val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.dialog_add_student, null)
 
-        val editName = view.findViewById<EditText>(R.id.editStudentName)
-        val editId = view.findViewById<EditText>(R.id.editStudentId)
+        val editMatricule = view.findViewById<EditText>(R.id.editMatricule)
+        val editLastNameFr = view.findViewById<EditText>(R.id.editLastNameFr)
+        val editFirstNameFr = view.findViewById<EditText>(R.id.editFirstNameFr)
+        val editLastNameAr = view.findViewById<EditText>(R.id.editLastNameAr)
+        val editFirstNameAr = view.findViewById<EditText>(R.id.editFirstNameAr)
+        val editNotes = view.findViewById<EditText>(R.id.editNotes)
 
         if (studentEntity != null) {
-            editName.setText(studentEntity.name)
-            editId.setText(studentEntity.studentId)
+            editMatricule.setText(studentEntity.displayMatricule)
+            editLastNameFr.setText(studentEntity.lastNameFr.ifEmpty { studentEntity.name })
+            editFirstNameFr.setText(studentEntity.firstNameFr)
+            editLastNameAr.setText(studentEntity.lastNameAr ?: "")
+            editFirstNameAr.setText(studentEntity.firstNameAr ?: "")
+            editNotes.setText(studentEntity.notes ?: "")
         }
 
         val title = if (studentEntity != null) "Edit Student" else "Add New Student"
@@ -34,17 +42,40 @@ class AddStudentDialog(
         builder.setView(view)
             .setTitle(title)
             .setPositiveButton(positiveButton) { _, _ ->
-                val name = editName.text.toString()
-                val studentId = editId.text.toString()
+                val matricule = editMatricule.text.toString().trim()
+                val lastNameFr = editLastNameFr.text.toString().trim()
+                val firstNameFr = editFirstNameFr.text.toString().trim()
+                val lastNameAr = editLastNameAr.text.toString().trim().ifEmpty { null }
+                val firstNameAr = editFirstNameAr.text.toString().trim().ifEmpty { null }
+                val notes = editNotes.text.toString().trim().ifEmpty { null }
 
-                if (name.isNotEmpty()) {
+                // At least last name is required
+                if (lastNameFr.isNotEmpty() || firstNameFr.isNotEmpty()) {
+                    // Compute legacy name for backward compatibility
+                    val legacyName = "$lastNameFr $firstNameFr".trim()
+                    
                     val updatedStudent = if (studentEntity != null) {
-                        studentEntity.copy(name = name, studentId = studentId)
+                        studentEntity.copy(
+                            matricule = matricule,
+                            firstNameFr = firstNameFr,
+                            lastNameFr = lastNameFr,
+                            firstNameAr = firstNameAr,
+                            lastNameAr = lastNameAr,
+                            name = legacyName,
+                            studentId = matricule,
+                            notes = notes
+                        )
                     } else {
                         StudentEntity(
                             classId = classId,
-                            name = name,
-                            studentId = studentId
+                            matricule = matricule,
+                            firstNameFr = firstNameFr,
+                            lastNameFr = lastNameFr,
+                            firstNameAr = firstNameAr,
+                            lastNameAr = lastNameAr,
+                            name = legacyName,
+                            studentId = matricule,
+                            notes = notes
                         )
                     }
                     onSave(updatedStudent)
@@ -58,7 +89,7 @@ class AddStudentDialog(
             builder.setNeutralButton("Delete") { _, _ ->
                 androidx.appcompat.app.AlertDialog.Builder(requireContext())
                     .setTitle("Delete Student")
-                    .setMessage("Are you sure you want to delete ${studentEntity.name}?")
+                    .setMessage("Are you sure you want to delete ${studentEntity.displayNameFr}?")
                     .setPositiveButton("Delete") { _, _ ->
                         onDelete.invoke(studentEntity)
                     }

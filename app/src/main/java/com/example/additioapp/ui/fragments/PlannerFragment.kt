@@ -208,6 +208,12 @@ class PlannerFragment : Fragment() {
         updateCalendar(textCurrentMonth)
         updateSelectedDateLabel(textSelectedDate)
         loadEventsForDate(recyclerEvents, textNoEvents)
+
+        // Handle tabIndex argument from navigation
+        val tabIndex = arguments?.getInt("tabIndex", 0) ?: 0
+        if (tabIndex in 0..2) {
+            tabLayout.getTabAt(tabIndex)?.select()
+        }
     }
 
     private fun setupDayButtons(container: LinearLayout, textScheduleDay: TextView, recyclerSchedule: RecyclerView, textNoSchedule: TextView) {
@@ -333,6 +339,11 @@ class PlannerFragment : Fragment() {
             TimePickerDialog(requireContext(), { _, hour, minute ->
                 startTime = String.format("%02d:%02d", hour, minute)
                 textStartTime.text = startTime
+                // Auto-set end time to 1h30m after start
+                val endHour = (hour + 1 + (minute + 30) / 60) % 24
+                val endMinute = (minute + 30) % 60
+                endTime = String.format("%02d:%02d", endHour, endMinute)
+                textEndTime.text = endTime
             }, parts[0].toInt(), parts[1].toInt(), true).show()
         }
 

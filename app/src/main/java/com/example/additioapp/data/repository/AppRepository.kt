@@ -46,6 +46,7 @@ class AppRepository(
 ) {
     // Classes
     val allClasses: LiveData<List<ClassEntity>> = classDao.getAllClasses()
+    val allClassesIncludingArchived: LiveData<List<ClassEntity>> = classDao.getAllClassesIncludingArchived()
     val allClassesWithSummary: LiveData<List<com.example.additioapp.data.model.ClassWithSummary>> = classDao.getAllClassesWithSummary()
     val distinctYears: LiveData<List<String>> = classDao.getDistinctYears()
     
@@ -62,6 +63,7 @@ class AppRepository(
         classDao.getArchivedClassesWithSummaryByYear(year)
 
     suspend fun insertClass(classEntity: ClassEntity) = classDao.insertClass(classEntity)
+    suspend fun insertClassAndGetId(classEntity: ClassEntity): Long = classDao.insertClass(classEntity)
     suspend fun updateClass(classEntity: ClassEntity) = classDao.updateClass(classEntity)
     suspend fun deleteClass(classEntity: ClassEntity) = classDao.deleteClass(classEntity)
     suspend fun getClassById(id: Long) = classDao.getClassById(id)

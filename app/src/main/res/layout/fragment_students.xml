@@ -45,6 +45,17 @@
                 android:layout_marginStart="12dp"/>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRandomPicker"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎲"
+                android:textSize="16sp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingHorizontal="4dp"/>
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSort"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
@@ -55,6 +66,67 @@
                 android:minHeight="0dp"
                 android:paddingHorizontal="8dp"
                 android:textColor="?attr/colorPrimary"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Selection Mode Toolbar (hidden by default) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/selectionToolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="?attr/colorPrimaryContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelSelection"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✕"
+                android:textSize="18sp"
+                android:minWidth="40dp"/>
+
+            <TextView
+                android:id="@+id/textSelectionCount"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="0 selected"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                android:layout_marginStart="4dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSelectAll"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                android:minWidth="0dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeleteSelected"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🗑️ Delete"
+                android:textColor="#D32F2F"
+                android:minWidth="0dp"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

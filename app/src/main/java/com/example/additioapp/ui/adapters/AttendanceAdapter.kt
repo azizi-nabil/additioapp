@@ -67,8 +67,28 @@ class AttendanceAdapter(
             statuses: List<AttendanceStatusEntity>,
             onStatusChanged: (StudentEntity, String) -> Unit
         ) {
-            nameTextView.text = item.student.name
-            idTextView.text = "ID: ${item.student.studentId}"
+            // Check preferences
+            val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(itemView.context)
+            val nameLang = prefs.getString("pref_name_language", "french") ?: "french"
+            val listSize = prefs.getString("pref_list_size", "normal") ?: "normal"
+            
+            // Apply list size
+            val (nameSize, idSize) = when (listSize) {
+                "compact" -> Pair(12f, 11f)
+                "comfortable" -> Pair(16f, 14f)
+                else -> Pair(14f, 12f) // normal
+            }
+            nameTextView.textSize = nameSize
+            idTextView.textSize = idSize
+            
+            // Use proper display name
+            val displayName = if (nameLang == "arabic" && !item.student.displayNameAr.isNullOrEmpty()) {
+                item.student.displayNameAr
+            } else {
+                item.student.displayNameFr
+            }
+            nameTextView.text = displayName
+            idTextView.text = "ID: ${item.student.displayMatricule}"
             
             val comment = item.attendance?.comment
             if (!comment.isNullOrBlank()) {

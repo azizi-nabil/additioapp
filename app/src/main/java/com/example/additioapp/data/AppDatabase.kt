@@ -52,7 +52,7 @@ import com.example.additioapp.data.model.UnitEntity
         TaskEntity::class,
         ScheduleItemEntity::class
     ],
-    version = 9,
+    version = 12,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -143,6 +143,41 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // Migration from v9 to v10: Add performance indices
+        private val MIGRATION_9_10 = object : androidx.room.migration.Migration(9, 10) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // Add indices to classes table for faster filtering
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_classes_year ON classes(year)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_classes_isArchived ON classes(isArchived)")
+                // Add sessionId index to attendance_records for faster lookups
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_attendance_records_sessionId ON attendance_records(sessionId)")
+            }
+        }
+
+        // Migration from v10 to v11: Add extended student name fields
+        private val MIGRATION_10_11 = object : androidx.room.migration.Migration(10, 11) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // Add new columns to students table
+                db.execSQL("ALTER TABLE students ADD COLUMN matricule TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE students ADD COLUMN firstNameFr TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE students ADD COLUMN lastNameFr TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE students ADD COLUMN firstNameAr TEXT")
+                db.execSQL("ALTER TABLE students ADD COLUMN lastNameAr TEXT")
+                // Add index on matricule for faster lookups
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_students_matricule ON students(matricule)")
+                
+                // Migrate existing data: copy name to lastNameFr, studentId to matricule
+                db.execSQL("UPDATE students SET lastNameFr = name, matricule = studentId WHERE name IS NOT NULL")
+            }
+        }
+
+        // Migration from v11 to v12: Add notes column to students table
+        private val MIGRATION_11_12 = object : androidx.room.migration.Migration(11, 12) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE students ADD COLUMN notes TEXT")
+            }
+        }
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -151,7 +186,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "additio_database"
                 )
                 // Use proper migrations to preserve data
-                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
+                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
                 // Only use destructive migration as last resort for older versions
                 .fallbackToDestructiveMigrationFrom(1, 2, 3, 4, 5)
                 .build()

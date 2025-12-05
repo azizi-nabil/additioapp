@@ -212,7 +212,7 @@ class GradebookFragment : Fragment() {
         container.addView(row)
     }
 
-    private fun renderStudentGrades(container: LinearLayout, studentAverages: List<Pair<StudentEntity, Float>>) {
+    private fun renderStudentGrades(container: LinearLayout, studentAverages: List<Pair<StudentEntity, Float>>, showAll: Boolean = false) {
         container.removeAllViews()
 
         val sorted = studentAverages.sortedByDescending { it.second }
@@ -222,7 +222,9 @@ class GradebookFragment : Fragment() {
             return
         }
 
-        sorted.take(10).forEachIndexed { index, (student, avg) ->
+        val displayList = if (showAll) sorted else sorted.take(10)
+        
+        displayList.forEachIndexed { index, (student, avg) ->
             val row = layoutInflater.inflate(R.layout.item_home_row, container, false)
             
             val gradeColor = when {
@@ -242,8 +244,33 @@ class GradebookFragment : Fragment() {
             container.addView(row)
         }
 
-        if (sorted.size > 10) {
-            addMoreRow(container, sorted.size - 10, "more students")
+        if (!showAll && sorted.size > 10) {
+            val moreRow = layoutInflater.inflate(R.layout.item_home_row, container, false)
+            moreRow.findViewById<View>(R.id.colorIndicator).visibility = View.INVISIBLE
+            moreRow.findViewById<TextView>(R.id.textRowTitle).apply {
+                text = "+${sorted.size - 10} more students"
+                setTextColor(Color.parseColor("#2196F3"))
+            }
+            moreRow.findViewById<TextView>(R.id.textRowMeta).visibility = View.GONE
+            moreRow.findViewById<TextView>(R.id.textRowExtra).visibility = View.GONE
+            moreRow.setOnClickListener {
+                renderStudentGrades(container, studentAverages, showAll = true)
+            }
+            container.addView(moreRow)
+        } else if (showAll && sorted.size > 10) {
+            // Add "Show less" option
+            val lessRow = layoutInflater.inflate(R.layout.item_home_row, container, false)
+            lessRow.findViewById<View>(R.id.colorIndicator).visibility = View.INVISIBLE
+            lessRow.findViewById<TextView>(R.id.textRowTitle).apply {
+                text = "Show less"
+                setTextColor(Color.parseColor("#2196F3"))
+            }
+            lessRow.findViewById<TextView>(R.id.textRowMeta).visibility = View.GONE
+            lessRow.findViewById<TextView>(R.id.textRowExtra).visibility = View.GONE
+            lessRow.setOnClickListener {
+                renderStudentGrades(container, studentAverages, showAll = false)
+            }
+            container.addView(lessRow)
         }
     }
 

@@ -85,8 +85,27 @@ class GradeEntryAdapter(
         private var textWatcher: TextWatcher? = null
 
         fun bind(item: StudentGradeItem, position: Int, isCalculated: Boolean, maxScore: Float, onGradeChanged: (StudentGradeItem, Float, String) -> Unit) {
+            // Check preferences
+            val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(itemView.context)
+            val nameLang = prefs.getString("pref_name_language", "french") ?: "french"
+            val listSize = prefs.getString("pref_list_size", "normal") ?: "normal"
+            
+            // Apply list size
+            val nameSize = when (listSize) {
+                "compact" -> 12f
+                "comfortable" -> 16f
+                else -> 14f // normal
+            }
+            nameTextView.textSize = nameSize
+            
             orderTextView.text = "${position + 1}."
-            nameTextView.text = item.student.name
+            // Use proper display name
+            val displayName = if (nameLang == "arabic" && !item.student.displayNameAr.isNullOrEmpty()) {
+                item.student.displayNameAr
+            } else {
+                item.student.displayNameFr
+            }
+            nameTextView.text = displayName
 
             val currentStatus = item.gradeRecord?.status ?: "PRESENT"
 

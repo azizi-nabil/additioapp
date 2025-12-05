@@ -95,6 +95,86 @@ class SettingsFragment : Fragment() {
                 Toast.makeText(requireContext(), "Restore Failed: ${it.message}", Toast.LENGTH_LONG).show()
             }
         }
+
+        // Name Language Setting
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val btnNameLanguage = view.findViewById<android.widget.LinearLayout>(R.id.btnNameLanguage)
+        val textNameLanguage = view.findViewById<android.widget.TextView>(R.id.textNameLanguage)
+        
+        // Load current setting
+        val currentLang = prefs.getString("pref_name_language", "french") ?: "french"
+        textNameLanguage.text = if (currentLang == "arabic") "العربية (Arabic)" else "French"
+
+        btnNameLanguage.setOnClickListener {
+            val options = arrayOf("French", "العربية (Arabic)")
+            val currentIndex = if (prefs.getString("pref_name_language", "french") == "arabic") 1 else 0
+            
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Student Name Display")
+                .setSingleChoiceItems(options, currentIndex) { dialog, which ->
+                    val newLang = if (which == 1) "arabic" else "french"
+                    prefs.edit().putString("pref_name_language", newLang).apply()
+                    textNameLanguage.text = options[which]
+                    Toast.makeText(requireContext(), "Name display updated", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+
+        // Sort Order Setting
+        val btnSortOrder = view.findViewById<android.widget.LinearLayout>(R.id.btnSortOrder)
+        val textSortOrder = view.findViewById<android.widget.TextView>(R.id.textSortOrder)
+        
+        val sortOptions = arrayOf("By Last Name", "By First Name", "By ID/Matricule")
+        val sortValues = arrayOf("lastname", "firstname", "id")
+        
+        // Load current setting
+        val currentSort = prefs.getString("pref_sort_order", "lastname") ?: "lastname"
+        val currentSortIndex = sortValues.indexOf(currentSort).coerceAtLeast(0)
+        textSortOrder.text = sortOptions[currentSortIndex]
+
+        btnSortOrder.setOnClickListener {
+            val selectedIndex = sortValues.indexOf(prefs.getString("pref_sort_order", "lastname")).coerceAtLeast(0)
+            
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Default Sort Order")
+                .setSingleChoiceItems(sortOptions, selectedIndex) { dialog, which ->
+                    prefs.edit().putString("pref_sort_order", sortValues[which]).apply()
+                    textSortOrder.text = sortOptions[which]
+                    Toast.makeText(requireContext(), "Sort order updated", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+
+        // List Size Setting
+        val layoutListSize = view.findViewById<android.widget.LinearLayout>(R.id.layoutListSize)
+        val textListSize = view.findViewById<android.widget.TextView>(R.id.textListSize)
+        
+        val sizeOptions = arrayOf("Compact", "Normal", "Comfortable")
+        val sizeValues = arrayOf("compact", "normal", "comfortable")
+        
+        // Load current setting
+        val currentSize = prefs.getString("pref_list_size", "normal") ?: "normal"
+        val currentSizeIndex = sizeValues.indexOf(currentSize).coerceAtLeast(0)
+        textListSize.text = sizeOptions[currentSizeIndex]
+
+        layoutListSize.setOnClickListener {
+            val selectedIndex = sizeValues.indexOf(prefs.getString("pref_list_size", "normal")).coerceAtLeast(0)
+            
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Student List Size")
+                .setSingleChoiceItems(sizeOptions, selectedIndex) { dialog, which ->
+                    prefs.edit().putString("pref_list_size", sizeValues[which]).apply()
+                    textListSize.text = sizeOptions[which]
+                    Toast.makeText(requireContext(), "List size updated", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
     }
 
     private fun showEditListDialog(title: String, prefKey: String, defaultList: List<String>) {

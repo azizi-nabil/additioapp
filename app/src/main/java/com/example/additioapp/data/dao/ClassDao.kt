@@ -14,6 +14,9 @@ interface ClassDao {
     @Query("SELECT * FROM classes WHERE isArchived = 0 ORDER BY name ASC")
     fun getAllClasses(): LiveData<List<ClassEntity>>
 
+    @Query("SELECT * FROM classes ORDER BY name ASC")
+    fun getAllClassesIncludingArchived(): LiveData<List<ClassEntity>>
+
     @Query("""
         SELECT c.*, COUNT(s.id) as studentCount 
         FROM classes c 

@@ -146,9 +146,17 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.plannerFragment)
         }
 
-        btnViewSchedule.setOnClickListener { findNavController().navigate(R.id.plannerFragment) }
-        btnViewEvents.setOnClickListener { findNavController().navigate(R.id.plannerFragment) }
-        btnViewTasks.setOnClickListener { findNavController().navigate(R.id.plannerFragment) }
+        btnViewSchedule.setOnClickListener {
+            val bundle = Bundle().apply { putInt("tabIndex", 2) } // Schedule tab
+            findNavController().navigate(R.id.plannerFragment, bundle)
+        }
+        btnViewEvents.setOnClickListener {
+            findNavController().navigate(R.id.plannerFragment) // Events tab (default 0)
+        }
+        btnViewTasks.setOnClickListener {
+            val bundle = Bundle().apply { putInt("tabIndex", 1) } // Tasks tab
+            findNavController().navigate(R.id.plannerFragment, bundle)
+        }
     }
 
     private fun loadTodayClasses(container: LinearLayout) {
@@ -264,12 +272,14 @@ class HomeFragment : Fragment() {
         }
 
         val dateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
-        tasks.take(4).forEach { task ->
+        // Sort by due date - nearest first
+        val sortedTasks = tasks.sortedBy { it.dueDate }
+        sortedTasks.take(4).forEach { task ->
             addTaskRow(container, task, dateFormat)
         }
 
-        if (tasks.size > 4) {
-            addMoreIndicator(container, tasks.size - 4, "more tasks")
+        if (sortedTasks.size > 4) {
+            addMoreIndicator(container, sortedTasks.size - 4, "more tasks")
         }
     }
 

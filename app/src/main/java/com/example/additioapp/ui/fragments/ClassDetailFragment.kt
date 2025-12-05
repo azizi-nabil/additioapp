@@ -11,17 +11,11 @@ import com.example.additioapp.R
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import androidx.fragment.app.viewModels
 import com.example.additioapp.AdditioApplication
 import com.example.additioapp.data.model.ClassEntity
 import com.example.additioapp.ui.AdditioViewModelFactory
-import com.example.additioapp.ui.dialogs.AddClassDialog
 import com.example.additioapp.ui.viewmodel.ClassViewModel
-import com.example.additioapp.ui.viewmodel.StudentViewModel
-import com.example.additioapp.data.model.StudentEntity
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -35,10 +29,6 @@ class ClassDetailFragment : Fragment() {
         AdditioViewModelFactory((requireActivity().application as AdditioApplication).repository)
     }
 
-    private val studentViewModel: StudentViewModel by viewModels {
-        AdditioViewModelFactory((requireActivity().application as AdditioApplication).repository)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -46,36 +36,6 @@ class ClassDetailFragment : Fragment() {
         }
     }
 
-    private val importLauncher = registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.OpenDocument()) { uri ->
-        uri?.let {
-            try {
-                val inputStream = requireContext().contentResolver.openInputStream(it)
-                val content = inputStream?.bufferedReader().use { reader -> reader?.readText() }
-                
-                if (content != null) {
-                    val lines = content.lines().filter { line -> line.isNotBlank() }
-                    val newStudents = lines.map { name ->
-                        val cleanName = name.split(",").firstOrNull()?.trim() ?: name.trim()
-                        StudentEntity(
-                            classId = classId,
-                            name = cleanName,
-                            studentId = "" 
-                        )
-                    }
-
-                    if (newStudents.isNotEmpty()) {
-                        studentViewModel.insertStudents(newStudents)
-                        android.widget.Toast.makeText(requireContext(), "Imported ${newStudents.size} students", android.widget.Toast.LENGTH_SHORT).show()
-                    } else {
-                        android.widget.Toast.makeText(requireContext(), "No valid data found", android.widget.Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (e: Exception) {
-                android.widget.Toast.makeText(requireContext(), "Error importing file: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
-                e.printStackTrace()
-            }
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,16 +54,6 @@ class ClassDetailFragment : Fragment() {
         val textTabName = view.findViewById<android.widget.TextView>(R.id.textTabName)
 
         // Setup Toolbar
-        toolbar.inflateMenu(R.menu.menu_class_detail)
-        toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.action_import -> {
-                    importLauncher.launch(arrayOf("text/plain", "text/csv", "application/vnd.ms-excel"))
-                    true
-                }
-                else -> false
-            }
-        }
         toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
