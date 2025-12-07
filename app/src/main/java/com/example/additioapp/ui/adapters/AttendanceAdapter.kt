@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.additioapp.R
 import com.example.additioapp.data.model.AttendanceRecordEntity
@@ -30,18 +31,13 @@ class AttendanceAdapter(
     }
 
     fun submitList(newItems: List<StudentAttendanceItem>) {
-        // Only refresh if this is a NEW list (e.g., date changed)
-        // Don't refresh for in-place updates (e.g., user tapping)
-        val isSameRef = items === newItems
-        android.util.Log.d("AttendanceAdapter", "submitList called. Same ref? $isSameRef. Will notify? ${!isSameRef}")
-        
-        // DISABLED: This was causing rebinding after taps
-        // The initial binding happens via setStatuses()
+        val oldList = items
         items = newItems
-        if (!isSameRef) {
-            android.util.Log.d("AttendanceAdapter", "Calling notifyDataSetChanged()")
-            notifyDataSetChanged()
-        }
+        
+        // Use DiffUtil for efficient updates
+        val diffCallback = AttendanceDiffCallback(oldList, newItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AttendanceViewHolder {
@@ -73,13 +69,16 @@ class AttendanceAdapter(
             val listSize = prefs.getString("pref_list_size", "normal") ?: "normal"
             
             // Apply list size
-            val (nameSize, idSize) = when (listSize) {
-                "compact" -> Pair(12f, 11f)
-                "comfortable" -> Pair(16f, 14f)
-                else -> Pair(14f, 12f) // normal
+            val (nameSize, idSize, padding) = when (listSize) {
+                "compact" -> Triple(12f, 11f, 8)
+                "comfortable" -> Triple(16f, 14f, 16)
+                else -> Triple(14f, 12f, 12) // normal
             }
             nameTextView.textSize = nameSize
             idTextView.textSize = idSize
+
+            val paddingPx = (padding * itemView.context.resources.displayMetrics.density).toInt()
+            (itemView as? com.google.android.material.card.MaterialCardView)?.setContentPadding(paddingPx, paddingPx, paddingPx, paddingPx)
             
             // Use proper display name
             val displayName = if (nameLang == "arabic" && !item.student.displayNameAr.isNullOrEmpty()) {
@@ -146,5 +145,26 @@ class AttendanceAdapter(
                 0xFF9E9E9E.toInt()
             }
         }
+    }
+}
+
+// DiffUtil Callback for efficient list updates
+class AttendanceDiffCallback(
+    private val oldList: List<StudentAttendanceItem>,
+    private val newList: List<StudentAttendanceItem>
+) : DiffUtil.Callback() {
+    
+    override fun getOldListSize(): Int = oldList.size
+    
+    override fun getNewListSize(): Int = newList.size
+    
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].student.id == newList[newItemPosition].student.id
+    }
+    
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+        return oldItem.student == newItem.student && oldItem.attendance == newItem.attendance
     }
 }

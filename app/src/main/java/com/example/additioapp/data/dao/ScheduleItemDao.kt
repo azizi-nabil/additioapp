@@ -32,6 +32,9 @@ interface ScheduleItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertScheduleItem(item: ScheduleItemEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertScheduleItems(items: List<ScheduleItemEntity>)
+
     @Update
     suspend fun updateScheduleItem(item: ScheduleItemEntity)
 
@@ -43,4 +46,24 @@ interface ScheduleItemDao {
 
     @Query("DELETE FROM schedule_items WHERE classId = :classId")
     suspend fun deleteScheduleItemsForClass(classId: Long)
+    
+    // ScheduleItem-Class cross reference methods
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertScheduleItemClassRef(ref: com.example.additioapp.data.model.ScheduleItemClassCrossRef)
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertScheduleItemClassRefs(refs: List<com.example.additioapp.data.model.ScheduleItemClassCrossRef>)
+    
+    @Query("DELETE FROM schedule_item_class_cross_ref WHERE scheduleItemId = :scheduleItemId")
+    suspend fun deleteScheduleItemClassRefs(scheduleItemId: Long)
+    
+    @Query("SELECT classId FROM schedule_item_class_cross_ref WHERE scheduleItemId = :scheduleItemId")
+    suspend fun getClassIdsForScheduleItem(scheduleItemId: Long): List<Long>
+    
+    @Query("SELECT classId FROM schedule_item_class_cross_ref WHERE scheduleItemId = :scheduleItemId")
+    fun getClassIdsForScheduleItemLive(scheduleItemId: Long): LiveData<List<Long>>
+
+    // Backup & Restore
+    @Query("SELECT * FROM schedule_item_class_cross_ref")
+    suspend fun getAllScheduleItemClassRefs(): List<com.example.additioapp.data.model.ScheduleItemClassCrossRef>
 }

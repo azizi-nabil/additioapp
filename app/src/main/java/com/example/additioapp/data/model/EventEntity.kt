@@ -28,5 +28,8 @@ data class EventEntity(
     val eventType: String = "OTHER",         // EXAM, MEETING, DEADLINE, OTHER
     val reminderMinutes: Int? = null,        // 15, 30, 60, 1440 (1 day), null = no reminder
     val isAllDay: Boolean = false,
-    val color: String? = null                // Custom color, or use class color if linked
+    val color: String? = null,               // Custom color, or use class color if linked
+    val recurrenceType: String = "NONE",     // NONE, DAILY, WEEKLY, BIWEEKLY, MONTHLY, YEARLY
+    val recurrenceEndDate: Long? = null,     // End date for recurrence (null = forever)
+    val parentEventId: Long? = null          // Links to original event for recurring instances
 )

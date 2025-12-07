@@ -10,26 +10,49 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Class Selection -->
+
+
+        <!-- Link to Classes (multi-select) -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Class *"
+            android:layout_marginTop="16dp"
+            android:text="@string/label_classes"
             android:textSize="12sp"
             android:textColor="?attr/colorOnSurfaceVariant"/>
 
-        <Spinner
-            android:id="@+id/spinnerScheduleClass"
+        <TextView
+            android:id="@+id/btnSelectClasses"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/hint_select_classes"
+            android:textSize="14sp"
+            android:drawableEnd="@drawable/ic_expand_more"/>
+            
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupClasses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:chipSpacingHorizontal="8dp"/>
+            
+        <!-- Hidden spinner to maintain layout compatibility if needed during transition, or remove completely -->
+        <Spinner
+            android:id="@+id/spinnerClasses"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"/>
 
         <!-- Day of Week -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Day of Week *"
+            android:text="@string/label_day_of_week_required"
             android:textSize="12sp"
             android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -56,7 +79,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Start Time *"
+                    android:text="@string/label_start_time_required"
                     android:textSize="12sp"
                     android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -81,7 +104,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="End Time *"
+                    android:text="@string/label_end_time_required"
                     android:textSize="12sp"
                     android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -102,7 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Session Type"
+            android:text="@string/label_session_type"
             android:textSize="12sp"
             android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -117,7 +140,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Room / Location"
+            android:hint="@string/hint_room_location"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText

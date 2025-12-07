@@ -7,25 +7,37 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.additioapp.R
 import com.example.additioapp.data.model.EventEntity
 
 class EventAdapter(
     private val onEventClick: (EventEntity) -> Unit,
-    private val onDeleteClick: (EventEntity) -> Unit
+    private val onDeleteClick: (EventEntity) -> Unit,
+    private val onLongClick: (EventEntity) -> Unit = {}
 ) : RecyclerView.Adapter<EventAdapter.ViewHolder>() {
 
     private var events: List<EventEntity> = emptyList()
     private var classNames: Map<Long, Pair<String, String>> = emptyMap() // classId -> (name, color)
+    private var eventClassNames: Map<Long, List<String>> = emptyMap()  // eventId -> list of class names
 
     fun submitList(newEvents: List<EventEntity>) {
+        val oldList = events
         events = newEvents
-        notifyDataSetChanged()
+        
+        val diffCallback = EventDiffCallback(oldList, newEvents)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun setClassInfo(classInfo: Map<Long, Pair<String, String>>) {
         classNames = classInfo
+        notifyDataSetChanged()
+    }
+    
+    fun setEventClassNames(names: Map<Long, List<String>>) {
+        eventClassNames = names
         notifyDataSetChanged()
     }
 
@@ -51,6 +63,12 @@ class EventAdapter(
 
         fun bind(event: EventEntity) {
             textTitle.text = event.title
+            
+            // Recurrence Icon
+            val iconRecurrence = itemView.findViewById<android.widget.ImageView>(R.id.iconRecurrence)
+            if (iconRecurrence != null) {
+                iconRecurrence.visibility = if (event.recurrenceType != "NONE" && event.recurrenceType != null) View.VISIBLE else View.GONE
+            }
 
             // Time
             val timeText = when {
@@ -75,8 +93,13 @@ class EventAdapter(
             (colorStrip.background as? GradientDrawable)?.setColor(Color.parseColor(color))
                 ?: colorStrip.setBackgroundColor(Color.parseColor(color))
 
-            // Class name
-            if (event.classId != null && classNames.containsKey(event.classId)) {
+            // Class names - show all classes
+            val classNamesList = eventClassNames[event.id]
+            if (!classNamesList.isNullOrEmpty()) {
+                textClass.text = classNamesList.joinToString(", ")
+                textClass.visibility = View.VISIBLE
+            } else if (event.classId != null && classNames.containsKey(event.classId)) {
+                // Fallback to legacy single class
                 textClass.text = classNames[event.classId]?.first
                 textClass.visibility = View.VISIBLE
             } else {
@@ -84,6 +107,10 @@ class EventAdapter(
             }
 
             itemView.setOnClickListener { onEventClick(event) }
+            itemView.setOnLongClickListener { 
+                onLongClick(event)
+                true
+            }
             btnDelete.setOnClickListener { onDeleteClick(event) }
         }
 
@@ -95,5 +122,24 @@ class EventAdapter(
                 else -> "#2196F3"        // Blue
             }
         }
+    }
+}
+
+// DiffUtil Callback for efficient list updates
+class EventDiffCallback(
+    private val oldList: List<EventEntity>,
+    private val newList: List<EventEntity>
+) : DiffUtil.Callback() {
+    
+    override fun getOldListSize(): Int = oldList.size
+    
+    override fun getNewListSize(): Int = newList.size
+    
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
+    }
+    
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition] == newList[newItemPosition]
     }
 }

@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
+import android.util.Log
 
 class SettingsViewModel(private val repository: AppRepository) : ViewModel() {
 
@@ -121,14 +122,24 @@ class SettingsViewModel(private val repository: AppRepository) : ViewModel() {
                 }
 
                 if (data != null) {
-                    repository.restoreData(data)
-                    _restoreStatus.postValue(Result.success("Restore completed successfully"))
+                    // Log what we're about to restore
+                    Log.d("SettingsVM", "Restoring: ${data.classes.size} classes, ${data.students.size} students, ${data.sessions.size} sessions")
+                    try {
+                        repository.restoreData(data)
+                        _restoreStatus.postValue(Result.success("Restore completed successfully"))
+                    } catch (e: Exception) {
+                        // Detailed error logging for repository operation
+                        Log.e("SettingsVM", "Restore failed during repository operation: ${e.message}", e)
+                        _restoreStatus.postValue(Result.failure(Exception("Restore Failed: ${e.message?.take(100) ?: "Unknown error during data restoration"}")))
+                    }
                 } else {
-                    _restoreStatus.postValue(Result.failure(Exception("Failed to read backup file")))
+                    Log.e("SettingsVM", "Restore failed: Could not read backup file or file was empty.")
+                    _restoreStatus.postValue(Result.failure(Exception("Restore Failed: Could not read file or file was empty")))
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
-                _restoreStatus.postValue(Result.failure(e))
+                // Detailed error logging for file read/parsing
+                Log.e("SettingsVM", "File read or parsing failed: ${e.message}", e)
+                _restoreStatus.postValue(Result.failure(Exception("Restore Failed: ${e.message?.take(100) ?: "File read or parsing error"}")))
             }
         }
     }

@@ -175,35 +175,152 @@ class AppRepository(
     // Backup & Restore
     suspend fun getAllData(): com.example.additioapp.data.model.BackupData {
         return com.example.additioapp.data.model.BackupData(
+            version = 2,
+            timestamp = System.currentTimeMillis(),
             classes = classDao.getAllClassesSync(),
             students = studentDao.getAllStudentsSync(),
             sessions = sessionDao.getAllSessionsSync(),
             attendanceRecords = attendanceDao.getAllAttendanceSync(),
             gradeItems = gradeDao.getAllGradeItemsSync(),
             gradeRecords = gradeDao.getAllGradeRecordsSync(),
-            behaviorRecords = behaviorDao.getAllBehaviorsSync()
+            behaviorRecords = behaviorDao.getAllBehaviorsSync(),
+            
+            // New v2 data
+            events = eventDao.getAllEventsSync(),
+            tasks = taskDao.getAllTasksSync(),
+            scheduleItems = scheduleItemDao.getAllScheduleItemsSync(),
+            eventClassRefs = eventDao.getAllEventClassRefs(),
+            taskClassRefs = taskDao.getAllTaskClassRefs(),
+            scheduleItemClassRefs = scheduleItemDao.getAllScheduleItemClassRefs()
         )
     }
 
     suspend fun restoreData(data: com.example.additioapp.data.model.BackupData) {
-        // Clear existing data? Or just upsert?
-        // For a true restore, we should probably clear, but that's risky if the backup is partial.
-        // Given the "BackupData" structure implies a full backup, we'll upsert everything.
-        // Users can clear data manually if they want a clean slate.
+        // Comprehensive sanitization with detailed error handling for each entity type
         
-        classDao.insertClasses(data.classes)
-        studentDao.insertStudents(data.students)
-        sessionDao.insertSessions(data.sessions)
-        attendanceDao.insertAttendanceList(data.attendanceRecords)
-        gradeDao.insertGradeItems(data.gradeItems)
-
-        
-        // Sanitize grade records: Ensure status is not null (for old backups)
-        val sanitizedGrades = data.gradeRecords.map { record ->
-            if (record.status == null) record.copy(status = "PRESENT") else record
+        try {
+            // Classes - ensure all required fields have defaults
+            val sanitizedClasses = data.classes.map { classEntity ->
+                classEntity.copy(
+                    color = classEntity.color ?: "#2196F3",
+                    semester = classEntity.semester ?: "Semester 1",
+                    location = classEntity.location ?: "",
+                    schedule = classEntity.schedule ?: ""
+                )
+            }
+            android.util.Log.d("AppRepository", "Inserting ${sanitizedClasses.size} classes")
+            classDao.insertClasses(sanitizedClasses)
+        } catch (e: Exception) {
+            android.util.Log.e("AppRepository", "Failed to restore classes: ${e.message}", e)
+            throw Exception("Classes restore failed: ${e.message}")
         }
-        gradeDao.insertGradeRecords(sanitizedGrades)
-        behaviorDao.insertBehaviors(data.behaviorRecords)
+        
+        try {
+            // Students - sanitize all string fields to prevent null constraint violations
+            val sanitizedStudents = data.students.map { student ->
+                student.copy(
+                    matricule = student.matricule ?: "",
+                    firstNameFr = student.firstNameFr ?: "",
+                    lastNameFr = student.lastNameFr ?: "",
+                    name = student.name ?: "",
+                    studentId = student.studentId ?: ""
+                )
+            }
+            android.util.Log.d("AppRepository", "Inserting ${sanitizedStudents.size} students")
+            studentDao.insertStudents(sanitizedStudents)
+        } catch (e: Exception) {
+            android.util.Log.e("AppRepository", "Failed to restore students: ${e.message}", e)
+            throw Exception("Students restore failed: ${e.message}")
+        }
+        
+        try {
+            // Sessions - ensure type is not null
+            val sanitizedSessions = data.sessions.map { session ->
+                session.copy(
+                    type = session.type ?: "Cours"
+                )
+            }
+            android.util.Log.d("AppRepository", "Inserting ${sanitizedSessions.size} sessions")
+            sessionDao.insertSessions(sanitizedSessions)
+        } catch (e: Exception) {
+            android.util.Log.e("AppRepository", "Failed to restore sessions: ${e.message}", e)
+            throw Exception("Sessions restore failed: ${e.message}")
+        }
+        
+        try {
+            // Attendance - already has defaults
+            android.util.Log.d("AppRepository", "Inserting ${data.attendanceRecords.size} attendance records")
+            attendanceDao.insertAttendanceList(data.attendanceRecords)
+        } catch (e: Exception) {
+            android.util.Log.e("AppRepository", "Failed to restore attendance: ${e.message}", e)
+            throw Exception("Attendance restore failed: ${e.message}")
+        }
+        
+        try {
+            // Grade Items - ensure all fields have defaults
+            val sanitizedGradeItems = data.gradeItems.map { item ->
+                item.copy(
+                    category = item.category ?: "General",
+                    weight = item.weight ?: 1.0f
+                )
+            }
+            android.util.Log.d("AppRepository", "Inserting ${sanitizedGradeItems.size} grade items")
+            gradeDao.insertGradeItems(sanitizedGradeItems)
+        } catch (e: Exception) {
+            android.util.Log.e("AppRepository", "Failed to restore grade items: ${e.message}", e)
+            throw Exception("Grade items restore failed: ${e.message}")
+        }
+
+        try {
+            // Grade Records - ensure status is not null
+            val sanitizedGrades = data.gradeRecords.map { record ->
+                record.copy(status = record.status ?: "PRESENT")
+            }
+            android.util.Log.d("AppRepository", "Inserting ${sanitizedGrades.size} grade records")
+            gradeDao.insertGradeRecords(sanitizedGrades)
+        } catch (e: Exception) {
+            android.util.Log.e("AppRepository", "Failed to restore grade records: ${e.message}", e)
+            throw Exception("Grade records restore failed: ${e.message}")
+        }
+        
+        try {
+            // Behavior Records - already has defaults
+            android.util.Log.d("AppRepository", "Inserting ${data.behaviorRecords.size} behavior records")
+            behaviorDao.insertBehaviors(data.behaviorRecords)
+        } catch (e: Exception) {
+            android.util.Log.e("AppRepository", "Failed to restore behavior records: ${e.message}", e)
+            throw Exception("Behavior records restore failed: ${e.message}")
+        }
+        
+        // Restore v2 data (only if present)
+        if (data.events.isNotEmpty()) {
+            try {
+                android.util.Log.d("AppRepository", "Inserting ${data.events.size} events")
+                eventDao.insertEvents(data.events)
+            } catch (e: Exception) {
+                android.util.Log.e("AppRepository", "Failed to restore events: ${e.message}", e)
+            }
+        }
+        if (data.tasks.isNotEmpty()) {
+            try {
+                taskDao.insertTasks(data.tasks)
+            } catch (e: Exception) {
+                android.util.Log.e("AppRepository", "Failed to restore tasks: ${e.message}", e)
+            }
+        }
+        if (data.scheduleItems.isNotEmpty()) {
+            try {
+                scheduleItemDao.insertScheduleItems(data.scheduleItems)
+            } catch (e: Exception) {
+                android.util.Log.e("AppRepository", "Failed to restore schedule items: ${e.message}", e)
+            }
+        }
+        
+        if (data.eventClassRefs.isNotEmpty()) eventDao.insertEventClassRefs(data.eventClassRefs)
+        if (data.taskClassRefs.isNotEmpty()) taskDao.insertTaskClassRefs(data.taskClassRefs)
+        if (data.scheduleItemClassRefs.isNotEmpty()) scheduleItemDao.insertScheduleItemClassRefs(data.scheduleItemClassRefs)
+        
+        android.util.Log.d("AppRepository", "Restore completed successfully")
     }
 
     // Events
@@ -219,6 +336,28 @@ class AppRepository(
     suspend fun updateEvent(event: EventEntity) = eventDao.updateEvent(event)
     suspend fun deleteEvent(event: EventEntity) = eventDao.deleteEvent(event)
     suspend fun deleteEventById(eventId: Long) = eventDao.deleteEventById(eventId)
+    suspend fun deleteEventSeries(seriesId: Long, fromDate: Long) = eventDao.deleteFutureEvents(seriesId, fromDate)
+    
+    // Event-Class cross reference
+    suspend fun insertEventWithClasses(event: EventEntity, classIds: List<Long>): Long {
+        val eventId = eventDao.insertEvent(event)
+        if (classIds.isNotEmpty()) {
+            val refs = classIds.map { com.example.additioapp.data.model.EventClassCrossRef(eventId, it) }
+            eventDao.insertEventClassRefs(refs)
+        }
+        return eventId
+    }
+    
+    suspend fun updateEventWithClasses(event: EventEntity, classIds: List<Long>) {
+        eventDao.updateEvent(event)
+        eventDao.deleteEventClassRefs(event.id)
+        if (classIds.isNotEmpty()) {
+            val refs = classIds.map { com.example.additioapp.data.model.EventClassCrossRef(event.id, it) }
+            eventDao.insertEventClassRefs(refs)
+        }
+    }
+    
+    suspend fun getClassIdsForEvent(eventId: Long): List<Long> = eventDao.getClassIdsForEvent(eventId)
 
     // Tasks
     fun getPendingTasks() = taskDao.getPendingTasks()
@@ -233,10 +372,63 @@ class AppRepository(
     suspend fun deleteTask(task: TaskEntity) = taskDao.deleteTask(task)
     suspend fun deleteTaskById(taskId: Long) = taskDao.deleteTaskById(taskId)
     suspend fun clearCompletedTasks() = taskDao.clearCompletedTasks()
+    
+    // Task-Class cross reference
+    suspend fun insertTaskWithClasses(task: TaskEntity, classIds: List<Long>): Long {
+        val taskId = taskDao.insertTask(task)
+        if (classIds.isNotEmpty()) {
+            val refs = classIds.map { com.example.additioapp.data.model.TaskClassCrossRef(taskId, it) }
+            taskDao.insertTaskClassRefs(refs)
+        }
+        return taskId
+    }
+    
+    suspend fun updateTaskWithClasses(task: TaskEntity, classIds: List<Long>) {
+        taskDao.updateTask(task)
+        taskDao.deleteTaskClassRefs(task.id)
+        if (classIds.isNotEmpty()) {
+            val refs = classIds.map { com.example.additioapp.data.model.TaskClassCrossRef(task.id, it) }
+            taskDao.insertTaskClassRefs(refs)
+        }
+    }
+    
+    suspend fun getClassIdsForTask(taskId: Long): List<Long> = taskDao.getClassIdsForTask(taskId)
+    fun getClassIdsForTaskLive(taskId: Long) = taskDao.getClassIdsForTaskLive(taskId)
 
     // Schedule Items
     fun getAllScheduleItems() = scheduleItemDao.getAllScheduleItems()
     suspend fun getAllScheduleItemsSync() = scheduleItemDao.getAllScheduleItemsSync()
+    
+    // ScheduleItem-Class methods
+    suspend fun insertScheduleItemWithClasses(item: ScheduleItemEntity, classIds: List<Long>): Long {
+        val insertedId = scheduleItemDao.insertScheduleItem(item)
+        
+        // Insert class references
+        if (classIds.isNotEmpty()) {
+            val refs = classIds.map { classId -> 
+                com.example.additioapp.data.model.ScheduleItemClassCrossRef(insertedId, classId) 
+            }
+            scheduleItemDao.insertScheduleItemClassRefs(refs)
+        }
+        
+        return insertedId
+    }
+    
+    suspend fun updateScheduleItemWithClasses(item: ScheduleItemEntity, classIds: List<Long>) {
+        scheduleItemDao.updateScheduleItem(item)
+        
+        // Update class references (delete all and re-insert)
+        scheduleItemDao.deleteScheduleItemClassRefs(item.id)
+        if (classIds.isNotEmpty()) {
+            val refs = classIds.map { classId -> 
+                com.example.additioapp.data.model.ScheduleItemClassCrossRef(item.id, classId) 
+            }
+            scheduleItemDao.insertScheduleItemClassRefs(refs)
+        }
+    }
+    
+    suspend fun getClassIdsForScheduleItem(scheduleItemId: Long) = scheduleItemDao.getClassIdsForScheduleItem(scheduleItemId)
+
     fun getScheduleItemsForDay(dayOfWeek: Int) = scheduleItemDao.getScheduleItemsForDay(dayOfWeek)
     suspend fun getScheduleItemsForDaySync(dayOfWeek: Int) = scheduleItemDao.getScheduleItemsForDaySync(dayOfWeek)
     fun getScheduleItemsForClass(classId: Long) = scheduleItemDao.getScheduleItemsForClass(classId)
@@ -246,4 +438,51 @@ class AppRepository(
     suspend fun deleteScheduleItem(item: ScheduleItemEntity) = scheduleItemDao.deleteScheduleItem(item)
     suspend fun deleteScheduleItemById(id: Long) = scheduleItemDao.deleteScheduleItemById(id)
     suspend fun deleteScheduleItemsForClass(classId: Long) = scheduleItemDao.deleteScheduleItemsForClass(classId)
+    
+    // Sync methods for calendar
+    suspend fun getPendingTasksSync() = taskDao.getPendingTasksSync()
+    
+    // Task statistics
+    suspend fun getCompletedTaskCount() = taskDao.getCompletedTaskCount()
+    suspend fun getTotalTaskCount() = taskDao.getTotalTaskCount()
+    suspend fun getCompletedThisWeek(weekStart: Long) = taskDao.getCompletedThisWeek(weekStart)
+
+    // Global Search
+    suspend fun searchStudents(query: String): List<StudentEntity> {
+        return studentDao.getAllStudentsSync().filter {
+            it.displayNameFr.contains(query, ignoreCase = true) ||
+            it.displayNameAr?.contains(query, ignoreCase = true) == true ||
+            it.displayMatricule.contains(query, ignoreCase = true) ||
+            it.email?.contains(query, ignoreCase = true) == true
+        }
+    }
+    
+    suspend fun searchClasses(query: String): List<ClassEntity> {
+        return classDao.getAllClassesSync().filter {
+            it.name.contains(query, ignoreCase = true) ||
+            it.year.contains(query, ignoreCase = true)
+        }
+    }
+    
+    suspend fun searchEvents(query: String): List<EventEntity> {
+        return eventDao.getAllEventsSync().filter {
+            it.title.contains(query, ignoreCase = true) ||
+            it.description.contains(query, ignoreCase = true)
+        }
+    }
+    
+    suspend fun searchTasks(query: String): List<TaskEntity> {
+        return taskDao.getAllTasksSync().filter {
+            it.title.contains(query, ignoreCase = true) ||
+            it.description.contains(query, ignoreCase = true)
+        }
+    }
+    
+    // Report Card Generation - TODO: Complete implementation with correct DAO methods
+    /*
+    suspend fun generateStudentReportCard(studentId: Long, classId: Long): com.example.additioapp.data.model.StudentReportCard? {
+        // Implementation commented out - needs correct DAO methods
+        return null
+    }
+    */
 }

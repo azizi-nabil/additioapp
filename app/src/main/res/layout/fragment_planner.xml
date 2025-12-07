@@ -70,15 +70,25 @@
 
                 <ImageButton
                     android:id="@+id/btnNextMonth"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/ic_arrow_forward"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Next month"/>
+                    
+                <ImageButton
+                    android:id="@+id/btnToggleCalendar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_expand_less"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Toggle calendar"
+                    android:layout_marginStart="8dp"/>
             </LinearLayout>
 
             <!-- Day Labels -->
             <LinearLayout
+                android:id="@+id/dayLabels"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -93,7 +103,7 @@
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Sat" android:textSize="12sp" android:textColor="?attr/colorOnSurfaceVariant"/>
             </LinearLayout>
 
-            <!-- Calendar Grid -->
+            <!-- Calendar Grid (collapsible) -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCalendar"
                 android:layout_width="match_parent"
@@ -107,6 +117,32 @@
             android:layout_height="1dp"
             android:background="?attr/colorOutline"
             android:layout_marginVertical="4dp"/>
+            
+        <!-- Search Bar -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="8dp"
+            app:boxStrokeWidth="1dp"
+            app:boxCornerRadiusTopStart="24dp"
+            app:boxCornerRadiusTopEnd="24dp"
+            app:boxCornerRadiusBottomStart="24dp"
+            app:boxCornerRadiusBottomEnd="24dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search..."
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingVertical="12dp"
+                android:drawableStart="@android:drawable/ic_menu_search"
+                android:drawablePadding="8dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- EVENTS VIEW -->
         <LinearLayout
@@ -146,42 +182,186 @@
         </LinearLayout>
 
         <!-- TASKS VIEW -->
-        <LinearLayout
+        <ScrollView
             android:id="@+id/tasksView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/textTasksTitle"
+            android:visibility="gone"
+            android:fillViewport="true">
+            
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="📝 My Tasks"/>
+                android:orientation="vertical">
+                
+                <!-- Task Statistics Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardTaskStats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="12dp">
+                        
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/textStatCompleted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="?attr/colorPrimary"
+                                android:text="0"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="11sp"
+                                android:text="Completed"/>
+                        </LinearLayout>
+                        
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/textStatThisWeek"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="#4CAF50"
+                                android:text="0"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="11sp"
+                                android:text="This Week"/>
+                        </LinearLayout>
+                        
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <TextView
+                                android:id="@+id/textStatRate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="#FF9800"
+                                android:text="0%"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="11sp"
+                                android:text="Rate"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerTasks"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:paddingHorizontal="12dp"/>
+                <TextView
+                    android:id="@+id/textTasksTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="📝 Pending Tasks"/>
 
-            <TextView
-                android:id="@+id/textNoTasks"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="📝 No tasks yet\n\nTap + to add a task"
-                android:textSize="14sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:visibility="gone"/>
-        </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerTasks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingHorizontal="12dp"/>
+
+                <TextView
+                    android:id="@+id/textNoTasks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="32dp"
+                    android:text="📝 No pending tasks\n\nTap + to add a task"
+                    android:textSize="14sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:visibility="gone"/>
+                    
+                <!-- Completed Tasks Section -->
+                <LinearLayout
+                    android:id="@+id/completedSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone">
+                    
+                    <LinearLayout
+                        android:id="@+id/completedHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="8dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="center_vertical">
+                        
+                        <TextView
+                            android:id="@+id/textCompletedTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:text="✅ Completed (0)"/>
+                            
+                        <ImageView
+                            android:id="@+id/iconExpandCompleted"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_expand_more"
+                            app:tint="?attr/colorOnSurfaceVariant"/>
+                    </LinearLayout>
+                    
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerCompletedTasks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:paddingHorizontal="12dp"
+                        android:visibility="gone"/>
+                        
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnClearCompleted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginVertical="8dp"
+                        android:text="Clear Completed"
+                        android:textSize="12sp"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:visibility="gone"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
 
         <!-- SCHEDULE VIEW -->
         <LinearLayout

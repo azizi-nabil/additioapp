@@ -38,6 +38,9 @@ interface EventDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEvent(event: EventEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertEvents(events: List<EventEntity>)
+
     @Update
     suspend fun updateEvent(event: EventEntity)
 
@@ -46,4 +49,27 @@ interface EventDao {
 
     @Query("DELETE FROM events WHERE id = :eventId")
     suspend fun deleteEventById(eventId: Long)
+
+    @Query("DELETE FROM events WHERE (id = :seriesId OR parentEventId = :seriesId) AND date >= :fromDate")
+    suspend fun deleteFutureEvents(seriesId: Long, fromDate: Long)
+    
+    // Event-Class cross reference methods
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertEventClassRef(ref: com.example.additioapp.data.model.EventClassCrossRef)
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertEventClassRefs(refs: List<com.example.additioapp.data.model.EventClassCrossRef>)
+    
+    @Query("DELETE FROM event_class_cross_ref WHERE eventId = :eventId")
+    suspend fun deleteEventClassRefs(eventId: Long)
+    
+    @Query("SELECT classId FROM event_class_cross_ref WHERE eventId = :eventId")
+    suspend fun getClassIdsForEvent(eventId: Long): List<Long>
+
+    // Backup & Restore
+    @Query("SELECT * FROM events")
+    suspend fun getAllEventsSync(): List<EventEntity>
+
+    @Query("SELECT * FROM event_class_cross_ref")
+    suspend fun getAllEventClassRefs(): List<com.example.additioapp.data.model.EventClassCrossRef>
 }

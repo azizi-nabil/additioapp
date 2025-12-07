@@ -13,7 +13,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Event Title *"
+            android:hint="@string/hint_event_title"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="Description"
+            android:hint="@string/label_description"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Date"
+            android:text="@string/label_date"
             android:textSize="12sp"
             android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -54,7 +54,7 @@
             android:padding="12dp"
             android:background="?attr/selectableItemBackground"
             android:drawableEnd="@android:drawable/ic_menu_my_calendar"
-            android:text="Select date"
+            android:text="@string/action_select_date"
             android:textSize="16sp"/>
 
         <!-- All Day Checkbox -->
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="All day event"/>
+            android:text="@string/label_all_day_event"/>
 
         <!-- Time Row -->
         <LinearLayout
@@ -82,7 +82,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Start Time"
+                    android:text="@string/label_start_time"
                     android:textSize="12sp"
                     android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -107,7 +107,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="End Time"
+                    android:text="@string/label_end_time"
                     android:textSize="12sp"
                     android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -128,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Event Type"
+            android:text="@string/label_event_type"
             android:textSize="12sp"
             android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -138,20 +138,48 @@
             android:layout_height="48dp"
             android:layout_marginTop="4dp"/>
 
-        <!-- Link to Class -->
+        <!-- Recurrence -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Link to Class (optional)"
+            android:text="@string/label_repeat"
             android:textSize="12sp"
             android:textColor="?attr/colorOnSurfaceVariant"/>
 
         <Spinner
-            android:id="@+id/spinnerClass"
+            android:id="@+id/spinnerRecurrence"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="4dp"/>
+
+        <!-- Link to Classes (multi-select) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/label_link_classes_optional"
+            android:textSize="12sp"
+            android:textColor="?attr/colorOnSurfaceVariant"/>
+
+        <TextView
+            android:id="@+id/btnSelectClasses"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/action_tap_select_classes"
+            android:textSize="14sp"
+            android:drawableEnd="@drawable/ic_expand_more"/>
+            
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupClasses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:chipSpacingHorizontal="8dp"/>
 
     </LinearLayout>
 </ScrollView>

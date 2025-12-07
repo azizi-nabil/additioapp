@@ -33,6 +33,9 @@ import com.example.additioapp.data.model.ScheduleItemEntity
 import com.example.additioapp.data.model.SessionEntity
 import com.example.additioapp.data.model.StudentEntity
 import com.example.additioapp.data.model.TaskEntity
+import com.example.additioapp.data.model.TaskClassCrossRef
+import com.example.additioapp.data.model.EventClassCrossRef
+import com.example.additioapp.data.model.ScheduleItemClassCrossRef
 import com.example.additioapp.data.model.UnitEntity
 
 @Database(
@@ -50,9 +53,12 @@ import com.example.additioapp.data.model.UnitEntity
         UnitEntity::class,
         EventEntity::class,
         TaskEntity::class,
-        ScheduleItemEntity::class
+        TaskClassCrossRef::class,
+        EventClassCrossRef::class,
+        ScheduleItemEntity::class,
+        ScheduleItemClassCrossRef::class
     ],
-    version = 12,
+    version = 17,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -178,6 +184,101 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // Migration from v12 to v13: Add task_class_cross_ref junction table
+        private val MIGRATION_12_13 = object : androidx.room.migration.Migration(12, 13) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // Create the junction table
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS task_class_cross_ref (
+                        taskId INTEGER NOT NULL,
+                        classId INTEGER NOT NULL,
+                        PRIMARY KEY(taskId, classId),
+                        FOREIGN KEY(taskId) REFERENCES tasks(id) ON DELETE CASCADE,
+                        FOREIGN KEY(classId) REFERENCES classes(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_task_class_cross_ref_taskId ON task_class_cross_ref(taskId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_task_class_cross_ref_classId ON task_class_cross_ref(classId)")
+                
+                // Migrate existing classId data to junction table
+                db.execSQL("""
+                    INSERT INTO task_class_cross_ref (taskId, classId)
+                    SELECT id, classId FROM tasks WHERE classId IS NOT NULL
+                """.trimIndent())
+            }
+        }
+
+        // Migration from v13 to v14: Add event_class_cross_ref junction table
+        private val MIGRATION_13_14 = object : androidx.room.migration.Migration(13, 14) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // Create the junction table
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS event_class_cross_ref (
+                        eventId INTEGER NOT NULL,
+                        classId INTEGER NOT NULL,
+                        PRIMARY KEY(eventId, classId),
+                        FOREIGN KEY(eventId) REFERENCES events(id) ON DELETE CASCADE,
+                        FOREIGN KEY(classId) REFERENCES classes(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_event_class_cross_ref_eventId ON event_class_cross_ref(eventId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_event_class_cross_ref_classId ON event_class_cross_ref(classId)")
+                
+                // Migrate existing classId data to junction table
+                db.execSQL("""
+                    INSERT INTO event_class_cross_ref (eventId, classId)
+                    SELECT id, classId FROM events WHERE classId IS NOT NULL
+                """.trimIndent())
+            }
+        }
+        
+        private val MIGRATION_14_15 = object : androidx.room.migration.Migration(14, 15) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // Add recurrence columns to events table
+                db.execSQL("ALTER TABLE events ADD COLUMN recurrenceType TEXT NOT NULL DEFAULT 'NONE'")
+                db.execSQL("ALTER TABLE events ADD COLUMN recurrenceEndDate INTEGER")
+                db.execSQL("ALTER TABLE events ADD COLUMN parentEventId INTEGER")
+            }
+        }
+        
+        private val MIGRATION_15_16 = object : androidx.room.migration.Migration(15, 16) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // Create the junction table
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS schedule_item_class_cross_ref (
+                        scheduleItemId INTEGER NOT NULL,
+                        classId INTEGER NOT NULL,
+                        PRIMARY KEY(scheduleItemId, classId),
+                        FOREIGN KEY(scheduleItemId) REFERENCES schedule_items(id) ON DELETE CASCADE,
+                        FOREIGN KEY(classId) REFERENCES classes(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_schedule_item_class_cross_ref_scheduleItemId ON schedule_item_class_cross_ref(scheduleItemId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_schedule_item_class_cross_ref_classId ON schedule_item_class_cross_ref(classId)")
+                
+                // Migrate existing classId data to junction table
+                db.execSQL("""
+                    INSERT INTO schedule_item_class_cross_ref (scheduleItemId, classId)
+                    SELECT id, classId FROM schedule_items WHERE classId IS NOT NULL
+                """.trimIndent())
+            }
+        }
+        
+        // Migration from v16 to v17: Add performance indices for foreign keys
+        private val MIGRATION_16_17 = object : androidx.room.migration.Migration(16, 17) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // Add indices for frequently queried foreign keys to improve query performance
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_students_classId ON students(classId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_attendance_records_studentId ON attendance_records(studentId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_grade_records_studentId ON grade_records(studentId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_grade_records_gradeItemId ON grade_records(gradeItemId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_behavior_records_studentId ON behavior_records(studentId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_behavior_records_classId ON behavior_records(classId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_grade_items_classId ON grade_items(classId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_sessions_classId ON sessions(classId)")
+            }
+        }
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -186,7 +287,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "additio_database"
                 )
                 // Use proper migrations to preserve data
-                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
+                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
                 // Only use destructive migration as last resort for older versions
                 .fallbackToDestructiveMigrationFrom(1, 2, 3, 4, 5)
                 .build()

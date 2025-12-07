@@ -94,4 +94,10 @@
         android:name="com.example.additioapp.ui.fragments.AnalyticsFragment"
         android:label="Analytics"
         tools:layout="@layout/fragment_analytics" />
+
+    <fragment
+        android:id="@+id/globalSearchFragment"
+        android:name="com.example.additioapp.ui.fragments.GlobalSearchFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_global_search" />
 </navigation>

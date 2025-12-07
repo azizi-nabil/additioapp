@@ -175,6 +175,14 @@ class SettingsFragment : Fragment() {
                 .setNegativeButton("Cancel", null)
                 .show()
         }
+        
+        // Global Search Visibility Setting
+        val switchShowGlobalSearch = view.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchShowGlobalSearch)
+        switchShowGlobalSearch.isChecked = prefs.getBoolean("pref_show_global_search", true)
+        switchShowGlobalSearch.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("pref_show_global_search", isChecked).apply()
+            Toast.makeText(requireContext(), if (isChecked) "Global search enabled" else "Global search hidden", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun showEditListDialog(title: String, prefKey: String, defaultList: List<String>) {

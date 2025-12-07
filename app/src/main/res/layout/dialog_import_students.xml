@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="📥 Import Students from CSV"
+        android:text="@string/dialog_import_students"
         android:textAppearance="?attr/textAppearanceHeadlineSmall"
         android:textColor="?attr/colorOnSurface"
         android:layout_marginBottom="16dp"/>
@@ -39,7 +39,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="📋 Expected CSV Format"
+                    android:text="@string/label_expected_csv_format"
                     android:textAppearance="?attr/textAppearanceTitleMedium"
                     android:textColor="#1565C0"
                     android:layout_marginBottom="8dp"/>
@@ -47,7 +47,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Matricule, Nom, Prénom"
+                    android:text="@string/label_csv_header"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textStyle="bold"
                     android:fontFamily="monospace"
@@ -56,7 +56,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="202034052475, ABDERREZAK, MAISSOUN"
+                    android:text="@string/label_csv_example"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:fontFamily="monospace"
                     android:textColor="#1976D2"
@@ -69,7 +69,7 @@
             android:id="@+id/btnShowFormat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📖 View Full Format Guide"
+            android:text="@string/action_view_format_guide"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_marginBottom="8dp"/>
 
@@ -108,7 +108,7 @@
         android:id="@+id/btnSelectFile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="📁 Select CSV File"
+        android:text="@string/action_select_csv_file"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
     <LinearLayout
@@ -122,7 +122,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="@string/action_cancel"
             style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
         <com.google.android.material.button.MaterialButton
@@ -130,7 +130,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Import"
+            android:text="@string/action_import"
             android:enabled="false"/>
     </LinearLayout>
 

@@ -14,8 +14,7 @@ enum class RiskLevel {
 }
 
 data class AtRiskStudent(
-    val studentId: Long,
-    val name: String,
+    val student: com.example.additioapp.data.model.StudentEntity,
     val tdUnexcused: Int,      // TD absences (status A only)
     val tdTotal: Int,          // TD absences (status A + E)
     val tpUnexcused: Int,      // TP absences (status A only)
@@ -54,7 +53,29 @@ class AtRiskAdapter(
         private val textTotal: TextView = itemView.findViewById(R.id.textTotalAbsences)
 
         fun bind(student: AtRiskStudent) {
-            textName.text = student.name
+            // Check preferences
+            val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(itemView.context)
+            val nameLang = prefs.getString("pref_name_language", "french") ?: "french"
+            val listSize = prefs.getString("pref_list_size", "normal") ?: "normal"
+
+            // Apply list size
+            val (nameSize, padding) = when (listSize) {
+                "compact" -> Pair(14f, 8)
+                "comfortable" -> Pair(16f, 16)
+                else -> Pair(14f, 12) // normal
+            }
+            textName.textSize = nameSize
+
+            val paddingPx = (padding * itemView.context.resources.displayMetrics.density).toInt()
+            (itemView as? com.google.android.material.card.MaterialCardView)?.setContentPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+
+            // Name language
+            val displayName = if (nameLang == "arabic" && !student.student.displayNameAr.isNullOrEmpty()) {
+                student.student.displayNameAr
+            } else {
+                student.student.displayNameFr
+            }
+            textName.text = displayName
             
             // Show TD:unexcused/total, TP:unexcused/total
             val details = buildString {

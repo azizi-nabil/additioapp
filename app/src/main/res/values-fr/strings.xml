@@ -1,0 +1,343 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">TeacherHub</string>
+    
+    <!-- Common Actions -->
+    <string name="action_add">Ajouter</string>
+    <string name="action_edit">Modifier</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="action_save">Enregistrer</string>
+    <string name="action_cancel">Annuler</string>
+    <string name="action_close">Fermer</string>
+    <string name="action_search">Rechercher</string>
+    <string name="action_filter">Filtrer</string>
+    <string name="action_sort">Trier</string>
+    <string name="action_export">Exporter</string>
+    <string name="action_import">Importer</string>
+    <string name="action_backup">Sauvegarder</string>
+    <string name="action_restore">Restaurer</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Accueil</string>
+    <string name="nav_classes">Classes</string>
+    <string name="nav_students">Étudiants</string>
+    <string name="nav_planner">Planificateur</string>
+    <string name="nav_analytics">Analyses</string>
+    
+    <!-- Home Screen -->
+    <string name="home_welcome">Bon retour !</string>
+    <string name="home_quick_actions">Actions rapides</string>
+    <string name="home_upcoming_events">Événements à venir</string>
+    <string name="home_recent_activity">Activité récente</string>
+    <string name="home_no_events">Aucun événement à venir</string>
+    
+    <!-- Classes -->
+    <string name="classes_title">Classes</string>
+    <string name="classes_add">Ajouter une classe</string>
+    <string name="classes_empty">Aucune classe. Appuyez sur + pour ajouter votre première classe.</string>
+    <string name="class_name">Nom de la classe</string>
+    <string name="class_name_hint">ex: Math A</string>
+    <string name="class_level">Niveau</string>
+    <string name="class_level_hint">ex: 2ème année</string>
+    <string name="class_semester">Semestre</string>
+    <string name="class_semester_1">Semestre 1</string>
+    <string name="class_semester_2">Semestre 2</string>
+    <string name="class_students_count">%d Étudiants</string>
+    <string name="class_delete_confirm">Supprimer cette classe et toutes ses données?</string>
+    <string name="hint_class_name">Nom de la classe (ex: L3 G1)</string>
+    <string name="hint_class_year">Année (ex: 2024-2025)</string>
+    <string name="hint_class_location">Lieu (ex: Salle 101)</string>
+    
+    <!-- Students -->
+    <string name="students_title">Étudiants</string>
+    <string name="students_add">Ajouter un étudiant</string>
+    <string name="students_import">Importer depuis CSV</string>
+    <string name="students_export">Exporter vers CSV</string>
+    <string name="students_empty">Aucun étudiant dans cette classe</string>
+    <string name="student_name_fr">Nom (Français)</string>
+    <string name="student_name_ar">Nom (Arabe)</string>
+    <string name="student_id">Matricule</string>
+    <string name="student_id_hint">Matricule</string>
+    <string name="student_email">Email</string>
+    <string name="student_phone">Téléphone</string>
+    <string name="student_delete_confirm">Supprimer cet élève?</string>
+    
+    <!-- Student Dialog Labels -->
+    <string name="dialog_student_details">Détails de l\'élève</string>
+    <string name="label_matricule">Matricule</string>
+    <string name="label_french_name">Nom français</string>
+    <string name="label_first_name">Prénom</string>
+    <string name="label_last_name">Nom</string>
+    <string name="label_arabic_name_optional">Nom arabe (Optionnel)</string>
+    <string name="label_private_notes_optional">📝 Notes privées (Optionnel)</string>
+    <string name="hint_student_notes">Notes sur cet élève...</string>
+    
+    <!-- Attendance -->
+    <string name="attendance_title">Présence</string>
+    <string name="attendance_session">Séance :</string>
+    <string name="attendance_date">Date</string>
+    <string name="attendance_status">Statut</string>
+    <string name="attendance_present">Présent</string>
+    <string name="attendance_absent">Absent</string>
+    <string name="attendance_late">En retard</string>
+    <string name="attendance_excused">Excusé</string>
+    <string name="attendance_justified_late">Retard justifié</string>
+    <string name="attendance_comment">Commentaire</string>
+    <string name="attendance_mark_all_present">Tous ✓</string>
+    <string name="attendance_mark_all_absent">Tous ✗</string>
+    <string name="attendance_clear">Effacer</string>
+    <string name="attendance_summary">Présents: %1$d | Absents: %2$d | En retard: %3$d</string>
+    <string name="attendance_today">Aujourd\'hui</string>
+    <string name="attendance_history">Historique</string>
+    <string name="attendance_export">Exporter CSV</string>
+    
+    <!-- Session Types -->
+    <string name="session_type_td">TD</string>
+    <string name="session_type_tp">TP</string>
+    <string name="session_type_course">Cours</string>
+    <string name="session_type_exam">Examen</string>
+    
+    <!-- Grades -->
+    <string name="grades_title">Notes</string>
+    <string name="grades_add_item">Ajouter une note</string>
+    <string name="grades_category">Catégorie</string>
+    <string name="grades_weight">Coefficient</string>
+    <string name="grades_max_score">Note maximale</string>
+    <string name="grades_average">Moyenne</string>
+    <string name="grades_empty">Aucune note enregistrée</string>
+    
+    <!-- Grade Categories -->
+    <string name="grade_category_exam">Examen</string>
+    <string name="grade_category_cc">CC</string>
+    <string name="grade_category_test">Test</string>
+    <string name="grade_category_homework">Devoir</string>
+    <string name="grade_category_project">Projet</string>
+    <string name="grade_category_other">Autre</string>
+    
+    <!-- Behavior -->
+    <string name="behavior_title">Comportement</string>
+    <string name="behavior_add">Ajouter un comportement</string>
+    <string name="behavior_positive">Positif</string>
+    <string name="behavior_negative">Négatif</string>
+    <string name="behavior_points">Points</string>
+    <string name="behavior_comment">Commentaire</string>
+    <string name="behavior_empty">Aucun enregistrement de comportement trouvé.</string>
+    
+    <!-- Planner -->
+    <string name="planner_title">Planificateur</string>
+    <string name="planner_events">Événements</string>
+    <string name="planner_tasks">Tâches</string>
+    <string name="planner_schedule">Emploi du temps</string>
+    <string name="planner_today">Aujourd\'hui</string>
+    <string name="planner_no_events">📅 Aucun événement pour ce jour\n\nAppuyez sur + pour ajouter un événement</string>
+    <string name="planner_no_tasks">Aucune tâche</string>
+    
+    <!-- Calendar -->
+    <string name="calendar_sun">Dim</string>
+    <string name="calendar_mon">Lun</string>
+    <string name="calendar_tue">Mar</string>
+    <string name="calendar_wed">Mer</string>
+    <string name="calendar_thu">Jeu</string>
+    <string name="calendar_fri">Ven</string>
+    <string name="calendar_sat">Sam</string>
+    
+    <!-- Events -->
+    <string name="event_title">Titre</string>
+    <string name="event_description">Description</string>
+    <string name="event_date">Date</string>
+    <string name="event_time">Heure</string>
+    <string name="event_start_time">Heure de début</string>
+    <string name="event_end_time">Heure de fin</string>
+    <string name="event_all_day">Toute la journée</string>
+    <string name="event_type">Type d\'événement</string>
+    <string name="event_recurrence">Récurrence</string>
+    <string name="event_recurrence_none">Aucune</string>
+    <string name="event_recurrence_daily">Quotidienne</string>
+    <string name="event_recurrence_weekly">Hebdomadaire</string>
+    <string name="event_recurrence_biweekly">Bi-hebdomadaire</string>
+    <string name="event_recurrence_monthly">Mensuelle</string>
+    <string name="event_recurrence_yearly">Annuelle</string>
+    
+    <!-- Tasks -->
+    <string name="task_title">Tâche</string>
+    <string name="task_description">Description</string>
+    <string name="task_due_date">Date d\'échéance</string>
+    <string name="task_priority">Priorité</string>
+    <string name="task_priority_low">Basse</string>
+    <string name="task_priority_medium">Moyenne</string>
+    <string name="task_priority_high">Haute</string>
+    <string name="task_completed">Terminée</string>
+    <string name="task_pending">En attente</string>
+    
+    <!-- Schedule -->
+    <string name="schedule_title">Emploi du temps</string>
+    <string name="schedule_add">Ajouter un élément</string>
+    <string name="schedule_day">Jour de la semaine</string>
+    <string name="schedule_start_time">Heure de début</string>
+    <string name="schedule_end_time">Heure de fin</string>
+    <string name="schedule_session_type">Type de séance</string>
+    <string name="schedule_classes">Classes</string>
+    <string name="schedule_select_classes">Appuyez pour sélectionner les classes...</string>
+    
+    <!-- Analytics -->
+    <string name="analytics_title">Analyses</string>
+    <string name="analytics_attendance_rate">Taux de présence</string>
+    <string name="analytics_average_grade">Moyenne générale</string>
+    <string name="analytics_at_risk">Étudiants à risque</string>
+    <string name="analytics_export_pdf">Exporter PDF</string>
+    <string name="analytics_export_excel">Exporter Excel</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Paramètres</string>
+    <string name="settings_backup_data">Sauvegarder les données</string>
+    <string name="settings_restore_data">Restaurer les données</string>
+    <string name="settings_name_language">Affichage des noms</string>
+    <string name="settings_sort_order">Ordre de tri par défaut</string>
+    <string name="settings_list_size">Taille de la liste</string>
+    <string name="settings_customization">Personnalisation</string>
+    
+    <!-- Sort Options -->
+    <string name="sort_by_name_asc">A-Z</string>
+    <string name="sort_by_name_desc">Z-A</string>
+    <string name="sort_by_id">Par matricule</string>
+    <string name="sort_by_lastname">Par nom de famille</string>
+    <string name="sort_by_firstname">Par prénom</string>
+    
+    <!-- List Size Options -->
+    <string name="list_size_compact">Compacte</string>
+    <string name="list_size_normal">Normale</string>
+    <string name="list_size_comfortable">Confortable</string>
+    
+    <!-- Filter Options -->
+    <string name="filter_all">Tous</string>
+    <string name="filter_positive">Positifs</string>
+    <string name="filter_negative">Négatifs</string>
+    
+    <!-- Dialogs -->
+    <string name="dialog_delete_title">Supprimer</string>
+    <string name="dialog_delete_message">Êtes-vous sûr ?</string>
+    <string name="dialog_restore_title">Restaurer les données</string>
+    <string name="dialog_restore_message">L\'importation des données écrasera les enregistrements existants. Êtes-vous sûr de vouloir continuer ?</string>
+    
+    <!-- Messages -->
+    <string name="message_saved">Enregistré</string>
+    <string name="message_deleted">Supprimé</string>
+    <string name="message_error">Une erreur s\'est produite</string>
+    <string name="message_no_data">Aucune donnée disponible</string>
+    <string name="message_loading">Chargement...</string>
+    
+    <!-- Validation -->
+    <string name="validation_required">Champ obligatoire</string>
+    <string name="validation_invalid_email">Email invalide</string>
+    <string name="validation_invalid_phone">Numéro de téléphone invalide</string>
+    
+    <!-- Import/Export -->
+    <string name="import_success">%d étudiants importés</string>
+    <string name="import_error">Échec de l\'importation : %s</string>
+    <string name="export_success">%d étudiants exportés</string>
+    <string name="export_error">Échec de l\'exportation : %s</string>
+    <string name="backup_success">Sauvegarde terminée avec succès</string>
+    <string name="backup_error">Échec de la sauvegarde : %s</string>
+    <string name="restore_success">Données restaurées avec succès</string>
+    <string name="restore_error">Échec de la restauration : %s</string>
+    
+    <!-- Schedule Dialog -->
+    <string name="label_classes">Classes</string>
+    <string name="hint_select_classes">Appuyez pour sélectionner les classes...</string>
+    <string name="label_day_of_week_required">Jour de la semaine *</string>
+    <string name="label_start_time_required">Heure de début *</string>
+    <string name="label_end_time_required">Heure de fin *</string>
+    <string name="label_session_type">Type de séance</string>
+    <string name="hint_room_location">Salle / Lieu</string>
+    
+    <!-- Event Dialog -->
+    <string name="hint_event_title">Titre de l\'événement *</string>
+    <string name="label_description">Description</string>
+    <string name="label_date">Date</string>
+    <string name="action_select_date">Sélectionner la date</string>
+    <string name="label_all_day_event">Événement toute la journée</string>
+    <string name="label_start_time">Heure de début</string>
+    <string name="label_end_time">Heure de fin</string>
+    <string name="label_event_type">Type d\'événement</string>
+    <string name="label_repeat">Répéter</string>
+    <string name="label_link_classes_optional">Lier aux classes (optionnel)</string>
+    <string name="action_tap_select_classes">Appuyez pour sélectionner les classes...</string>
+    
+    <!-- Task Dialog -->
+    <string name="hint_task_title">Titre de la tâche *</string>
+    <string name="label_due_date_optional">Date d\'échéance (optionnel)</string>
+    <string name="label_no_due_date">Aucune date d\'échéance</string>
+    <string name="label_today">Aujourd\'hui</string>
+    <string name="label_tomorrow">Demain</string>
+    <string name="label_next_week">Semaine prochaine</string>
+    <string name="label_priority">Priorité</string>
+    <string name="label_low">Basse</string>
+    <string name="label_medium">Moyenne</string>
+    <string name="label_high">Haute</string>
+    
+    <!-- Grade Item Dialog -->
+    <string name="hint_grade_item_name">Nom de l\'élément (ex: Quiz 1)</string>
+    <string name="hint_category">Catégorie</string>
+    <string name="label_exam">Examen</string>
+    <string name="hint_max_score">Note maximale</string>
+    <string name="hint_weight">Coefficient</string>
+    <string name="label_calculated_item">Élément calculé (Formule)</string>
+    <string name="hint_formula">Formule (ex: max([Item1], [Item2]))</string>
+    
+    <!-- Behavior Dialog -->
+    <string name="dialog_add_behavior">Ajouter un comportement</string>
+    <string name="label_type">Type</string>
+    <string name="label_positive">Positif (+1)</string>
+    <string name="label_negative">Négatif (-1)</string>
+    <string name="label_active_participation">Participation active</string>
+    <string name="hint_comment_optional">Commentaire (Optionnel)</string>
+    
+    <!-- Report Dialogs -->
+    <string name="dialog_absence_report">Rapport d\'absences</string>
+    <string name="dialog_behavior_report">Rapport de comportement</string>
+    <string name="dialog_grades_report">Rapport de notes</string>
+    <string name="label_student_name">Nom de l\'élève</string>
+    <string name="label_td_absences">Absences TD (%d)</string>
+    <string name="label_tp_absences">Absences TP (%d)</string>
+    <string name="label_cours_absences">Absences Cours (%d)</string>
+    <string name="label_none">Aucune</string>
+    <string name="label_no_records_found">Aucun enregistrement trouvé.</string>
+    <string name="label_no_grades_recorded">Aucune note enregistrée.</string>
+    
+    <!-- Import Students Dialog -->
+    <string name="dialog_import_students">📥 Importer des élèves depuis CSV</string>
+    <string name="label_expected_csv_format">📋 Format CSV attendu</string>
+    <string name="label_csv_header">Matricule, Nom, Prénom</string>
+    <string name="label_csv_example">202034052475, ABDERREZAK, MAISSOUN</string>
+    <string name="action_view_format_guide">📖 Voir le guide complet</string>
+    <string name="action_select_csv_file">📁 Sélectionner un fichier CSV</string>
+    
+    <!-- Item Layout Actions -->
+    <string name="action_report">Rapport</string>
+    <string name="action_marks">Notes</string>
+    
+    <!-- Fragment Common Strings -->
+    <string name="hint_search">Rechercher...</string>
+    <string name="hint_search_students">Rechercher des élèves...</string>
+    <string name="label_completed">Terminé</string>
+    <string name="label_this_week">Cette semaine</string>
+    <string name="label_rate">Taux</string>
+    <string name="label_pending_tasks">📝 Tâches en attente</string>
+    <string name="label_no_pending_tasks">📝 Aucune tâche en attente\n\nAppuyez sur + pour ajouter une tâche</string>
+    <string name="label_completed_count">✅ Terminé (%d)</string>
+    <string name="action_clear_completed">Effacer les terminées</string>
+    <string name="label_no_classes_scheduled">🗓️ Aucun cours prévu\n\nAppuyez sur + pour ajouter un cours</string>
+    <string name="label_no_results_found">Aucun résultat trouvé</string>
+    <string name="hint_search_all">Rechercher élèves, classes, événements, tâches...</string>
+    <string name="label_all_present">Tous ✓</string>
+    <string name="label_all_absent">Tous ✗</string>
+    <string name="action_clear">Effacer</string>
+    <string name="label_overview">Aperçu</string>
+    <string name="label_from">De</string>
+    <string name="label_to">À</string>
+    <string name="action_take_attendance_today">Prendre les présences (Aujourd\'hui)</string>
+    <string name="hint_min">Min</string>
+    <string name="hint_max">Max</string>
+    <string name="label_students_count">%d Élèves</string>
+    <string name="label_grade_item_name">Nom de l\'élément de notation</string>
+</resources>

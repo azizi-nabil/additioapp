@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.additioapp.R
 import com.example.additioapp.data.model.StudentEntity
@@ -42,14 +43,19 @@ class StudentAdapter(
     private val selectedItems = mutableSetOf<Long>()
 
     fun submitList(newItems: List<StudentEntity>, newStats: Map<Long, StudentStats> = attendanceStats) {
+        val oldList = filteredItems
         items = newItems
         originalItems = newItems
         filteredItems = newItems
         attendanceStats = newStats
-        notifyDataSetChanged()
+        
+        val diffCallback = StudentDiffCallback(oldList, newItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun filter(query: String) {
+        val oldList = filteredItems
         filteredItems = if (query.isEmpty()) {
             originalItems
         } else {
@@ -59,7 +65,9 @@ class StudentAdapter(
                 it.matricule.contains(query, ignoreCase = true)
             }
         }
-        notifyDataSetChanged()
+        val diffCallback = StudentDiffCallback(oldList, filteredItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     // Selection mode methods
@@ -138,11 +146,16 @@ class StudentAdapter(
         private val statsTDTextView: TextView = itemView.findViewById(R.id.textStatsTD)
         private val layoutStatsTP: View = itemView.findViewById(R.id.layoutStatsTP)
         private val statsTPTextView: TextView = itemView.findViewById(R.id.textStatsTP)
+        private val layoutBehaviorPos: View = itemView.findViewById(R.id.layoutBehaviorPos)
         private val behaviorPosTextView: TextView = itemView.findViewById(R.id.textStudentBehaviorPos)
+        private val layoutBehaviorNeg: View = itemView.findViewById(R.id.layoutBehaviorNeg)
         private val behaviorNegTextView: TextView = itemView.findViewById(R.id.textStudentBehaviorNeg)
         private val btnReport: com.google.android.material.button.MaterialButton = itemView.findViewById(R.id.btnAbsenceReport)
         private val btnGrades: com.google.android.material.button.MaterialButton = itemView.findViewById(R.id.btnGradesReport)
         private val btnMoreOptions: android.widget.ImageView = itemView.findViewById(R.id.btnMoreOptions)
+        private val layoutRow1: View = itemView.findViewById(R.id.layoutRow1)
+        private val layoutRow2: View = itemView.findViewById(R.id.layoutRow2)
+        private val layoutActions: View = itemView.findViewById(R.id.layoutActions)
 
         fun bind(
             student: StudentEntity, 
@@ -284,19 +297,19 @@ class StudentAdapter(
                 }
                 
                 if (stats.behaviorPositive != 0) {
-                    behaviorPosTextView.visibility = View.VISIBLE
+                    layoutBehaviorPos.visibility = View.VISIBLE
                     behaviorPosTextView.text = stats.behaviorPositive.toString()
-                    behaviorPosTextView.setOnClickListener { onBehaviorClick(student, "POSITIVE") }
+                    layoutBehaviorPos.setOnClickListener { onBehaviorClick(student, "POSITIVE") }
                 } else {
-                    behaviorPosTextView.visibility = View.GONE
+                    layoutBehaviorPos.visibility = View.GONE
                 }
 
                 if (stats.behaviorNegative != 0) {
-                    behaviorNegTextView.visibility = View.VISIBLE
-                    behaviorNegTextView.text = stats.behaviorNegative.toString()
-                    behaviorNegTextView.setOnClickListener { onBehaviorClick(student, "NEGATIVE") }
+                    layoutBehaviorNeg.visibility = View.VISIBLE
+                    behaviorNegTextView.text = kotlin.math.abs(stats.behaviorNegative).toString()
+                    layoutBehaviorNeg.setOnClickListener { onBehaviorClick(student, "NEGATIVE") }
                 } else {
-                    behaviorNegTextView.visibility = View.GONE
+                    layoutBehaviorNeg.visibility = View.GONE
                 }
 
                 // Show report button if any absence
@@ -318,14 +331,47 @@ class StudentAdapter(
                 layoutStatsCours.visibility = View.GONE
                 layoutStatsTD.visibility = View.GONE
                 layoutStatsTP.visibility = View.GONE
-                behaviorPosTextView.visibility = View.GONE
-                behaviorNegTextView.visibility = View.GONE
+                layoutBehaviorPos.visibility = View.GONE
+                layoutBehaviorNeg.visibility = View.GONE
                 btnReport.visibility = View.GONE
                 btnGrades.visibility = View.GONE
             }
             
             btnMoreOptions.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
             btnMoreOptions.setOnClickListener { onStudentClick(student) }
+            
+            // Hide empty rows to reduce visual clutter
+            val row1HasContent = layoutStatsTD.visibility == View.VISIBLE || layoutStatsTP.visibility == View.VISIBLE
+            layoutRow1.visibility = if (row1HasContent) View.VISIBLE else View.GONE
+            
+            val row2HasContent = layoutStatsCours.visibility == View.VISIBLE || 
+                                 layoutBehaviorPos.visibility == View.VISIBLE || 
+                                 layoutBehaviorNeg.visibility == View.VISIBLE
+            layoutRow2.visibility = if (row2HasContent) View.VISIBLE else View.GONE
+            
+            val actionsHasContent = btnReport.visibility == View.VISIBLE || btnGrades.visibility == View.VISIBLE
+            layoutActions.visibility = if (actionsHasContent) View.VISIBLE else View.GONE
         }
+    }
+}
+
+// DiffUtil Callback for efficient list updates
+class StudentDiffCallback(
+    private val oldList: List<StudentEntity>,
+    private val newList: List<StudentEntity>
+) : DiffUtil.Callback() {
+    
+    override fun getOldListSize(): Int = oldList.size
+    
+    override fun getNewListSize(): Int = newList.size
+    
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
+    }
+    
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+        return oldItem == newItem
     }
 }

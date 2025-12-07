@@ -46,6 +46,10 @@ class AdditioViewModelFactory(private val repository: AppRepository) : ViewModel
             @Suppress("UNCHECKED_CAST")
             return com.example.additioapp.ui.viewmodel.SettingsViewModel(repository) as T
         }
+        if (modelClass.isAssignableFrom(com.example.additioapp.ui.viewmodel.GlobalSearchViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return com.example.additioapp.ui.viewmodel.GlobalSearchViewModel(repository) as T
+        }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

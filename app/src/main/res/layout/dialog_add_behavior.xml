@@ -24,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Behavior"
+            android:text="@string/dialog_add_behavior"
             android:textAppearance="?attr/textAppearanceHeadlineSmall"
             android:textColor="?attr/colorOnSurface"/>
     </LinearLayout>
@@ -32,7 +32,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Type"
+        android:text="@string/label_type"
         android:textAppearance="?attr/textAppearanceTitleSmall"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:layout_marginBottom="8dp"/>
@@ -49,7 +49,7 @@
             android:id="@+id/chipPositive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Positive (+1)"
+            android:text="@string/label_positive"
             style="@style/Widget.Material3.Chip.Filter"
             android:textColor="#2E7D32"
             app:chipBackgroundColor="@color/selector_chip_positive"
@@ -63,7 +63,7 @@
             android:id="@+id/chipNegative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Negative (-1)"
+            android:text="@string/label_negative"
             style="@style/Widget.Material3.Chip.Filter"
             android:textColor="#C62828"
             app:chipIcon="@drawable/ic_thumb_down_24dp"
@@ -79,7 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:hint="Category"
+        android:hint="@string/hint_category"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -87,13 +87,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
-            android:text="Active Participation" />
+            android:text="@string/label_active_participation" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Comment (Optional)"
+        android:hint="@string/hint_comment_optional"
         app:startIconDrawable="@drawable/ic_comment_24dp"
         app:startIconTint="?attr/colorOnSurfaceVariant"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">

@@ -9,7 +9,7 @@
         android:id="@+id/editClassName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Class Name (e.g., L3 G1)"
+        android:hint="@string/hint_class_name"
         android:inputType="textCapWords" />
 
     <EditText
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Year (e.g., 2024-2025)"
+        android:hint="@string/hint_class_year"
         android:inputType="text" />
 
     <EditText
@@ -25,14 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Location (e.g., Room 101)"
+        android:hint="@string/hint_class_location"
         android:inputType="text" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Semester"
+        android:text="@string/class_semester"
         android:textAppearance="?attr/textAppearanceBodyMedium" />
 
     <com.google.android.material.chip.ChipGroup
@@ -50,14 +50,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Semester 1" />
+            android:text="@string/class_semester_1" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipSemester2"
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Semester 2" />
+            android:text="@string/class_semester_2" />
 
     </com.google.android.material.chip.ChipGroup>
 

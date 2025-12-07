@@ -45,6 +45,7 @@ class BehaviorFragment : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewBehavior)
         val btnSort = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSort)
+        val btnFilter = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnFilter)
         val textTotalStudents = view.findViewById<android.widget.TextView>(R.id.textTotalStudents)
         val editSearch = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.editSearchStudent)
 
@@ -59,6 +60,7 @@ class BehaviorFragment : Fragment() {
         var currentStudents: List<com.example.additioapp.data.model.StudentEntity> = emptyList()
         var currentBehaviors: List<com.example.additioapp.data.model.BehaviorRecordEntity> = emptyList()
         var sortMode = "NAME_ASC" // NAME_ASC, NAME_DESC, ID_ASC
+        var filterMode = "ALL" // ALL, POSITIVE, NEGATIVE
         var searchQuery = ""
 
         fun updateList() {
@@ -73,11 +75,18 @@ class BehaviorFragment : Fragment() {
                 StudentBehaviorItem(student, positive, negative)
             }
 
+            // Apply behavior filter
+            val filteredItems = when (filterMode) {
+                "POSITIVE" -> items.filter { it.positivePoints != 0 }
+                "NEGATIVE" -> items.filter { it.negativePoints != 0 }
+                else -> items // ALL
+            }
+
             val sortedItems = when (sortMode) {
-                "NAME_ASC" -> items.sortedBy { it.student.name }
-                "NAME_DESC" -> items.sortedByDescending { it.student.name }
-                "ID_ASC" -> items.sortedBy { it.student.id }
-                else -> items
+                "NAME_ASC" -> filteredItems.sortedBy { it.student.name }
+                "NAME_DESC" -> filteredItems.sortedByDescending { it.student.name }
+                "ID_ASC" -> filteredItems.sortedBy { it.student.id }
+                else -> filteredItems
             }
 
             adapter.submitList(sortedItems)
@@ -90,6 +99,13 @@ class BehaviorFragment : Fragment() {
                 else -> "Sort"
             }
             btnSort.text = sortText
+
+            val filterText = when (filterMode) {
+                "POSITIVE" -> "Pos"
+                "NEGATIVE" -> "Neg"
+                else -> "All"
+            }
+            btnFilter.text = filterText
         }
 
         btnSort.setOnClickListener {
@@ -102,6 +118,22 @@ class BehaviorFragment : Fragment() {
                         1 -> "NAME_DESC"
                         2 -> "ID_ASC"
                         else -> "NAME_ASC"
+                    }
+                    updateList()
+                }
+                .show()
+        }
+
+        btnFilter.setOnClickListener {
+            val options = arrayOf("All Students", "Positive Behavior (≠0)", "Negative Behavior (≠0)")
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Filter Students By Behavior")
+                .setItems(options) { _, which ->
+                    filterMode = when (which) {
+                        0 -> "ALL"
+                        1 -> "POSITIVE"
+                        2 -> "NEGATIVE"
+                        else -> "ALL"
                     }
                     updateList()
                 }

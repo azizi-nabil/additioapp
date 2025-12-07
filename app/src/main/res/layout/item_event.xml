@@ -51,6 +51,17 @@
                     android:textColor="?attr/colorOnSurfaceVariant"
                     android:text="09:00 - 10:30"/>
 
+                <ImageView
+                    android:id="@+id/iconRecurrence"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_repeat"
+                    app:tint="?attr/colorOnSurfaceVariant"
+                    android:visibility="gone"
+                    android:contentDescription="Recurring event"/>
+
                 <TextView
                     android:id="@+id/textEventType"
                     android:layout_width="wrap_content"

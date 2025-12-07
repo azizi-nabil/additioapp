@@ -40,6 +40,16 @@ class HomeFragment : Fragment() {
     }
 
     private var classLookup: Map<Long, ClassEntity> = emptyMap()
+    
+    // Expansion state for lists
+    private var isTasksExpanded = false
+    private var isEventsExpanded = false
+    private var isClassesExpanded = false
+    
+    // Store data for re-rendering
+    private var cachedTasks: List<TaskEntity> = emptyList()
+    private var cachedEvents: List<EventEntity> = emptyList()
+    private var cachedScheduleItems: List<ScheduleItemEntity> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -143,7 +153,8 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.classesFragment)
         }
         view.findViewById<View>(R.id.cardTasks).setOnClickListener {
-            findNavController().navigate(R.id.plannerFragment)
+            val bundle = Bundle().apply { putInt("tabIndex", 1) } // Tasks tab
+            findNavController().navigate(R.id.plannerFragment, bundle)
         }
 
         btnViewSchedule.setOnClickListener {
@@ -169,17 +180,35 @@ class HomeFragment : Fragment() {
                 repository.getScheduleItemsForDaySync(dayOfWeek)
             }
 
-            if (scheduleItems.isEmpty()) {
-                addEmptyState(container, "No classes scheduled for today", "🎉")
-                return@launch
-            }
+            cachedScheduleItems = scheduleItems
+            renderScheduleItems(container, scheduleItems)
+        }
+    }
+    
+    private fun renderScheduleItems(container: LinearLayout, scheduleItems: List<ScheduleItemEntity>) {
+        container.removeAllViews()
+        
+        if (scheduleItems.isEmpty()) {
+            addEmptyState(container, "No classes scheduled for today", "🎉")
+            return
+        }
+        
+        val itemsToShow = if (isClassesExpanded) scheduleItems else scheduleItems.take(4)
+        itemsToShow.forEach { item ->
+            addScheduleItemRow(container, item)
+        }
 
-            scheduleItems.take(4).forEach { item ->
-                addScheduleItemRow(container, item)
-            }
-
-            if (scheduleItems.size > 4) {
-                addMoreIndicator(container, scheduleItems.size - 4, "more classes")
+        if (scheduleItems.size > 4) {
+            if (isClassesExpanded) {
+                addCollapseIndicator(container, "classes") {
+                    isClassesExpanded = false
+                    renderScheduleItems(container, scheduleItems)
+                }
+            } else {
+                addExpandIndicator(container, scheduleItems.size - 4, "more classes") {
+                    isClassesExpanded = true
+                    renderScheduleItems(container, scheduleItems)
+                }
             }
         }
     }
@@ -202,6 +231,14 @@ class HomeFragment : Fragment() {
             roomView.visibility = View.GONE
         }
         
+        // Click to go to schedule
+        row.setOnClickListener {
+            val bundle = Bundle().apply { 
+                putInt("tabIndex", 2) // Schedule tab
+            }
+            findNavController().navigate(R.id.plannerFragment, bundle)
+        }
+        
         container.addView(row)
     }
 
@@ -222,18 +259,36 @@ class HomeFragment : Fragment() {
                 repository.getEventsInRangeSync(today.timeInMillis, endDate.timeInMillis)
             }
 
-            if (events.isEmpty()) {
-                addEmptyState(container, "No upcoming events this week", "📭")
-                return@launch
-            }
+            cachedEvents = events
+            renderEvents(container, events)
+        }
+    }
+    
+    private fun renderEvents(container: LinearLayout, events: List<EventEntity>) {
+        container.removeAllViews()
+        
+        if (events.isEmpty()) {
+            addEmptyState(container, "No upcoming events this week", "📭")
+            return
+        }
 
-            val dateFormat = SimpleDateFormat("EEE, MMM d", Locale.getDefault())
-            events.take(4).forEach { event ->
-                addEventRow(container, event, dateFormat)
-            }
+        val dateFormat = SimpleDateFormat("EEE, MMM d", Locale.getDefault())
+        val eventsToShow = if (isEventsExpanded) events else events.take(4)
+        eventsToShow.forEach { event ->
+            addEventRow(container, event, dateFormat)
+        }
 
-            if (events.size > 4) {
-                addMoreIndicator(container, events.size - 4, "more events")
+        if (events.size > 4) {
+            if (isEventsExpanded) {
+                addCollapseIndicator(container, "events") {
+                    isEventsExpanded = false
+                    renderEvents(container, events)
+                }
+            } else {
+                addExpandIndicator(container, events.size - 4, "more events") {
+                    isEventsExpanded = true
+                    renderEvents(container, events)
+                }
             }
         }
     }
@@ -260,10 +315,22 @@ class HomeFragment : Fragment() {
         typeView.text = event.eventType
         typeView.visibility = View.VISIBLE
         
+        // Click to go to events
+        row.setOnClickListener {
+            val bundle = Bundle().apply { 
+                putInt("tabIndex", 0) // Events tab
+            }
+            findNavController().navigate(R.id.plannerFragment, bundle)
+        }
+        
         container.addView(row)
     }
-
     private fun loadPendingTasks(container: LinearLayout, tasks: List<TaskEntity>) {
+        cachedTasks = tasks
+        renderTasks(container, tasks)
+    }
+    
+    private fun renderTasks(container: LinearLayout, tasks: List<TaskEntity>) {
         container.removeAllViews()
 
         if (tasks.isEmpty()) {
@@ -274,12 +341,23 @@ class HomeFragment : Fragment() {
         val dateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
         // Sort by due date - nearest first
         val sortedTasks = tasks.sortedBy { it.dueDate }
-        sortedTasks.take(4).forEach { task ->
+        val tasksToShow = if (isTasksExpanded) sortedTasks else sortedTasks.take(4)
+        tasksToShow.forEach { task ->
             addTaskRow(container, task, dateFormat)
         }
 
         if (sortedTasks.size > 4) {
-            addMoreIndicator(container, sortedTasks.size - 4, "more tasks")
+            if (isTasksExpanded) {
+                addCollapseIndicator(container, "tasks") {
+                    isTasksExpanded = false
+                    renderTasks(container, tasks)
+                }
+            } else {
+                addExpandIndicator(container, sortedTasks.size - 4, "more tasks") {
+                    isTasksExpanded = true
+                    renderTasks(container, tasks)
+                }
+            }
         }
     }
 
@@ -308,6 +386,14 @@ class HomeFragment : Fragment() {
         priorityView.text = task.priority
         priorityView.visibility = View.VISIBLE
         
+        // Click to go to tasks
+        row.setOnClickListener {
+            val bundle = Bundle().apply { 
+                putInt("tabIndex", 1) // Tasks tab
+            }
+            findNavController().navigate(R.id.plannerFragment, bundle)
+        }
+        
         container.addView(row)
     }
 
@@ -329,6 +415,46 @@ class HomeFragment : Fragment() {
         }
         row.findViewById<TextView>(R.id.textRowMeta).visibility = View.GONE
         row.findViewById<TextView>(R.id.textRowExtra).visibility = View.GONE
+        
+        // Add click handler to navigate to Planner
+        row.setOnClickListener {
+            val tabIndex = when {
+                label.contains("events") -> 0
+                label.contains("tasks") -> 1
+                else -> 0
+            }
+            val bundle = Bundle().apply {
+                putInt("tabIndex", tabIndex)
+            }
+            findNavController().navigate(R.id.plannerFragment, bundle)
+        }
+        
+        container.addView(row)
+    }
+    
+    private fun addExpandIndicator(container: LinearLayout, count: Int, label: String, onClick: () -> Unit) {
+        val row = layoutInflater.inflate(R.layout.item_home_row, container, false)
+        row.findViewById<View>(R.id.colorIndicator).visibility = View.INVISIBLE
+        row.findViewById<TextView>(R.id.textRowTitle).apply {
+            text = "+$count $label"
+            setTextColor(Color.parseColor("#2196F3"))
+        }
+        row.findViewById<TextView>(R.id.textRowMeta).visibility = View.GONE
+        row.findViewById<TextView>(R.id.textRowExtra).visibility = View.GONE
+        row.setOnClickListener { onClick() }
+        container.addView(row)
+    }
+    
+    private fun addCollapseIndicator(container: LinearLayout, label: String, onClick: () -> Unit) {
+        val row = layoutInflater.inflate(R.layout.item_home_row, container, false)
+        row.findViewById<View>(R.id.colorIndicator).visibility = View.INVISIBLE
+        row.findViewById<TextView>(R.id.textRowTitle).apply {
+            text = "Show less $label ▲"
+            setTextColor(Color.parseColor("#757575"))
+        }
+        row.findViewById<TextView>(R.id.textRowMeta).visibility = View.GONE
+        row.findViewById<TextView>(R.id.textRowExtra).visibility = View.GONE
+        row.setOnClickListener { onClick() }
         container.addView(row)
     }
 }

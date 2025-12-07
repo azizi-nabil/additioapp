@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.additioapp"
         minSdk = 24
         targetSdk = 34
-        versionCode = 5
-        versionName = "2.2.1"
+        versionCode = 7
+        versionName = "2.3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -50,6 +50,11 @@ dependencies {
     val navVersion = "2.7.7"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+    // CSV parsing
+    implementation("com.opencsv:opencsv:5.7.1")
+
+    // PDF generation
+    implementation("com.tom-roush:pdfbox-android:2.0.27.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

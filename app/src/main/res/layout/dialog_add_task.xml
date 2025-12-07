@@ -13,7 +13,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Task Title *"
+            android:hint="@string/hint_task_title"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="Description"
+            android:hint="@string/label_description"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Due Date (optional)"
+            android:text="@string/label_due_date_optional"
             android:textSize="12sp"
             android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -54,15 +54,53 @@
             android:padding="12dp"
             android:background="?attr/selectableItemBackground"
             android:drawableEnd="@android:drawable/ic_menu_my_calendar"
-            android:text="No due date"
+            android:text="@string/label_no_due_date"
             android:textSize="16sp"/>
+            
+        <!-- Quick Date Shortcuts -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+            
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnToday"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="@string/label_today"
+                android:textSize="11sp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTomorrow"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                android:text="@string/label_tomorrow"
+                android:textSize="11sp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNextWeek"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:text="@string/label_next_week"
+                android:textSize="11sp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+        </LinearLayout>
 
         <!-- Priority -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Priority"
+            android:text="@string/label_priority"
             android:textSize="12sp"
             android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -78,14 +116,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Low"/>
+                android:text="@string/label_low"/>
 
             <RadioButton
                 android:id="@+id/radioMedium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Medium"
+                android:text="@string/label_medium"
                 android:checked="true"/>
 
             <RadioButton
@@ -93,23 +131,36 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="High"/>
+                android:text="@string/label_high"/>
         </RadioGroup>
 
-        <!-- Link to Class -->
+        <!-- Link to Classes (multi-select) -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Link to Class (optional)"
+            android:text="@string/label_link_classes_optional"
             android:textSize="12sp"
             android:textColor="?attr/colorOnSurfaceVariant"/>
 
-        <Spinner
-            android:id="@+id/spinnerTaskClass"
+        <TextView
+            android:id="@+id/btnSelectClasses"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="4dp"/>
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/action_tap_select_classes"
+            android:textSize="14sp"
+            android:drawableEnd="@drawable/ic_expand_more"/>
+            
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupClasses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:chipSpacingHorizontal="8dp"/>
 
     </LinearLayout>
 </ScrollView>

@@ -12,7 +12,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp">
 
         <!-- Checkbox for selection (hidden by default) -->
         <CheckBox
@@ -61,7 +62,7 @@
             android:text="Student Name"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="?attr/colorOnSurface"
             app:layout_constraintStart_toEndOf="@id/imgAvatar"
             app:layout_constraintTop_toTopOf="@id/imgAvatar"
             app:layout_constraintEnd_toStartOf="@id/btnMoreOptions" />
@@ -129,8 +130,8 @@
 
                 <TextView
                     android:id="@+id/badgeTD"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:text="TD"
                     android:gravity="center"
                     android:background="@drawable/bg_badge_soft_red"
@@ -160,8 +161,8 @@
 
                 <TextView
                     android:id="@+id/badgeTP"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:text="TP"
                     android:gravity="center"
                     android:background="@drawable/bg_badge_soft_red"
@@ -178,21 +179,6 @@
                     android:textColor="?attr/colorOnSurface"
                     android:textSize="12sp"/>
             </LinearLayout>
-
-            <!-- Behavior Negative (thumbs down - in red line) -->
-            <TextView
-                android:id="@+id/textStudentBehaviorNeg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/holo_red_dark"
-                app:drawableStartCompat="@drawable/ic_thumb_down_24dp"
-                android:drawablePadding="4dp"
-                app:drawableTint="@android:color/holo_red_dark"
-                android:gravity="center_vertical"
-                android:visibility="gone"/>
         </LinearLayout>
 
         <!-- LINE 2: C (Cours) and Good Behavior (all positive/green) -->
@@ -219,8 +205,8 @@
 
                 <TextView
                     android:id="@+id/badgeCours"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:text="C"
                     android:gravity="center"
                     android:background="@drawable/bg_badge_soft_green"
@@ -238,20 +224,58 @@
                     android:textSize="12sp"/>
             </LinearLayout>
 
-            <!-- Behavior Positive (thumbs up - in green line) -->
-            <TextView
-                android:id="@+id/textStudentBehaviorPos"
+            <!-- Behavior Positive: Icon + Count -->
+            <LinearLayout
+                android:id="@+id/layoutBehaviorPos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/holo_green_dark"
-                app:drawableStartCompat="@drawable/ic_thumb_up_24dp"
-                android:drawablePadding="4dp"
-                app:drawableTint="@android:color/holo_green_dark"
+                android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:visibility="gone"/>
+                android:layout_marginEnd="8dp"
+                android:visibility="gone">
+                
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_thumb_up_24dp"
+                    app:tint="@android:color/holo_green_dark"/>
+                
+                <TextView
+                    android:id="@+id/textStudentBehaviorPos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:layout_marginStart="2dp"/>
+            </LinearLayout>
+
+            <!-- Behavior Negative: Icon + Count -->
+            <LinearLayout
+                android:id="@+id/layoutBehaviorNeg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+                
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_thumb_down_24dp"
+                    app:tint="@android:color/holo_red_dark"/>
+                
+                <TextView
+                    android:id="@+id/textStudentBehaviorNeg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:layout_marginStart="2dp"/>
+            </LinearLayout>
         </LinearLayout>
 
         <!-- LINE 3: Report and Marks Buttons -->
@@ -261,7 +285,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="start|center_vertical"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="2dp"
             app:layout_constraintStart_toStartOf="@id/textStudentName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutRow2">
@@ -271,12 +295,12 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Report"
+                android:text="@string/action_report"
                 android:textSize="12sp"
                 android:minWidth="0dp"
                 android:paddingHorizontal="8dp"
                 app:icon="@drawable/ic_assignment"
-                app:iconSize="16dp"
+                app:iconSize="18dp"
                 android:visibility="gone"/>
 
             <com.google.android.material.button.MaterialButton
@@ -284,12 +308,12 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Marks"
+                android:text="@string/action_marks"
                 android:textSize="12sp"
                 android:minWidth="0dp"
                 android:paddingHorizontal="8dp"
                 app:icon="@drawable/ic_grade"
-                app:iconSize="16dp"
+                app:iconSize="18dp"
                 android:visibility="gone"/>
         </LinearLayout>
 

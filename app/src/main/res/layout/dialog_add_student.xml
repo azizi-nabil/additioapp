@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Student Details"
+            android:text="@string/dialog_student_details"
             android:textAppearance="?attr/textAppearanceHeadlineSmall"
             android:textColor="?attr/colorOnSurface"
             android:layout_marginBottom="16dp"/>
@@ -22,7 +22,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Matricule"
+            android:hint="@string/label_matricule"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:startIconDrawable="@drawable/ic_classes"
             app:startIconTint="?attr/colorOnSurfaceVariant">
@@ -38,7 +38,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="French Name"
+            android:text="@string/label_french_name"
             android:textAppearance="?attr/textAppearanceLabelMedium"
             android:textColor="?attr/colorPrimary"
             android:layout_marginTop="16dp"
@@ -53,7 +53,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:hint="Last Name"
+                android:hint="@string/label_last_name"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -68,7 +68,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:hint="First Name"
+                android:hint="@string/label_first_name"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -83,7 +83,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Arabic Name (Optional)"
+            android:text="@string/label_arabic_name_optional"
             android:textAppearance="?attr/textAppearanceLabelMedium"
             android:textColor="?attr/colorPrimary"
             android:layout_marginTop="16dp"
@@ -130,7 +130,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📝 Private Notes (Optional)"
+            android:text="@string/label_private_notes_optional"
             android:textAppearance="?attr/textAppearanceLabelMedium"
             android:textColor="?attr/colorPrimary"
             android:layout_marginTop="16dp"
@@ -139,7 +139,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Notes about this student..."
+            android:hint="@string/hint_student_notes"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText

@@ -1,0 +1,343 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">TeacherHub</string>
+    
+    <!-- Common Actions -->
+    <string name="action_add">إضافة</string>
+    <string name="action_edit">تعديل</string>
+    <string name="action_delete">حذف</string>
+    <string name="action_save">حفظ</string>
+    <string name="action_cancel">إلغاء</string>
+    <string name="action_close">إغلاق</string>
+    <string name="action_search">بحث</string>
+    <string name="action_filter">تصفية</string>
+    <string name="action_sort">ترتيب</string>
+    <string name="action_export">تصدير</string>
+    <string name="action_import">استيراد</string>
+    <string name="action_backup">نسخ احتياطي</string>
+    <string name="action_restore">استعادة</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_classes">الفصول</string>
+    <string name="nav_students">الطلاب</string>
+    <string name="nav_planner">المخطط</string>
+    <string name="nav_analytics">التحليلات</string>
+    
+    <!-- Home Screen -->
+    <string name="home_welcome">مرحباً بعودتك!</string>
+    <string name="home_quick_actions">إجراءات سريعة</string>
+    <string name="home_upcoming_events">الأحداث القادمة</string>
+    <string name="home_recent_activity">النشاط الأخير</string>
+    <string name="home_no_events">لا توجد أحداث قادمة</string>
+    
+    <!-- Classes -->
+    <string name="classes_title">الفصول</string>
+    <string name="classes_add">إضافة فصل</string>
+    <string name="classes_empty">لا توجد فصول. اضغط + لإضافة فصلك الأول.</string>
+    <string name="class_name">اسم الفصل</string>
+    <string name="class_name_hint">مثال: رياضيات أ</string>
+    <string name="class_level">المستوى</string>
+    <string name="class_level_hint">مثال: السنة الثانية</string>
+    <string name="class_semester">الفصل الدراسي</string>
+    <string name="class_semester_1">الفصل الأول</string>
+    <string name="class_semester_2">الفصل الثاني</string>
+    <string name="class_students_count">%d طالب</string>
+    <string name="class_delete_confirm">حذف هذا الفصل وجميع بياناته؟</string>
+    <string name="hint_class_name">اسم الفصل (مثال: L3 G1)</string>
+    <string name="hint_class_year">السنة (مثال: 2024-2025)</string>
+    <string name="hint_class_location">المكان (مثال: القاعة 101)</string>
+    
+    <!-- Students -->
+    <string name="students_title">الطلاب</string>
+    <string name="students_add">إضافة طالب</string>
+    <string name="students_import">استيراد من CSV</string>
+    <string name="students_export">تصدير إلى CSV</string>
+    <string name="students_empty">لا يوجد طلاب في هذا الفصل</string>
+    <string name="student_name_fr">الاسم (فرنسي)</string>
+    <string name="student_name_ar">الاسم (عربي)</string>
+    <string name="student_id">رقم الطالب</string>
+    <string name="student_id_hint">رقم التسجيل</string>
+    <string name="student_email">البريد الإلكتروني</string>
+    <string name="student_phone">الهاتف</string>
+    <string name="student_delete_confirm">حذف هذا الطالب؟</string>
+    
+    <!-- Student Dialog Labels -->
+    <string name="dialog_student_details">تفاصيل الطالب</string>
+    <string name="label_matricule">رقم التسجيل</string>
+    <string name="label_french_name">الاسم بالفرنسية</string>
+    <string name="label_first_name">الاسم الأول</string>
+    <string name="label_last_name">اللقب</string>
+    <string name="label_arabic_name_optional">الاسم بالعربية (اختياري)</string>
+    <string name="label_private_notes_optional">📝 ملاحظات خاصة (اختياري)</string>
+    <string name="hint_student_notes">ملاحظات حول هذا الطالب...</string>
+    
+    <!-- Attendance -->
+    <string name="attendance_title">الحضور</string>
+    <string name="attendance_session">الحصة:</string>
+    <string name="attendance_date">التاريخ</string>
+    <string name="attendance_status">الحالة</string>
+    <string name="attendance_present">حاضر</string>
+    <string name="attendance_absent">غائب</string>
+    <string name="attendance_late">متأخر</string>
+    <string name="attendance_excused">غياب مبرر</string>
+    <string name="attendance_justified_late">تأخر مبرر</string>
+    <string name="attendance_comment">ملاحظة</string>
+    <string name="attendance_mark_all_present">الكل ✓</string>
+    <string name="attendance_mark_all_absent">الكل ✗</string>
+    <string name="attendance_clear">مسح</string>
+    <string name="attendance_summary">حاضر: %1$d | غائب: %2$d | متأخر: %3$d</string>
+    <string name="attendance_today">اليوم</string>
+    <string name="attendance_history">السجل</string>
+    <string name="attendance_export">تصدير CSV</string>
+    
+    <!-- Session Types -->
+    <string name="session_type_td">TD</string>
+    <string name="session_type_tp">TP</string>
+    <string name="session_type_course">محاضرة</string>
+    <string name="session_type_exam">امتحان</string>
+    
+    <!-- Grades -->
+    <string name="grades_title">الدرجات</string>
+    <string name="grades_add_item">إضافة درجة</string>
+    <string name="grades_category">الفئة</string>
+    <string name="grades_weight">المعامل</string>
+    <string name="grades_max_score">الدرجة القصوى</string>
+    <string name="grades_average">المعدل</string>
+    <string name="grades_empty">لا توجد درجات مسجلة</string>
+    
+    <!-- Grade Categories -->
+    <string name="grade_category_exam">امتحان</string>
+    <string name="grade_category_cc">CC</string>
+    <string name="grade_category_test">اختبار</string>
+    <string name="grade_category_homework">واجب منزلي</string>
+    <string name="grade_category_project">مشروع</string>
+    <string name="grade_category_other">أخرى</string>
+    
+    <!-- Behavior -->
+    <string name="behavior_title">السلوك</string>
+    <string name="behavior_add">إضافة سلوك</string>
+    <string name="behavior_positive">إيجابي</string>
+    <string name="behavior_negative">سلبي</string>
+    <string name="behavior_points">النقاط</string>
+    <string name="behavior_comment">ملاحظة</string>
+    <string name="behavior_empty">لم يتم العثور على سجلات سلوك.</string>
+    
+    <!-- Planner -->
+    <string name="planner_title">المخطط</string>
+    <string name="planner_events">الأحداث</string>
+    <string name="planner_tasks">المهام</string>
+    <string name="planner_schedule">الجدول الزمني</string>
+    <string name="planner_today">اليوم</string>
+    <string name="planner_no_events">📅 لا توجد أحداث لهذا اليوم\n\nاضغط + لإضافة حدث</string>
+    <string name="planner_no_tasks">لا توجد مهام</string>
+    
+    <!-- Calendar -->
+    <string name="calendar_sun">الأحد</string>
+    <string name="calendar_mon">الاثنين</string>
+    <string name="calendar_tue">الثلاثاء</string>
+    <string name="calendar_wed">الأربعاء</string>
+    <string name="calendar_thu">الخميس</string>
+    <string name="calendar_fri">الجمعة</string>
+    <string name="calendar_sat">السبت</string>
+    
+    <!-- Events -->
+    <string name="event_title">العنوان</string>
+    <string name="event_description">الوصف</string>
+    <string name="event_date">التاريخ</string>
+    <string name="event_time">الوقت</string>
+    <string name="event_start_time">وقت البداية</string>
+    <string name="event_end_time">وقت النهاية</string>
+    <string name="event_all_day">طوال اليوم</string>
+    <string name="event_type">نوع الحدث</string>
+    <string name="event_recurrence">التكرار</string>
+    <string name="event_recurrence_none">بدون</string>
+    <string name="event_recurrence_daily">يومي</string>
+    <string name="event_recurrence_weekly">أسبوعي</string>
+    <string name="event_recurrence_biweekly">كل أسبوعين</string>
+    <string name="event_recurrence_monthly">شهري</string>
+    <string name="event_recurrence_yearly">سنوي</string>
+    
+    <!-- Tasks -->
+    <string name="task_title">المهمة</string>
+    <string name="task_description">الوصف</string>
+    <string name="task_due_date">تاريخ الاستحقاق</string>
+    <string name="task_priority">الأولوية</string>
+    <string name="task_priority_low">منخفضة</string>
+    <string name="task_priority_medium">متوسطة</string>
+    <string name="task_priority_high">عالية</string>
+    <string name="task_completed">مكتملة</string>
+    <string name="task_pending">قيد الانتظار</string>
+    
+    <!-- Schedule -->
+    <string name="schedule_title">الجدول الزمني</string>
+    <string name="schedule_add">إضافة عنصر</string>
+    <string name="schedule_day">يوم الأسبوع</string>
+    <string name="schedule_start_time">وقت البداية</string>
+    <string name="schedule_end_time">وقت النهاية</string>
+    <string name="schedule_session_type">نوع الحصة</string>
+    <string name="schedule_classes">الفصول</string>
+    <string name="schedule_select_classes">اضغط لاختيار الفصول...</string>
+    
+    <!-- Analytics -->
+    <string name="analytics_title">التحليلات</string>
+    <string name="analytics_attendance_rate">معدل الحضور</string>
+    <string name="analytics_average_grade">المعدل العام</string>
+    <string name="analytics_at_risk">الطلاب المعرضون للخطر</string>
+    <string name="analytics_export_pdf">تصدير PDF</string>
+    <string name="analytics_export_excel">تصدير Excel</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_backup_data">نسخ احتياطي للبيانات</string>
+    <string name="settings_restore_data">استعادة البيانات</string>
+    <string name="settings_name_language">عرض أسماء الطلاب</string>
+    <string name="settings_sort_order">ترتيب افتراضي</string>
+    <string name="settings_list_size">حجم القائمة</string>
+    <string name="settings_customization">التخصيص</string>
+    
+    <!-- Sort Options -->
+    <string name="sort_by_name_asc">أ-ي</string>
+    <string name="sort_by_name_desc">ي-أ</string>
+    <string name="sort_by_id">حسب الرقم</string>
+    <string name="sort_by_lastname">حسب اسم العائلة</string>
+    <string name="sort_by_firstname">حسب الاسم الأول</string>
+    
+    <!-- List Size Options -->
+    <string name="list_size_compact">مضغوطة</string>
+    <string name="list_size_normal">عادية</string>
+    <string name="list_size_comfortable">مريحة</string>
+    
+    <!-- Filter Options -->
+    <string name="filter_all">الكل</string>
+    <string name="filter_positive">إيجابي</string>
+    <string name="filter_negative">سلبي</string>
+    
+    <!-- Dialogs -->
+    <string name="dialog_delete_title">حذف</string>
+    <string name="dialog_delete_message">هل أنت متأكد؟</string>
+    <string name="dialog_restore_title">استعادة البيانات</string>
+    <string name="dialog_restore_message">سيؤدي استيراد البيانات إلى استبدال السجلات الموجودة. هل أنت متأكد من أنك تريد المتابعة؟</string>
+    
+    <!-- Messages -->
+    <string name="message_saved">تم الحفظ</string>
+    <string name="message_deleted">تم الحذف</string>
+    <string name="message_error">حدث خطأ</string>
+    <string name="message_no_data">لا توجد بيانات متاحة</string>
+    <string name="message_loading">جاري التحميل...</string>
+    
+    <!-- Validation -->
+    <string name="validation_required">حقل مطلوب</string>
+    <string name="validation_invalid_email">بريد إلكتروني غير صالح</string>
+    <string name="validation_invalid_phone">رقم هاتف غير صالح</string>
+    
+    <!-- Import/Export -->
+    <string name="import_success">تم استيراد %d طالب</string>
+    <string name="import_error">فشل الاستيراد: %s</string>
+    <string name="export_success">تم تصدير %d طالب</string>
+    <string name="export_error">فشل التصدير: %s</string>
+    <string name="backup_success">تم النسخ الاحتياطي بنجاح</string>
+    <string name="backup_error">فشل النسخ الاحتياطي: %s</string>
+    <string name="restore_success">تمت استعادة البيانات بنجاح</string>
+    <string name="restore_error">فشلت الاستعادة: %s</string>
+    
+    <!-- Schedule Dialog -->
+    <string name="label_classes">الفصول</string>
+    <string name="hint_select_classes">اضغط لاختيار الفصول...</string>
+    <string name="label_day_of_week_required">يوم الأسبوع *</string>
+    <string name="label_start_time_required">وقت البدء *</string>
+    <string name="label_end_time_required">وقت الانتهاء *</string>
+    <string name="label_session_type">نوع الجلسة</string>
+    <string name="hint_room_location">القاعة / الموقع</string>
+    
+    <!-- Event Dialog -->
+    <string name="hint_event_title">عنوان الحدث *</string>
+    <string name="label_description">الوصف</string>
+    <string name="label_date">التاريخ</string>
+    <string name="action_select_date">اختر التاريخ</string>
+    <string name="label_all_day_event">حدث طوال اليوم</string>
+    <string name="label_start_time">وقت البداية</string>
+    <string name="label_end_time">وقت النهاية</string>
+    <string name="label_event_type">نوع الحدث</string>
+    <string name="label_repeat">تكرار</string>
+    <string name="label_link_classes_optional">ربط بالفصول (اختياري)</string>
+    <string name="action_tap_select_classes">اضغط لاختيار الفصول...</string>
+    
+    <!-- Task Dialog -->
+    <string name="hint_task_title">عنوان المهمة *</string>
+    <string name="label_due_date_optional">تاريخ الاستحقاق (اختياري)</string>
+    <string name="label_no_due_date">بدون تاريخ استحقاق</string>
+    <string name="label_today">اليوم</string>
+    <string name="label_tomorrow">غداً</string>
+    <string name="label_next_week">الأسبوع القادم</string>
+    <string name="label_priority">الأولوية</string>
+    <string name="label_low">منخفضة</string>
+    <string name="label_medium">متوسطة</string>
+    <string name="label_high">عالية</string>
+    
+    <!-- Grade Item Dialog -->
+    <string name="hint_grade_item_name">اسم العنصر (مثال: اختبار 1)</string>
+    <string name="hint_category">الفئة</string>
+    <string name="label_exam">امتحان</string>
+    <string name="hint_max_score">الدرجة القصوى</string>
+    <string name="hint_weight">المعامل</string>
+    <string name="label_calculated_item">عنصر محسوب (صيغة)</string>
+    <string name="hint_formula">صيغة (مثال: max([Item1], [Item2]))</string>
+    
+    <!-- Behavior Dialog -->
+    <string name="dialog_add_behavior">إضافة سلوك</string>
+    <string name="label_type">النوع</string>
+    <string name="label_positive">إيجابي (+1)</string>
+    <string name="label_negative">سلبي (-1)</string>
+    <string name="label_active_participation">مشاركة نشطة</string>
+    <string name="hint_comment_optional">تعليق (اختياري)</string>
+    
+    <!-- Report Dialogs -->
+    <string name="dialog_absence_report">تقرير الغياب</string>
+    <string name="dialog_behavior_report">تقرير السلوك</string>
+    <string name="dialog_grades_report">تقرير الدرجات</string>
+    <string name="label_student_name">اسم الطالب</string>
+    <string name="label_td_absences">غياب TD (%d)</string>
+    <string name="label_tp_absences">غياب TP (%d)</string>
+    <string name="label_cours_absences">غياب المحاضرات (%d)</string>
+    <string name="label_none">لا يوجد</string>
+    <string name="label_no_records_found">لم يتم العثور على سجلات.</string>
+    <string name="label_no_grades_recorded">لا توجد درجات مسجلة.</string>
+    
+    <!-- Import Students Dialog -->
+    <string name="dialog_import_students">📥 استيراد الطلاب من CSV</string>
+    <string name="label_expected_csv_format">📋 تنسيق CSV المتوقع</string>
+    <string name="label_csv_header">Matricule, Nom, Prénom</string>
+    <string name="label_csv_example">202034052475, ABDERREZAK, MAISSOUN</string>
+    <string name="action_view_format_guide">📖 عرض الدليل الكامل</string>
+    <string name="action_select_csv_file">📁 اختر ملف CSV</string>
+    
+    <!-- Item Layout Actions -->
+    <string name="action_report">تقرير</string>
+    <string name="action_marks">الدرجات</string>
+    
+    <!-- Fragment Common Strings -->
+    <string name="hint_search">بحث...</string>
+    <string name="hint_search_students">البحث عن الطلاب...</string>
+    <string name="label_completed">مكتمل</string>
+    <string name="label_this_week">هذا الأسبوع</string>
+    <string name="label_rate">المعدل</string>
+    <string name="label_pending_tasks">📝 المهام المعلقة</string>
+    <string name="label_no_pending_tasks">📝 لا توجد مهام معلقة\n\nاضغط + لإضافة مهمة</string>
+    <string name="label_completed_count">✅ مكتمل (%d)</string>
+    <string name="action_clear_completed">مسح المكتملة</string>
+    <string name="label_no_classes_scheduled">🗓️ لا توجد فصول مجدولة\n\nاضغط + لإضافة فصل</string>
+    <string name="label_no_results_found">لم يتم العثور على نتائج</string>
+    <string name="hint_search_all">البحث عن الطلاب والفصول والأحداث والمهام...</string>
+    <string name="label_all_present">الكل ✓</string>
+    <string name="label_all_absent">الكل ✗</string>
+    <string name="action_clear">مسح</string>
+    <string name="label_overview">نظرة عامة</string>
+    <string name="label_from">من</string>
+    <string name="label_to">إلى</string>
+    <string name="action_take_attendance_today">أخذ الحضور (اليوم)</string>
+    <string name="hint_min">الحد الأدنى</string>
+    <string name="hint_max">الحد الأقصى</string>
+    <string name="label_students_count">%d طالب</string>
+    <string name="label_grade_item_name">اسم عنصر الدرجة</string>
+</resources>

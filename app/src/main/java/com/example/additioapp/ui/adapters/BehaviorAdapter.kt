@@ -43,12 +43,15 @@ class BehaviorAdapter(
             val listSize = prefs.getString("pref_list_size", "normal") ?: "normal"
             
             // Apply list size
-            val nameSize = when (listSize) {
-                "compact" -> 12f
-                "comfortable" -> 16f
-                else -> 14f // normal
+            val (nameSize, padding) = when (listSize) {
+                "compact" -> Pair(12f, 8)
+                "comfortable" -> Pair(16f, 16)
+                else -> Pair(14f, 12) // normal
             }
             textName.textSize = nameSize
+            
+            val paddingPx = (padding * itemView.context.resources.displayMetrics.density).toInt()
+            (itemView as? com.google.android.material.card.MaterialCardView)?.setContentPadding(paddingPx, paddingPx, paddingPx, paddingPx)
             
             // Use proper display name
             val displayName = if (nameLang == "arabic" && !item.student.displayNameAr.isNullOrEmpty()) {
@@ -60,7 +63,7 @@ class BehaviorAdapter(
             textOrder.text = "$orderNumber."
 
             textPositive.text = item.positivePoints.toString()
-            textNegative.text = item.negativePoints.toString()
+            textNegative.text = kotlin.math.abs(item.negativePoints).toString()
             
             itemView.setOnClickListener { onItemClick(item.student) }
         }

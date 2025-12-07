@@ -78,8 +78,8 @@ class AnalyticsFragment : Fragment() {
         val btnExportExcel = view.findViewById<MaterialButton>(R.id.btnExportExcel)
 
         // Setup RecyclerView
-        atRiskAdapter = AtRiskAdapter { student ->
-            val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(student.studentId, student.name)
+        atRiskAdapter = AtRiskAdapter { item ->
+            val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(item.student.id, item.student.name)
             dialog.show(parentFragmentManager, "AbsenceReportDialog")
         }
         recyclerAtRisk.adapter = atRiskAdapter
@@ -228,8 +228,7 @@ class AnalyticsFragment : Fragment() {
 
                 if (isHighRisk || isAtRisk) {
                     atRiskStudents.add(AtRiskStudent(
-                        studentId = student.id,
-                        name = student.name,
+                        student = student,
                         tdUnexcused = tdUnexcused,
                         tdTotal = tdTotal,
                         tpUnexcused = tpUnexcused,

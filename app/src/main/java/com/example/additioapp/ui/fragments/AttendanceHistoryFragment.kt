@@ -42,7 +42,13 @@ class AttendanceHistoryFragment : Fragment() {
     private var classId: Long = -1
     private val calendar = Calendar.getInstance()
     private var startDate: Calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -30) }
-    private var endDate: Calendar = Calendar.getInstance()
+    private var endDate: Calendar = Calendar.getInstance().apply {
+        // Set to end of day to include all sessions created today
+        set(Calendar.HOUR_OF_DAY, 23)
+        set(Calendar.MINUTE, 59)
+        set(Calendar.SECOND, 59)
+        set(Calendar.MILLISECOND, 999)
+    }
     private lateinit var adapter: AttendanceHistoryAdapter
     private var currentSummaries: List<AttendanceSessionSummary> = emptyList()
     private var sortDesc = true
@@ -53,6 +59,14 @@ class AttendanceHistoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             classId = it.getLong("classId")
+        }
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        // Refresh data when returning to this fragment (e.g., after adding attendance)
+        if (::adapter.isInitialized) {
+            loadSummaries()
         }
     }
 

@@ -18,6 +18,7 @@ class ScheduleAdapter(
 
     private var items: List<ScheduleItemEntity> = emptyList()
     private var classInfo: Map<Long, Pair<String, String>> = emptyMap() // classId -> (name, color)
+    private var scheduleClassNames: Map<Long, List<String>> = emptyMap() // scheduleItemId -> [Name1, Name2]
 
     fun submitList(newItems: List<ScheduleItemEntity>) {
         items = newItems
@@ -26,6 +27,11 @@ class ScheduleAdapter(
 
     fun setClassInfo(info: Map<Long, Pair<String, String>>) {
         classInfo = info
+        notifyDataSetChanged()
+    }
+    
+    fun setScheduleClassNames(classNames: Map<Long, List<String>>) {
+        scheduleClassNames = classNames
         notifyDataSetChanged()
     }
 
@@ -50,11 +56,18 @@ class ScheduleAdapter(
         private val btnDelete: ImageButton = itemView.findViewById(R.id.btnDeleteSchedule)
 
         fun bind(item: ScheduleItemEntity) {
-            val info = classInfo[item.classId]
-            textClassName.text = info?.first ?: "Unknown Class"
+            val primaryClassInfo = classInfo[item.classId]
             
-            // Color
-            val color = info?.second ?: "#2196F3"
+            // Display multiple class names if available, otherwise fallback to primary class name
+            val multiClassNames = scheduleClassNames[item.id]
+            if (!multiClassNames.isNullOrEmpty()) {
+                textClassName.text = multiClassNames.joinToString(", ")
+            } else {
+                textClassName.text = primaryClassInfo?.first ?: "Unknown Class"
+            }
+            
+            // Color (use primary class color)
+            val color = primaryClassInfo?.second ?: "#2196F3"
             (colorStrip.background as? GradientDrawable)?.setColor(Color.parseColor(color))
                 ?: colorStrip.setBackgroundColor(Color.parseColor(color))
 

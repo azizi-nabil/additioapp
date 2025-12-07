@@ -17,5 +17,14 @@ data class BackupData(
     val attendanceRecords: List<AttendanceRecordEntity> = emptyList(),
     val gradeItems: List<GradeItemEntity> = emptyList(),
     val gradeRecords: List<GradeRecordEntity> = emptyList(),
-    val behaviorRecords: List<BehaviorRecordEntity> = emptyList()
+    val behaviorRecords: List<BehaviorRecordEntity> = emptyList(),
+    
+    // New fields for Version 2 (Planner & Schedule)
+    val events: List<com.example.additioapp.data.model.EventEntity> = emptyList(),
+    val tasks: List<com.example.additioapp.data.model.TaskEntity> = emptyList(),
+    val scheduleItems: List<com.example.additioapp.data.model.ScheduleItemEntity> = emptyList(),
+    
+    val eventClassRefs: List<com.example.additioapp.data.model.EventClassCrossRef> = emptyList(),
+    val taskClassRefs: List<com.example.additioapp.data.model.TaskClassCrossRef> = emptyList(),
+    val scheduleItemClassRefs: List<com.example.additioapp.data.model.ScheduleItemClassCrossRef> = emptyList()
 )

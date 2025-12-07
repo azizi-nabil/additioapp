@@ -14,6 +14,7 @@
 > Task :app:processDebugMainManifest UP-TO-DATE
 > Task :app:processDebugManifest UP-TO-DATE
 > Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
 > Task :app:javaPreCompileDebug UP-TO-DATE
 > Task :app:mergeDebugShaders UP-TO-DATE
 > Task :app:compileDebugShaders NO-SOURCE
@@ -30,16 +31,16 @@
 > Task :app:validateSigningDebug UP-TO-DATE
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
-> Task :app:processDebugResources FAILED
+
+> Task :app:kspDebugKotlin FAILED
+e: file:///home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/PlannerFragment.kt:1333:2 Missing '}
 
 FAILURE: Build failed with an exception.
 
 * What went wrong:
-Execution failed for task ':app:processDebugResources'.
-> A failure occurred while executing com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask$TaskAction
-   > Android resource linking failed
-     ERROR: D:\additioapp\app\src\main\res\layout\fragment_grade_entry.xml:67: AAPT: error: resource drawable/ic_search_24dp (aka com.example.additioapp:drawable/ic_search_24dp) not found.
-         
+Execution failed for task ':app:kspDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
 
 * Try:
 > Run with --stacktrace option to get the stack trace.
@@ -47,5 +48,5 @@ Execution failed for task ':app:processDebugResources'.
 > Run with --scan to get full insights.
 > Get more help at https://help.gradle.org.
 
-BUILD FAILED in 1m 8s
-25 actionable tasks: 2 executed, 23 up-to-date
+BUILD FAILED in 2s
+26 actionable tasks: 2 executed, 24 up-to-date

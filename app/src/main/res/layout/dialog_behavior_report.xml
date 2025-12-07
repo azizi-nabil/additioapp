@@ -39,7 +39,7 @@
                     android:id="@+id/textReportTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Behavior Report"
+                    android:text="@string/dialog_behavior_report"
                     android:textAppearance="?attr/textAppearanceTitleMedium"
                     android:textColor="?attr/colorOnSurface"/>
 
@@ -47,7 +47,7 @@
                     android:id="@+id/textStudentName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Student Name"
+                    android:text="@string/label_student_name"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant"/>
             </LinearLayout>
@@ -76,7 +76,7 @@
                     android:id="@+id/textNoBehaviors"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No records found."
+                    android:text="@string/label_no_records_found"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant"
                     android:gravity="center"
@@ -91,7 +91,7 @@
             android:id="@+id/btnClose"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Close"
+            android:text="@string/action_close"
             style="@style/Widget.Material3.Button.TonalButton"/>
 
     </LinearLayout>

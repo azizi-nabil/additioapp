@@ -37,7 +37,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Absence Report"
+                    android:text="@string/dialog_absence_report"
                     android:textAppearance="?attr/textAppearanceTitleMedium"
                     android:textColor="?attr/colorOnSurface"/>
 
@@ -45,7 +45,7 @@
                     android:id="@+id/textStudentName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Student Name"
+                    android:text="@string/label_student_name"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant"/>
             </LinearLayout>
@@ -90,7 +90,7 @@
                             android:id="@+id/textHeaderTD"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="TD Absences (0)"
+                            android:text="@string/label_td_absences"
                             android:textAppearance="?attr/textAppearanceLabelLarge"
                             android:textColor="?attr/colorError"
                             android:textStyle="bold"
@@ -100,7 +100,7 @@
                             android:id="@+id/textListTD"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="None"
+                            android:text="@string/label_none"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textColor="?attr/colorOnSurfaceVariant"/>
                     </LinearLayout>
@@ -127,7 +127,7 @@
                             android:id="@+id/textHeaderTP"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="TP Absences (0)"
+                            android:text="@string/label_tp_absences"
                             android:textAppearance="?attr/textAppearanceLabelLarge"
                             android:textColor="?attr/colorError"
                             android:textStyle="bold"
@@ -137,7 +137,7 @@
                             android:id="@+id/textListTP"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="None"
+                            android:text="@string/label_none"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textColor="?attr/colorOnSurfaceVariant"/>
                     </LinearLayout>
@@ -166,7 +166,7 @@
                             android:id="@+id/textHeaderCours"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Cours Absences (0)"
+                            android:text="@string/label_cours_absences"
                             android:textAppearance="?attr/textAppearanceLabelLarge"
                             android:textColor="?attr/colorError"
                             android:textStyle="bold"
@@ -176,7 +176,7 @@
                             android:id="@+id/textListCours"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="None"
+                            android:text="@string/label_none"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textColor="?attr/colorOnSurfaceVariant"/>
                     </LinearLayout>
@@ -189,7 +189,7 @@
             android:id="@+id/btnClose"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Close"
+            android:text="@string/action_close"
             style="@style/Widget.Material3.Button.TonalButton"/>
 
     </LinearLayout>

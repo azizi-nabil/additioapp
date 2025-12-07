@@ -52,7 +52,7 @@
             android:text="Student Name"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="?attr/colorOnSurface"
             app:layout_constraintStart_toEndOf="@id/imgAvatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -64,38 +64,60 @@
             android:id="@+id/layoutStats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="end"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <TextView
-                android:id="@+id/textPositiveBehavior"
+            <!-- Positive Behavior: Icon + Count -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/holo_green_dark"
-                app:drawableStartCompat="@drawable/ic_thumb_up_24dp"
-                android:drawablePadding="4dp"
-                app:drawableTint="@android:color/holo_green_dark"
+                android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="4dp"/>
+                android:layout_marginEnd="12dp">
+                
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_thumb_up_24dp"
+                    app:tint="@android:color/holo_green_dark"/>
+                
+                <TextView
+                    android:id="@+id/textPositiveBehavior"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:layout_marginStart="2dp"/>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/textNegativeBehavior"
+            <!-- Negative Behavior: Icon + Count -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/holo_red_dark"
-                app:drawableStartCompat="@drawable/ic_thumb_down_24dp"
-                android:drawablePadding="4dp"
-                app:drawableTint="@android:color/holo_red_dark"
-                android:gravity="center_vertical"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_thumb_down_24dp"
+                    app:tint="@android:color/holo_red_dark"/>
+                
+                <TextView
+                    android:id="@+id/textNegativeBehavior"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:layout_marginStart="2dp"/>
+            </LinearLayout>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.additioapp.R
 import com.example.additioapp.data.model.TaskEntity
@@ -18,21 +19,34 @@ import java.util.*
 class TaskAdapter(
     private val onTaskChecked: (TaskEntity, Boolean) -> Unit,
     private val onTaskClick: (TaskEntity) -> Unit,
-    private val onDeleteClick: (TaskEntity) -> Unit
+    private val onDeleteClick: (TaskEntity) -> Unit,
+    private val onLongClick: ((TaskEntity) -> Unit)? = null
 ) : RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
 
     private var tasks: List<TaskEntity> = emptyList()
     private var classNames: Map<Long, String> = emptyMap()
+    private var taskClassNames: Map<Long, List<String>> = emptyMap()  // taskId -> list of class names
 
     fun submitList(newTasks: List<TaskEntity>) {
+        val oldList = tasks
         tasks = newTasks
-        notifyDataSetChanged()
+        
+        val diffCallback = TaskDiffCallback(oldList, newTasks)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun setClassNames(names: Map<Long, String>) {
         classNames = names
         notifyDataSetChanged()
     }
+    
+    fun setTaskClassNames(names: Map<Long, List<String>>) {
+        taskClassNames = names
+        notifyDataSetChanged()
+    }
+    
+    fun getCurrentList(): List<TaskEntity> = tasks
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -92,8 +106,13 @@ class TaskAdapter(
                 textDue.visibility = View.GONE
             }
 
-            // Class name
-            if (task.classId != null && classNames.containsKey(task.classId)) {
+            // Class names - show all classes
+            val classNamesList = taskClassNames[task.id]
+            if (!classNamesList.isNullOrEmpty()) {
+                textClass.text = classNamesList.joinToString(", ")
+                textClass.visibility = View.VISIBLE
+            } else if (task.classId != null && classNames.containsKey(task.classId)) {
+                // Fallback to legacy single class
                 textClass.text = classNames[task.classId]
                 textClass.visibility = View.VISIBLE
             } else {
@@ -105,7 +124,30 @@ class TaskAdapter(
             }
             
             itemView.setOnClickListener { onTaskClick(task) }
+            itemView.setOnLongClickListener { 
+                onLongClick?.invoke(task)
+                true
+            }
             btnDelete.setOnClickListener { onDeleteClick(task) }
         }
+    }
+}
+
+// DiffUtil Callback for efficient list updates
+class TaskDiffCallback(
+    private val oldList: List<TaskEntity>,
+    private val newList: List<TaskEntity>
+) : DiffUtil.Callback() {
+    
+    override fun getOldListSize(): Int = oldList.size
+    
+    override fun getNewListSize(): Int = newList.size
+    
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
+    }
+    
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition] == newList[newItemPosition]
     }
 }
