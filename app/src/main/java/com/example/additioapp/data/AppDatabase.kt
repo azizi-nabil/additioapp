@@ -283,6 +283,58 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // Migration 17 to 18: Add teacher_absences table (old schema with classId)
+        private val MIGRATION_17_18 = object : androidx.room.migration.Migration(17, 18) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS teacher_absences (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        classId INTEGER NOT NULL,
+                        sessionType TEXT NOT NULL,
+                        absenceDate INTEGER NOT NULL,
+                        reason TEXT,
+                        replacementDate INTEGER,
+                        status TEXT NOT NULL DEFAULT 'PENDING',
+                        notes TEXT,
+                        createdAt INTEGER NOT NULL,
+                        FOREIGN KEY(classId) REFERENCES classes(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_teacher_absences_classId ON teacher_absences(classId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_teacher_absences_status ON teacher_absences(status)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_teacher_absences_absenceDate ON teacher_absences(absenceDate)")
+            }
+        }
+
+        // Migration 18 to 19: Change classId to classIds (multi-class support)
+        private val MIGRATION_18_19 = object : androidx.room.migration.Migration(18, 19) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // Create new table with classIds
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS teacher_absences_new (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        classIds TEXT NOT NULL,
+                        sessionType TEXT NOT NULL,
+                        absenceDate INTEGER NOT NULL,
+                        reason TEXT,
+                        replacementDate INTEGER,
+                        status TEXT NOT NULL DEFAULT 'PENDING',
+                        notes TEXT,
+                        createdAt INTEGER NOT NULL
+                    )
+                """.trimIndent())
+                // Copy data, converting classId to classIds string
+                db.execSQL("INSERT INTO teacher_absences_new SELECT id, CAST(classId AS TEXT), sessionType, absenceDate, reason, replacementDate, status, notes, createdAt FROM teacher_absences")
+                // Drop old table
+                db.execSQL("DROP TABLE teacher_absences")
+                // Rename new table
+                db.execSQL("ALTER TABLE teacher_absences_new RENAME TO teacher_absences")
+                // Recreate indices
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_teacher_absences_status ON teacher_absences(status)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_teacher_absences_absenceDate ON teacher_absences(absenceDate)")
+            }
+        }
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -291,7 +343,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "additio_database"
                 )
                 // Use proper migrations to preserve data
-                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
+                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19)
                 // Only use destructive migration as last resort for older versions
                 .fallbackToDestructiveMigrationFrom(1, 2, 3, 4, 5)
                 .build()
