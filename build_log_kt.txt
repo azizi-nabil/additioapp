@@ -3,12 +3,12 @@ Initialized jansi services in: /home/nabil/.gradle/native
 Received JVM installation metadata from '/home/nabil/.cache/coursier/arc/https/github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.17%252B10/OpenJDK17U-jdk_x64_linux_hotspot_17.0.17_10.tar.gz/jdk-17.0.17+10': {JAVA_HOME=/home/nabil/.cache/coursier/arc/https/github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.17%252B10/OpenJDK17U-jdk_x64_linux_hotspot_17.0.17_10.tar.gz/jdk-17.0.17+10, JAVA_VERSION=17.0.17, JAVA_VENDOR=Eclipse Adoptium, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=17.0.17+10, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=17.0.17+10, VM_VENDOR=Eclipse Adoptium, OS_ARCH=amd64}
 Found daemon DaemonInfo{pid=51151, address=[438b72b9-89d2-457a-9df5-322c9e51c9df port:38391, addresses:[/127.0.0.1]], state=Idle, lastBusy=1765180691964, context=DefaultDaemonContext[uid=bf4837a0-a0fa-4125-8f3c-4ff41a7d9f23,javaHome=/usr/lib/jvm/java-21-openjdk-amd64,daemonRegistryDir=/home/nabil/.gradle/daemon,pid=51151,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx2048m,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]} however its context does not match the desired criteria.
 Java home is different.
-Wanted: DefaultDaemonContext[uid=null,javaHome=/home/nabil/.cache/coursier/arc/https/github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.17%252B10/OpenJDK17U-jdk_x64_linux_hotspot_17.0.17_10.tar.gz/jdk-17.0.17+10,daemonRegistryDir=/home/nabil/.gradle/daemon,pid=90839,idleTimeout=null,priority=NORMAL,applyInstrumentationAgent=true,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx2048m,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]
+Wanted: DefaultDaemonContext[uid=null,javaHome=/home/nabil/.cache/coursier/arc/https/github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.17%252B10/OpenJDK17U-jdk_x64_linux_hotspot_17.0.17_10.tar.gz/jdk-17.0.17+10,daemonRegistryDir=/home/nabil/.gradle/daemon,pid=93452,idleTimeout=null,priority=NORMAL,applyInstrumentationAgent=true,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx2048m,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]
 Actual: DefaultDaemonContext[uid=bf4837a0-a0fa-4125-8f3c-4ff41a7d9f23,javaHome=/usr/lib/jvm/java-21-openjdk-amd64,daemonRegistryDir=/home/nabil/.gradle/daemon,pid=51151,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-Xmx2048m,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]
 
   Looking for a different daemon...
 The client will now receive all logging from the daemon (pid: 40772). The daemon log file: /home/nabil/.gradle/daemon/8.5/daemon-40772.out.log
-Starting 36th build in daemon [uptime: 4 hrs 47 mins 2.32 secs, performance: 99%, GC rate: 0.00/s, heap usage: 5% of 2 GiB]
+Starting 42nd build in daemon [uptime: 4 hrs 56 mins 10.668 secs, performance: 99%, GC rate: 0.00/s, heap usage: 5% of 2 GiB]
 Using 8 worker leases.
 Now considering [/home/nabil/additioapp] as hierarchies to watch
 Watching the file system is configured to be enabled if available
@@ -44,199 +44,197 @@ Resolve mutations for :app:preDebugBuild (Thread[Execution worker Thread 2,5,mai
 
 > Task :app:preDebugBuild UP-TO-DATE
 Skipping task ':app:preDebugBuild' as it has no actions.
-Resolve mutations for :app:mergeDebugNativeDebugMetadata (Thread[Execution worker,5,main]) started.
-:app:mergeDebugNativeDebugMetadata (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:mergeDebugNativeDebugMetadata (Thread[Execution worker Thread 2,5,main]) started.
+:app:mergeDebugNativeDebugMetadata (Thread[Execution worker Thread 2,5,main]) started.
 
 > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
 Skipping task ':app:mergeDebugNativeDebugMetadata' as it has no source files and no previous output files.
-Resolve mutations for :app:checkKotlinGradlePluginConfigurationErrors (Thread[Execution worker,5,main]) started.
-:app:checkKotlinGradlePluginConfigurationErrors (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:checkKotlinGradlePluginConfigurationErrors (Thread[Execution worker Thread 2,5,main]) started.
+:app:checkKotlinGradlePluginConfigurationErrors (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:checkKotlinGradlePluginConfigurationErrors
 Caching disabled for task ':app:checkKotlinGradlePluginConfigurationErrors' because:
   Build cache is disabled
 Task ':app:checkKotlinGradlePluginConfigurationErrors' is not up-to-date because:
   Task has not declared any outputs despite executing actions.
-Resolve mutations for :app:checkDebugAarMetadata (Thread[Execution worker,5,main]) started.
-:app:checkDebugAarMetadata (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:checkDebugAarMetadata (Thread[Execution worker Thread 3,5,main]) started.
+:app:checkDebugAarMetadata (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:checkDebugAarMetadata UP-TO-DATE
-Transforming navigation-ui-ktx-2.7.7.aar (androidx.navigation:navigation-ui-ktx:2.7.7) with ExtractAarTransform
-Transforming navigation-runtime-ktx-2.7.7.aar (androidx.navigation:navigation-runtime-ktx:2.7.7) with ExtractAarTransform
-Transforming navigation-ui-2.7.7.aar (androidx.navigation:navigation-ui:2.7.7) with ExtractAarTransform
-Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with ExtractAarTransform
-Transforming navigation-fragment-2.7.7.aar (androidx.navigation:navigation-fragment:2.7.7) with ExtractAarTransform
-Transforming navigation-fragment-ktx-2.7.7.aar (androidx.navigation:navigation-fragment-ktx:2.7.7) with ExtractAarTransform
-Transforming navigation-fragment-2.7.7.aar (androidx.navigation:navigation-fragment:2.7.7) with AarTransform
-Transforming navigation-runtime-ktx-2.7.7.aar (androidx.navigation:navigation-runtime-ktx:2.7.7) with AarTransform
-Transforming navigation-ui-ktx-2.7.7.aar (androidx.navigation:navigation-ui-ktx:2.7.7) with AarTransform
-Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with AarTransform
-Transforming navigation-fragment-ktx-2.7.7.aar (androidx.navigation:navigation-fragment-ktx:2.7.7) with AarTransform
-Transforming navigation-runtime-2.7.7.aar (androidx.navigation:navigation-runtime:2.7.7) with ExtractAarTransform
-Transforming navigation-ui-2.7.7.aar (androidx.navigation:navigation-ui:2.7.7) with AarTransform
-Transforming navigation-runtime-2.7.7.aar (androidx.navigation:navigation-runtime:2.7.7) with AarTransform
-Transforming material-1.11.0.aar (com.google.android.material:material:1.11.0) with ExtractAarTransform
-Transforming constraintlayout-2.1.4.aar (androidx.constraintlayout:constraintlayout:2.1.4) with ExtractAarTransform
-Transforming preference-ktx-1.2.1.aar (androidx.preference:preference-ktx:1.2.1) with ExtractAarTransform
-Transforming constraintlayout-2.1.4.aar (androidx.constraintlayout:constraintlayout:2.1.4) with AarTransform
-Transforming preference-ktx-1.2.1.aar (androidx.preference:preference-ktx:1.2.1) with AarTransform
 Transforming navigation-common-ktx-2.7.7.aar (androidx.navigation:navigation-common-ktx:2.7.7) with ExtractAarTransform
-Transforming material-1.11.0.aar (com.google.android.material:material:1.11.0) with AarTransform
-Transforming appcompat-resources-1.6.1.aar (androidx.appcompat:appcompat-resources:1.6.1) with ExtractAarTransform
+Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with ExtractAarTransform
+Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with AarTransform
 Transforming navigation-common-ktx-2.7.7.aar (androidx.navigation:navigation-common-ktx:2.7.7) with AarTransform
-Transforming appcompat-resources-1.6.1.aar (androidx.appcompat:appcompat-resources:1.6.1) with AarTransform
-Transforming appcompat-1.6.1.aar (androidx.appcompat:appcompat:1.6.1) with ExtractAarTransform
-Transforming emoji2-views-helper-1.2.0.aar (androidx.emoji2:emoji2-views-helper:1.2.0) with ExtractAarTransform
-Transforming appcompat-1.6.1.aar (androidx.appcompat:appcompat:1.6.1) with AarTransform
+Transforming material-1.11.0.aar (com.google.android.material:material:1.11.0) with ExtractAarTransform
+Transforming material-1.11.0.aar (com.google.android.material:material:1.11.0) with AarTransform
+Transforming navigation-fragment-2.7.7.aar (androidx.navigation:navigation-fragment:2.7.7) with ExtractAarTransform
+Transforming navigation-fragment-2.7.7.aar (androidx.navigation:navigation-fragment:2.7.7) with AarTransform
+Transforming navigation-runtime-ktx-2.7.7.aar (androidx.navigation:navigation-runtime-ktx:2.7.7) with ExtractAarTransform
+Transforming navigation-runtime-ktx-2.7.7.aar (androidx.navigation:navigation-runtime-ktx:2.7.7) with AarTransform
+Transforming navigation-runtime-2.7.7.aar (androidx.navigation:navigation-runtime:2.7.7) with ExtractAarTransform
+Transforming navigation-fragment-ktx-2.7.7.aar (androidx.navigation:navigation-fragment-ktx:2.7.7) with ExtractAarTransform
+Transforming navigation-runtime-2.7.7.aar (androidx.navigation:navigation-runtime:2.7.7) with AarTransform
+Transforming navigation-fragment-ktx-2.7.7.aar (androidx.navigation:navigation-fragment-ktx:2.7.7) with AarTransform
+Transforming constraintlayout-2.1.4.aar (androidx.constraintlayout:constraintlayout:2.1.4) with ExtractAarTransform
 Transforming preference-1.2.1.aar (androidx.preference:preference:1.2.1) with ExtractAarTransform
-Transforming emoji2-1.2.0.aar (androidx.emoji2:emoji2:1.2.0) with ExtractAarTransform
-Transforming viewpager2-1.0.0.aar (androidx.viewpager2:viewpager2:1.0.0) with ExtractAarTransform
-Transforming emoji2-1.2.0.aar (androidx.emoji2:emoji2:1.2.0) with AarTransform
-Transforming emoji2-views-helper-1.2.0.aar (androidx.emoji2:emoji2-views-helper:1.2.0) with AarTransform
-Transforming viewpager2-1.0.0.aar (androidx.viewpager2:viewpager2:1.0.0) with AarTransform
+Transforming constraintlayout-2.1.4.aar (androidx.constraintlayout:constraintlayout:2.1.4) with AarTransform
 Transforming preference-1.2.1.aar (androidx.preference:preference:1.2.1) with AarTransform
+Transforming preference-ktx-1.2.1.aar (androidx.preference:preference-ktx:1.2.1) with ExtractAarTransform
+Transforming emoji2-1.2.0.aar (androidx.emoji2:emoji2:1.2.0) with ExtractAarTransform
+Transforming preference-ktx-1.2.1.aar (androidx.preference:preference-ktx:1.2.1) with AarTransform
+Transforming emoji2-1.2.0.aar (androidx.emoji2:emoji2:1.2.0) with AarTransform
+Transforming navigation-ui-ktx-2.7.7.aar (androidx.navigation:navigation-ui-ktx:2.7.7) with ExtractAarTransform
+Transforming navigation-ui-2.7.7.aar (androidx.navigation:navigation-ui:2.7.7) with ExtractAarTransform
+Transforming navigation-ui-2.7.7.aar (androidx.navigation:navigation-ui:2.7.7) with AarTransform
+Transforming navigation-ui-ktx-2.7.7.aar (androidx.navigation:navigation-ui-ktx:2.7.7) with AarTransform
+Transforming viewpager2-1.0.0.aar (androidx.viewpager2:viewpager2:1.0.0) with ExtractAarTransform
+Transforming viewpager2-1.0.0.aar (androidx.viewpager2:viewpager2:1.0.0) with AarTransform
 Transforming fragment-1.6.2.aar (androidx.fragment:fragment:1.6.2) with ExtractAarTransform
-Transforming fragment-1.6.2.aar (androidx.fragment:fragment:1.6.2) with AarTransform
-Transforming fragment-ktx-1.6.2.aar (androidx.fragment:fragment-ktx:1.6.2) with ExtractAarTransform
-Transforming fragment-1.6.2.aar (androidx.fragment:fragment:1.6.2) with ExtractAarTransform
-Transforming fragment-ktx-1.6.2.aar (androidx.fragment:fragment-ktx:1.6.2) with AarTransform
 Transforming fragment-1.6.2.aar (androidx.fragment:fragment:1.6.2) with AarTransform
 Transforming activity-ktx-1.8.0.aar (androidx.activity:activity-ktx:1.8.0) with ExtractAarTransform
-Transforming activity-1.8.0.aar (androidx.activity:activity:1.8.0) with ExtractAarTransform
-Transforming dynamicanimation-1.0.0.aar (androidx.dynamicanimation:dynamicanimation:1.0.0) with ExtractAarTransform
-Transforming coordinatorlayout-1.1.0.aar (androidx.coordinatorlayout:coordinatorlayout:1.1.0) with ExtractAarTransform
-Transforming activity-ktx-1.8.0.aar (androidx.activity:activity-ktx:1.8.0) with AarTransform
-Transforming dynamicanimation-1.0.0.aar (androidx.dynamicanimation:dynamicanimation:1.0.0) with AarTransform
+Transforming fragment-ktx-1.6.2.aar (androidx.fragment:fragment-ktx:1.6.2) with ExtractAarTransform
+Transforming emoji2-views-helper-1.2.0.aar (androidx.emoji2:emoji2-views-helper:1.2.0) with ExtractAarTransform
+Transforming fragment-ktx-1.6.2.aar (androidx.fragment:fragment-ktx:1.6.2) with AarTransform
+Transforming emoji2-views-helper-1.2.0.aar (androidx.emoji2:emoji2-views-helper:1.2.0) with AarTransform
 Transforming drawerlayout-1.1.1.aar (androidx.drawerlayout:drawerlayout:1.1.1) with ExtractAarTransform
-Transforming work-runtime-ktx-2.9.0.aar (androidx.work:work-runtime-ktx:2.9.0) with ExtractAarTransform
+Transforming activity-ktx-1.8.0.aar (androidx.activity:activity-ktx:1.8.0) with AarTransform
+Transforming appcompat-1.6.1.aar (androidx.appcompat:appcompat:1.6.1) with ExtractAarTransform
+Transforming drawerlayout-1.1.1.aar (androidx.drawerlayout:drawerlayout:1.1.1) with AarTransform
+Transforming activity-1.8.0.aar (androidx.activity:activity:1.8.0) with ExtractAarTransform
+Transforming appcompat-resources-1.6.1.aar (androidx.appcompat:appcompat-resources:1.6.1) with ExtractAarTransform
+Transforming vectordrawable-animated-1.1.0.aar (androidx.vectordrawable:vectordrawable-animated:1.1.0) with ExtractAarTransform
+Transforming appcompat-resources-1.6.1.aar (androidx.appcompat:appcompat-resources:1.6.1) with AarTransform
+Transforming vectordrawable-animated-1.1.0.aar (androidx.vectordrawable:vectordrawable-animated:1.1.0) with AarTransform
+Transforming coordinatorlayout-1.1.0.aar (androidx.coordinatorlayout:coordinatorlayout:1.1.0) with ExtractAarTransform
+Transforming coordinatorlayout-1.1.0.aar (androidx.coordinatorlayout:coordinatorlayout:1.1.0) with AarTransform
+Transforming activity-1.8.0.aar (androidx.activity:activity:1.8.0) with AarTransform
+Transforming appcompat-1.6.1.aar (androidx.appcompat:appcompat:1.6.1) with AarTransform
 Transforming vectordrawable-1.1.0.aar (androidx.vectordrawable:vectordrawable:1.1.0) with ExtractAarTransform
 Transforming vectordrawable-1.1.0.aar (androidx.vectordrawable:vectordrawable:1.1.0) with ExtractAarTransform
 Transforming vectordrawable-1.1.0.aar (androidx.vectordrawable:vectordrawable:1.1.0) with AarTransform
-Transforming vectordrawable-animated-1.1.0.aar (androidx.vectordrawable:vectordrawable-animated:1.1.0) with ExtractAarTransform
+Transforming work-runtime-ktx-2.9.0.aar (androidx.work:work-runtime-ktx:2.9.0) with ExtractAarTransform
+Transforming fragment-1.6.2.aar (androidx.fragment:fragment:1.6.2) with ExtractAarTransform
 Transforming legacy-support-core-utils-1.0.0.aar (androidx.legacy:legacy-support-core-utils:1.0.0) with ExtractAarTransform
-Transforming vectordrawable-animated-1.1.0.aar (androidx.vectordrawable:vectordrawable-animated:1.1.0) with AarTransform
-Transforming activity-1.8.0.aar (androidx.activity:activity:1.8.0) with AarTransform
-Transforming coordinatorlayout-1.1.0.aar (androidx.coordinatorlayout:coordinatorlayout:1.1.0) with AarTransform
+Transforming fragment-1.6.2.aar (androidx.fragment:fragment:1.6.2) with AarTransform
+Transforming legacy-support-core-utils-1.0.0.aar (androidx.legacy:legacy-support-core-utils:1.0.0) with AarTransform
 Transforming loader-1.0.0.aar (androidx.loader:loader:1.0.0) with ExtractAarTransform
-Transforming loader-1.0.0.aar (androidx.loader:loader:1.0.0) with AarTransform
 Transforming recyclerview-1.1.0.aar (androidx.recyclerview:recyclerview:1.1.0) with ExtractAarTransform
+Transforming work-runtime-ktx-2.9.0.aar (androidx.work:work-runtime-ktx:2.9.0) with AarTransform
+Transforming recyclerview-1.1.0.aar (androidx.recyclerview:recyclerview:1.1.0) with AarTransform
+Transforming loader-1.0.0.aar (androidx.loader:loader:1.0.0) with ExtractAarTransform
+Transforming recyclerview-1.1.0.aar (androidx.recyclerview:recyclerview:1.1.0) with ExtractAarTransform
+Transforming loader-1.0.0.aar (androidx.loader:loader:1.0.0) with AarTransform
+Transforming loader-1.0.0.aar (androidx.loader:loader:1.0.0) with AarTransform
 Transforming recyclerview-1.1.0.aar (androidx.recyclerview:recyclerview:1.1.0) with AarTransform
 Transforming slidingpanelayout-1.2.0.aar (androidx.slidingpanelayout:slidingpanelayout:1.2.0) with ExtractAarTransform
-Transforming slidingpanelayout-1.2.0.aar (androidx.slidingpanelayout:slidingpanelayout:1.2.0) with AarTransform
-Transforming viewpager-1.0.0.aar (androidx.viewpager:viewpager:1.0.0) with ExtractAarTransform
-Transforming viewpager-1.0.0.aar (androidx.viewpager:viewpager:1.0.0) with AarTransform
-Transforming legacy-support-core-utils-1.0.0.aar (androidx.legacy:legacy-support-core-utils:1.0.0) with AarTransform
-Transforming vectordrawable-1.1.0.aar (androidx.vectordrawable:vectordrawable:1.1.0) with AarTransform
-Transforming work-runtime-ktx-2.9.0.aar (androidx.work:work-runtime-ktx:2.9.0) with AarTransform
+Transforming dynamicanimation-1.0.0.aar (androidx.dynamicanimation:dynamicanimation:1.0.0) with ExtractAarTransform
 Transforming work-runtime-2.9.0.aar (androidx.work:work-runtime:2.9.0) with ExtractAarTransform
-Transforming drawerlayout-1.1.1.aar (androidx.drawerlayout:drawerlayout:1.1.1) with AarTransform
-Transforming work-runtime-2.9.0.aar (androidx.work:work-runtime:2.9.0) with AarTransform
-Transforming recyclerview-1.1.0.aar (androidx.recyclerview:recyclerview:1.1.0) with ExtractAarTransform
-Transforming loader-1.0.0.aar (androidx.loader:loader:1.0.0) with ExtractAarTransform
-Transforming recyclerview-1.1.0.aar (androidx.recyclerview:recyclerview:1.1.0) with AarTransform
-Transforming loader-1.0.0.aar (androidx.loader:loader:1.0.0) with AarTransform
-Transforming transition-1.4.1.aar (androidx.transition:transition:1.4.1) with ExtractAarTransform
+Transforming slidingpanelayout-1.2.0.aar (androidx.slidingpanelayout:slidingpanelayout:1.2.0) with AarTransform
+Transforming vectordrawable-1.1.0.aar (androidx.vectordrawable:vectordrawable:1.1.0) with AarTransform
 Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with ExtractAarTransform
+Transforming viewpager-1.0.0.aar (androidx.viewpager:viewpager:1.0.0) with ExtractAarTransform
+Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with ExtractAarTransform
+Transforming viewpager-1.0.0.aar (androidx.viewpager:viewpager:1.0.0) with AarTransform
+Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarTransform
+Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarTransform
+Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with ExtractAarTransform
+Transforming transition-1.4.1.aar (androidx.transition:transition:1.4.1) with ExtractAarTransform
 Transforming window-1.0.0.aar (androidx.window:window:1.0.0) with ExtractAarTransform
+Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarTransform
+Transforming window-1.0.0.aar (androidx.window:window:1.0.0) with AarTransform
+Transforming work-runtime-2.9.0.aar (androidx.work:work-runtime:2.9.0) with AarTransform
+Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with ExtractAarTransform
+Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with ExtractAarTransform
+Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with AarTransform
+Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarTransform
+Transforming dynamicanimation-1.0.0.aar (androidx.dynamicanimation:dynamicanimation:1.0.0) with AarTransform
 Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with ExtractAarTransform
 Transforming transition-1.4.1.aar (androidx.transition:transition:1.4.1) with AarTransform
+Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with AarTransform
+Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with ExtractAarTransform
 Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with ExtractAarTransform
-Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarTransform
-Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with AarTransform
-Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with ExtractAarTransform
-Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with ExtractAarTransform
-Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with AarTransform
-Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with AarTransform
-Transforming savedstate-ktx-1.2.1.aar (androidx.savedstate:savedstate-ktx:1.2.1) with ExtractAarTransform
-Transforming savedstate-ktx-1.2.1.aar (androidx.savedstate:savedstate-ktx:1.2.1) with AarTransform
 Transforming savedstate-1.2.1.aar (androidx.savedstate:savedstate:1.2.1) with ExtractAarTransform
+Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with AarTransform
 Transforming lifecycle-service-2.6.2.aar (androidx.lifecycle:lifecycle-service:2.6.2) with ExtractAarTransform
 Transforming savedstate-1.2.1.aar (androidx.savedstate:savedstate:1.2.1) with AarTransform
-Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with ExtractAarTransform
-Transforming lifecycle-runtime-2.6.2.aar (androidx.lifecycle:lifecycle-runtime:2.6.2) with ExtractAarTransform
-Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with ExtractAarTransform
-Transforming lifecycle-runtime-2.6.2.aar (androidx.lifecycle:lifecycle-runtime:2.6.2) with AarTransform
-Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarTransform
+Transforming lifecycle-service-2.6.2.aar (androidx.lifecycle:lifecycle-service:2.6.2) with AarTransform
 Transforming lifecycle-process-2.6.2.aar (androidx.lifecycle:lifecycle-process:2.6.2) with ExtractAarTransform
-Transforming window-1.0.0.aar (androidx.window:window:1.0.0) with AarTransform
+Transforming savedstate-ktx-1.2.1.aar (androidx.savedstate:savedstate-ktx:1.2.1) with ExtractAarTransform
+Transforming lifecycle-process-2.6.2.aar (androidx.lifecycle:lifecycle-process:2.6.2) with AarTransform
 Transforming lifecycle-livedata-core-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.2) with ExtractAarTransform
+Transforming lifecycle-livedata-core-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.2) with AarTransform
+Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarTransform
 Transforming lifecycle-livedata-core-2.6.2.aar (androidx.lifecycle:lifecycle-livedata-core:2.6.2) with ExtractAarTransform
+Transforming lifecycle-runtime-2.6.2.aar (androidx.lifecycle:lifecycle-runtime:2.6.2) with ExtractAarTransform
 Transforming lifecycle-livedata-core-2.6.2.aar (androidx.lifecycle:lifecycle-livedata-core:2.6.2) with AarTransform
+Transforming lifecycle-runtime-2.6.2.aar (androidx.lifecycle:lifecycle-runtime:2.6.2) with AarTransform
+Transforming savedstate-ktx-1.2.1.aar (androidx.savedstate:savedstate-ktx:1.2.1) with AarTransform
 Transforming lifecycle-livedata-2.6.2.aar (androidx.lifecycle:lifecycle-livedata:2.6.2) with ExtractAarTransform
-Transforming lifecycle-livedata-2.6.2.aar (androidx.lifecycle:lifecycle-livedata:2.6.2) with AarTransform
-Transforming lifecycle-livedata-2.6.2.aar (androidx.lifecycle:lifecycle-livedata:2.6.2) with ExtractAarTransform
-Transforming lifecycle-livedata-2.6.2.aar (androidx.lifecycle:lifecycle-livedata:2.6.2) with AarTransform
 Transforming lifecycle-viewmodel-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel:2.6.2) with ExtractAarTransform
+Transforming lifecycle-livedata-2.6.2.aar (androidx.lifecycle:lifecycle-livedata:2.6.2) with AarTransform
 Transforming lifecycle-viewmodel-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel:2.6.2) with AarTransform
 Transforming lifecycle-viewmodel-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel:2.6.2) with ExtractAarTransform
 Transforming lifecycle-viewmodel-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel:2.6.2) with AarTransform
+Transforming lifecycle-livedata-2.6.2.aar (androidx.lifecycle:lifecycle-livedata:2.6.2) with ExtractAarTransform
 Transforming lifecycle-runtime-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-runtime-ktx:2.6.2) with ExtractAarTransform
-Transforming lifecycle-runtime-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-runtime-ktx:2.6.2) with AarTransform
 Transforming lifecycle-viewmodel-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2) with ExtractAarTransform
+Transforming lifecycle-livedata-2.6.2.aar (androidx.lifecycle:lifecycle-livedata:2.6.2) with AarTransform
 Transforming lifecycle-viewmodel-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2) with AarTransform
 Transforming lifecycle-viewmodel-savedstate-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2) with ExtractAarTransform
 Transforming lifecycle-viewmodel-savedstate-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2) with AarTransform
-Transforming core-ktx-1.12.0.aar (androidx.core:core-ktx:1.12.0) with ExtractAarTransform
-Transforming core-ktx-1.12.0.aar (androidx.core:core-ktx:1.12.0) with AarTransform
-Transforming room-runtime-2.6.1.aar (androidx.room:room-runtime:2.6.1) with ExtractAarTransform
-Transforming room-runtime-2.6.1.aar (androidx.room:room-runtime:2.6.1) with AarTransform
-Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarTransform
 Transforming room-ktx-2.6.1.aar (androidx.room:room-ktx:2.6.1) with ExtractAarTransform
 Transforming room-ktx-2.6.1.aar (androidx.room:room-ktx:2.6.1) with AarTransform
-Transforming sqlite-framework-2.4.0.aar (androidx.sqlite:sqlite-framework:2.4.0) with ExtractAarTransform
-Transforming sqlite-framework-2.4.0.aar (androidx.sqlite:sqlite-framework:2.4.0) with AarTransform
+Transforming lifecycle-runtime-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-runtime-ktx:2.6.2) with AarTransform
+Transforming room-runtime-2.6.1.aar (androidx.room:room-runtime:2.6.1) with ExtractAarTransform
 Transforming sqlite-2.4.0.aar (androidx.sqlite:sqlite:2.4.0) with ExtractAarTransform
-Transforming sqlite-2.4.0.aar (androidx.sqlite:sqlite:2.4.0) with AarTransform
-Transforming annotation-experimental-1.3.0.aar (androidx.annotation:annotation-experimental:1.3.0) with ExtractAarTransform
-Transforming annotation-experimental-1.3.0.aar (androidx.annotation:annotation-experimental:1.3.0) with AarTransform
+Transforming core-ktx-1.12.0.aar (androidx.core:core-ktx:1.12.0) with ExtractAarTransform
 Transforming MPAndroidChart-v3.1.0.aar (com.github.PhilJay:MPAndroidChart:v3.1.0) with ExtractAarTransform
-Transforming MPAndroidChart-v3.1.0.aar (com.github.PhilJay:MPAndroidChart:v3.1.0) with AarTransform
-Transforming cursoradapter-1.0.0.aar (androidx.cursoradapter:cursoradapter:1.0.0) with ExtractAarTransform
-Transforming cursoradapter-1.0.0.aar (androidx.cursoradapter:cursoradapter:1.0.0) with AarTransform
-Transforming cardview-1.0.0.aar (androidx.cardview:cardview:1.0.0) with ExtractAarTransform
-Transforming cardview-1.0.0.aar (androidx.cardview:cardview:1.0.0) with AarTransform
+Transforming core-ktx-1.12.0.aar (androidx.core:core-ktx:1.12.0) with AarTransform
+Transforming sqlite-2.4.0.aar (androidx.sqlite:sqlite:2.4.0) with AarTransform
 Transforming core-runtime-2.2.0.aar (androidx.arch.core:core-runtime:2.2.0) with ExtractAarTransform
-Transforming core-runtime-2.2.0.aar (androidx.arch.core:core-runtime:2.2.0) with AarTransform
+Transforming room-runtime-2.6.1.aar (androidx.room:room-runtime:2.6.1) with AarTransform
 Transforming interpolator-1.0.0.aar (androidx.interpolator:interpolator:1.0.0) with ExtractAarTransform
+Transforming annotation-experimental-1.3.0.aar (androidx.annotation:annotation-experimental:1.3.0) with ExtractAarTransform
+Transforming interpolator-1.0.0.aar (androidx.interpolator:interpolator:1.0.0) with ExtractAarTransform
+Transforming annotation-experimental-1.3.0.aar (androidx.annotation:annotation-experimental:1.3.0) with AarTransform
 Transforming interpolator-1.0.0.aar (androidx.interpolator:interpolator:1.0.0) with AarTransform
-Transforming lifecycle-livedata-core-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.2) with AarTransform
-Transforming versionedparcelable-1.1.1.aar (androidx.versionedparcelable:versionedparcelable:1.1.1) with ExtractAarTransform
-Transforming lifecycle-process-2.6.2.aar (androidx.lifecycle:lifecycle-process:2.6.2) with AarTransform
+Transforming sqlite-framework-2.4.0.aar (androidx.sqlite:sqlite-framework:2.4.0) with ExtractAarTransform
+Transforming interpolator-1.0.0.aar (androidx.interpolator:interpolator:1.0.0) with AarTransform
+Transforming core-runtime-2.2.0.aar (androidx.arch.core:core-runtime:2.2.0) with AarTransform
 Transforming profileinstaller-1.3.0.aar (androidx.profileinstaller:profileinstaller:1.3.0) with ExtractAarTransform
 Transforming profileinstaller-1.3.0.aar (androidx.profileinstaller:profileinstaller:1.3.0) with AarTransform
-Transforming startup-runtime-1.1.1.aar (androidx.startup:startup-runtime:1.1.1) with ExtractAarTransform
-Transforming startup-runtime-1.1.1.aar (androidx.startup:startup-runtime:1.1.1) with AarTransform
+Transforming cardview-1.0.0.aar (androidx.cardview:cardview:1.0.0) with ExtractAarTransform
 Transforming tracing-1.0.0.aar (androidx.tracing:tracing:1.0.0) with ExtractAarTransform
 Transforming tracing-1.0.0.aar (androidx.tracing:tracing:1.0.0) with AarTransform
-Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarTransform
+Transforming documentfile-1.0.0.aar (androidx.documentfile:documentfile:1.0.0) with ExtractAarTransform
+Transforming documentfile-1.0.0.aar (androidx.documentfile:documentfile:1.0.0) with AarTransform
 Transforming localbroadcastmanager-1.0.0.aar (androidx.localbroadcastmanager:localbroadcastmanager:1.0.0) with ExtractAarTransform
-Transforming lifecycle-service-2.6.2.aar (androidx.lifecycle:lifecycle-service:2.6.2) with AarTransform
+Transforming localbroadcastmanager-1.0.0.aar (androidx.localbroadcastmanager:localbroadcastmanager:1.0.0) with AarTransform
 Transforming print-1.0.0.aar (androidx.print:print:1.0.0) with ExtractAarTransform
-Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with ExtractAarTransform
-Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarTransform
-Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with ExtractAarTransform
-Transforming print-1.0.0.aar (androidx.print:print:1.0.0) with AarTransform
-Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with AarTransform
 Transforming pdfbox-android-2.0.27.0.aar (com.tom-roush:pdfbox-android:2.0.27.0) with ExtractAarTransform
 Transforming pdfbox-android-2.0.27.0.aar (com.tom-roush:pdfbox-android:2.0.27.0) with AarTransform
-Transforming localbroadcastmanager-1.0.0.aar (androidx.localbroadcastmanager:localbroadcastmanager:1.0.0) with AarTransform
-Transforming documentfile-1.0.0.aar (androidx.documentfile:documentfile:1.0.0) with ExtractAarTransform
+Transforming MPAndroidChart-v3.1.0.aar (com.github.PhilJay:MPAndroidChart:v3.1.0) with AarTransform
+Transforming cursoradapter-1.0.0.aar (androidx.cursoradapter:cursoradapter:1.0.0) with ExtractAarTransform
+Transforming print-1.0.0.aar (androidx.print:print:1.0.0) with AarTransform
+Transforming cursoradapter-1.0.0.aar (androidx.cursoradapter:cursoradapter:1.0.0) with AarTransform
+Transforming cardview-1.0.0.aar (androidx.cardview:cardview:1.0.0) with AarTransform
+Transforming startup-runtime-1.1.1.aar (androidx.startup:startup-runtime:1.1.1) with ExtractAarTransform
+Transforming versionedparcelable-1.1.1.aar (androidx.versionedparcelable:versionedparcelable:1.1.1) with ExtractAarTransform
+Transforming sqlite-framework-2.4.0.aar (androidx.sqlite:sqlite-framework:2.4.0) with AarTransform
 Transforming versionedparcelable-1.1.1.aar (androidx.versionedparcelable:versionedparcelable:1.1.1) with AarTransform
-Transforming interpolator-1.0.0.aar (androidx.interpolator:interpolator:1.0.0) with ExtractAarTransform
-Transforming documentfile-1.0.0.aar (androidx.documentfile:documentfile:1.0.0) with AarTransform
-Transforming interpolator-1.0.0.aar (androidx.interpolator:interpolator:1.0.0) with AarTransform
+Transforming startup-runtime-1.1.1.aar (androidx.startup:startup-runtime:1.1.1) with AarTransform
 Caching disabled for task ':app:checkDebugAarMetadata' because:
   Build cache is disabled
 Skipping task ':app:checkDebugAarMetadata' as it is up-to-date.
-Resolve mutations for :app:generateDebugResValues (Thread[Execution worker,5,main]) started.
-:app:generateDebugResValues (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:generateDebugResValues (Thread[Execution worker Thread 3,5,main]) started.
+:app:generateDebugResValues (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:generateDebugResValues UP-TO-DATE
 Caching disabled for task ':app:generateDebugResValues' because:
   Build cache is disabled
 Skipping task ':app:generateDebugResValues' as it is up-to-date.
-Resolve mutations for :app:mapDebugSourceSetPaths (Thread[Execution worker,5,main]) started.
-:app:mapDebugSourceSetPaths (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:mapDebugSourceSetPaths (Thread[Execution worker Thread 3,5,main]) started.
+:app:mapDebugSourceSetPaths (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:mapDebugSourceSetPaths UP-TO-DATE
 Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with ExtractAarTransform
@@ -396,27 +394,27 @@ Transforming pdfbox-android-2.0.27.0.aar (com.tom-roush:pdfbox-android:2.0.27.0)
 Caching disabled for task ':app:mapDebugSourceSetPaths' because:
   Build cache is disabled
 Skipping task ':app:mapDebugSourceSetPaths' as it is up-to-date.
-Resolve mutations for :app:generateDebugResources (Thread[Execution worker,5,main]) started.
-:app:generateDebugResources (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:generateDebugResources (Thread[Execution worker Thread 3,5,main]) started.
+:app:generateDebugResources (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:generateDebugResources UP-TO-DATE
 Skipping task ':app:generateDebugResources' as it has no actions.
-Resolve mutations for :app:mergeDebugResources (Thread[Execution worker,5,main]) started.
-:app:mergeDebugResources (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:mergeDebugResources (Thread[Execution worker Thread 3,5,main]) started.
+:app:mergeDebugResources (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:mergeDebugResources UP-TO-DATE
 Caching disabled for task ':app:mergeDebugResources' because:
   Build cache is disabled
 Skipping task ':app:mergeDebugResources' as it is up-to-date.
-Resolve mutations for :app:packageDebugResources (Thread[Execution worker,5,main]) started.
-:app:packageDebugResources (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:packageDebugResources (Thread[Execution worker Thread 3,5,main]) started.
+:app:packageDebugResources (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:packageDebugResources UP-TO-DATE
 Caching disabled for task ':app:packageDebugResources' because:
   Build cache is disabled
 Skipping task ':app:packageDebugResources' as it is up-to-date.
-Resolve mutations for :app:parseDebugLocalResources (Thread[Execution worker,5,main]) started.
-:app:parseDebugLocalResources (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:parseDebugLocalResources (Thread[Execution worker Thread 3,5,main]) started.
+:app:parseDebugLocalResources (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:parseDebugLocalResources UP-TO-DATE
 Transforming android.jar with PlatformAttrTransform
@@ -424,22 +422,22 @@ Transforming android.jar with PlatformAttrTransform
 Caching disabled for task ':app:parseDebugLocalResources' because:
   Build cache is disabled
 Skipping task ':app:parseDebugLocalResources' as it is up-to-date.
-Resolve mutations for :app:createDebugCompatibleScreenManifests (Thread[Execution worker,5,main]) started.
-:app:createDebugCompatibleScreenManifests (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:createDebugCompatibleScreenManifests (Thread[Execution worker Thread 3,5,main]) started.
+:app:createDebugCompatibleScreenManifests (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
 Caching disabled for task ':app:createDebugCompatibleScreenManifests' because:
   Build cache is disabled
 Skipping task ':app:createDebugCompatibleScreenManifests' as it is up-to-date.
-Resolve mutations for :app:extractDeepLinksDebug (Thread[Execution worker,5,main]) started.
-:app:extractDeepLinksDebug (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:extractDeepLinksDebug (Thread[Execution worker Thread 3,5,main]) started.
+:app:extractDeepLinksDebug (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:extractDeepLinksDebug UP-TO-DATE
 Caching disabled for task ':app:extractDeepLinksDebug' because:
   Build cache is disabled
 Skipping task ':app:extractDeepLinksDebug' as it is up-to-date.
-Resolve mutations for :app:processDebugMainManifest (Thread[Execution worker,5,main]) started.
-:app:processDebugMainManifest (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:processDebugMainManifest (Thread[Execution worker Thread 3,5,main]) started.
+:app:processDebugMainManifest (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:processDebugMainManifest UP-TO-DATE
 Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with ExtractAarTransform
@@ -753,22 +751,22 @@ Transforming pdfbox-android-2.0.27.0.aar (com.tom-roush:pdfbox-android:2.0.27.0)
 Caching disabled for task ':app:processDebugMainManifest' because:
   Build cache is disabled
 Skipping task ':app:processDebugMainManifest' as it is up-to-date.
-Resolve mutations for :app:processDebugManifest (Thread[Execution worker,5,main]) started.
-:app:processDebugManifest (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:processDebugManifest (Thread[Execution worker Thread 3,5,main]) started.
+:app:processDebugManifest (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:processDebugManifest UP-TO-DATE
 Caching disabled for task ':app:processDebugManifest' because:
   Build cache is disabled
 Skipping task ':app:processDebugManifest' as it is up-to-date.
-Resolve mutations for :app:processDebugManifestForPackage (Thread[Execution worker,5,main]) started.
-:app:processDebugManifestForPackage (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:processDebugManifestForPackage (Thread[Execution worker Thread 3,5,main]) started.
+:app:processDebugManifestForPackage (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:processDebugManifestForPackage UP-TO-DATE
 Caching disabled for task ':app:processDebugManifestForPackage' because:
   Build cache is disabled
 Skipping task ':app:processDebugManifestForPackage' as it is up-to-date.
-Resolve mutations for :app:processDebugResources (Thread[Execution worker,5,main]) started.
-:app:processDebugResources (Thread[Execution worker,5,main]) started.
+Resolve mutations for :app:processDebugResources (Thread[Execution worker Thread 3,5,main]) started.
+:app:processDebugResources (Thread[Execution worker Thread 4,5,main]) started.
 
 > Task :app:processDebugResources UP-TO-DATE
 Transforming aapt2-8.2.0-10154469-linux.jar (com.android.tools.build:aapt2:8.2.0-10154469) with Aapt2Extractor
@@ -1083,34 +1081,230 @@ Transforming pdfbox-android-2.0.27.0.aar (com.tom-roush:pdfbox-android:2.0.27.0)
 Caching disabled for task ':app:processDebugResources' because:
   Build cache is disabled
 Skipping task ':app:processDebugResources' as it is up-to-date.
-Resolve mutations for :app:kspDebugKotlin (Thread[Execution worker,5,main]) started.
-:app:kspDebugKotlin (Thread[Execution worker,5,main]) started.
-Resolve mutations for :app:javaPreCompileDebug (Thread[Execution worker Thread 5,5,main]) started.
-:app:javaPreCompileDebug (Thread[Execution worker Thread 6,5,main]) started.
+Resolve mutations for :app:kspDebugKotlin (Thread[Execution worker Thread 4,5,main]) started.
+:app:kspDebugKotlin (Thread[Execution worker Thread 4,5,main]) started.
+
+> Task :app:kspDebugKotlin UP-TO-DATE
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/java', not found
+file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+Transforming preference-ktx-1.2.1.aar (androidx.preference:preference-ktx:1.2.1) with AarToClassTransform
+Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with AarToClassTransform
+Transforming navigation-common-ktx-2.7.7.aar (androidx.navigation:navigation-common-ktx:2.7.7) with AarToClassTransform
+Transforming navigation-runtime-2.7.7.aar (androidx.navigation:navigation-runtime:2.7.7) with AarToClassTransform
+Transforming navigation-runtime-ktx-2.7.7.aar (androidx.navigation:navigation-runtime-ktx:2.7.7) with AarToClassTransform
+Transforming navigation-fragment-2.7.7.aar (androidx.navigation:navigation-fragment:2.7.7) with AarToClassTransform
+Transforming navigation-fragment-ktx-2.7.7.aar (androidx.navigation:navigation-fragment-ktx:2.7.7) with AarToClassTransform
+Transforming navigation-ui-ktx-2.7.7.aar (androidx.navigation:navigation-ui-ktx:2.7.7) with AarToClassTransform
+Transforming navigation-ui-2.7.7.aar (androidx.navigation:navigation-ui:2.7.7) with AarToClassTransform
+Transforming material-1.11.0.aar (com.google.android.material:material:1.11.0) with AarToClassTransform
+Transforming preference-1.2.1.aar (androidx.preference:preference:1.2.1) with AarToClassTransform
+Transforming appcompat-1.6.1.aar (androidx.appcompat:appcompat:1.6.1) with AarToClassTransform
+Transforming viewpager2-1.0.0.aar (androidx.viewpager2:viewpager2:1.0.0) with AarToClassTransform
+Transforming fragment-ktx-1.6.2.aar (androidx.fragment:fragment-ktx:1.6.2) with AarToClassTransform
+Transforming fragment-1.6.2.aar (androidx.fragment:fragment:1.6.2) with AarToClassTransform
+Transforming fragment-1.6.2.aar (androidx.fragment:fragment:1.6.2) with AarToClassTransform
+Transforming activity-ktx-1.8.0.aar (androidx.activity:activity-ktx:1.8.0) with AarToClassTransform
+Transforming activity-1.8.0.aar (androidx.activity:activity:1.8.0) with AarToClassTransform
+Transforming appcompat-resources-1.6.1.aar (androidx.appcompat:appcompat-resources:1.6.1) with AarToClassTransform
+Transforming drawerlayout-1.1.1.aar (androidx.drawerlayout:drawerlayout:1.1.1) with AarToClassTransform
+Transforming coordinatorlayout-1.1.0.aar (androidx.coordinatorlayout:coordinatorlayout:1.1.0) with AarToClassTransform
+Transforming dynamicanimation-1.0.0.aar (androidx.dynamicanimation:dynamicanimation:1.0.0) with AarToClassTransform
+Transforming recyclerview-1.1.0.aar (androidx.recyclerview:recyclerview:1.1.0) with AarToClassTransform
+Transforming recyclerview-1.1.0.aar (androidx.recyclerview:recyclerview:1.1.0) with AarToClassTransform
+Transforming transition-1.4.1.aar (androidx.transition:transition:1.4.1) with AarToClassTransform
+Transforming vectordrawable-animated-1.1.0.aar (androidx.vectordrawable:vectordrawable-animated:1.1.0) with AarToClassTransform
+Transforming vectordrawable-1.1.0.aar (androidx.vectordrawable:vectordrawable:1.1.0) with AarToClassTransform
+Transforming vectordrawable-1.1.0.aar (androidx.vectordrawable:vectordrawable:1.1.0) with AarToClassTransform
+Transforming viewpager-1.0.0.aar (androidx.viewpager:viewpager:1.0.0) with AarToClassTransform
+Transforming slidingpanelayout-1.2.0.aar (androidx.slidingpanelayout:slidingpanelayout:1.2.0) with AarToClassTransform
+Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarToClassTransform
+Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarToClassTransform
+Transforming legacy-support-core-utils-1.0.0.aar (androidx.legacy:legacy-support-core-utils:1.0.0) with AarToClassTransform
+Transforming loader-1.0.0.aar (androidx.loader:loader:1.0.0) with AarToClassTransform
+Transforming loader-1.0.0.aar (androidx.loader:loader:1.0.0) with AarToClassTransform
+Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with AarToClassTransform
+Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with AarToClassTransform
+Transforming work-runtime-ktx-2.9.0.aar (androidx.work:work-runtime-ktx:2.9.0) with AarToClassTransform
+Transforming work-runtime-2.9.0.aar (androidx.work:work-runtime:2.9.0) with AarToClassTransform
+Transforming lifecycle-runtime-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-runtime-ktx:2.6.2) with AarToClassTransform
+Transforming lifecycle-livedata-2.6.2.aar (androidx.lifecycle:lifecycle-livedata:2.6.2) with AarToClassTransform
+Transforming lifecycle-livedata-2.6.2.aar (androidx.lifecycle:lifecycle-livedata:2.6.2) with AarToClassTransform
+Transforming lifecycle-viewmodel-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2) with AarToClassTransform
+Transforming lifecycle-livedata-core-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.2) with AarToClassTransform
+Transforming lifecycle-livedata-core-2.6.2.aar (androidx.lifecycle:lifecycle-livedata-core:2.6.2) with AarToClassTransform
+Transforming lifecycle-viewmodel-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel:2.6.2) with AarToClassTransform
+Transforming lifecycle-viewmodel-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel:2.6.2) with AarToClassTransform
+Transforming lifecycle-runtime-2.6.2.aar (androidx.lifecycle:lifecycle-runtime:2.6.2) with AarToClassTransform
+Transforming lifecycle-viewmodel-savedstate-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2) with AarToClassTransform
+Transforming core-ktx-1.12.0.aar (androidx.core:core-ktx:1.12.0) with AarToClassTransform
+Transforming room-common-2.6.1.jar (androidx.room:room-common:2.6.1) with IdentityTransform
+Transforming lifecycle-common-2.6.2.jar (androidx.lifecycle:lifecycle-common:2.6.2) with IdentityTransform
+Transforming room-runtime-2.6.1.aar (androidx.room:room-runtime:2.6.1) with AarToClassTransform
+Transforming room-ktx-2.6.1.aar (androidx.room:room-ktx:2.6.1) with AarToClassTransform
+Transforming savedstate-ktx-1.2.1.aar (androidx.savedstate:savedstate-ktx:1.2.1) with AarToClassTransform
+Transforming savedstate-1.2.1.aar (androidx.savedstate:savedstate:1.2.1) with AarToClassTransform
+Transforming annotation-experimental-1.3.0.aar (androidx.annotation:annotation-experimental:1.3.0) with AarToClassTransform
+Transforming cursoradapter-1.0.0.aar (androidx.cursoradapter:cursoradapter:1.0.0) with AarToClassTransform
+Transforming cardview-1.0.0.aar (androidx.cardview:cardview:1.0.0) with AarToClassTransform
+Transforming sqlite-framework-2.4.0.aar (androidx.sqlite:sqlite-framework:2.4.0) with AarToClassTransform
+Transforming sqlite-2.4.0.aar (androidx.sqlite:sqlite:2.4.0) with AarToClassTransform
+Transforming versionedparcelable-1.1.1.aar (androidx.versionedparcelable:versionedparcelable:1.1.1) with AarToClassTransform
+Transforming core-runtime-2.2.0.aar (androidx.arch.core:core-runtime:2.2.0) with AarToClassTransform
+Transforming collection-ktx-1.1.0.jar (androidx.collection:collection-ktx:1.1.0) with IdentityTransform
+Transforming collection-1.1.0.jar (androidx.collection:collection:1.1.0) with IdentityTransform
+Transforming interpolator-1.0.0.aar (androidx.interpolator:interpolator:1.0.0) with AarToClassTransform
+Transforming documentfile-1.0.0.aar (androidx.documentfile:documentfile:1.0.0) with AarToClassTransform
+Transforming localbroadcastmanager-1.0.0.aar (androidx.localbroadcastmanager:localbroadcastmanager:1.0.0) with AarToClassTransform
+Transforming print-1.0.0.aar (androidx.print:print:1.0.0) with AarToClassTransform
+Transforming core-common-2.2.0.jar (androidx.arch.core:core-common:2.2.0) with IdentityTransform
+Transforming kotlin-stdlib-jdk8-1.8.22.jar (org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22) with IdentityTransform
+Transforming kotlin-stdlib-jdk7-1.8.22.jar (org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22) with IdentityTransform
+Transforming kotlin-stdlib-1.9.20.jar (org.jetbrains.kotlin:kotlin-stdlib:1.9.20) with IdentityTransform
+Transforming startup-runtime-1.1.1.aar (androidx.startup:startup-runtime:1.1.1) with AarToClassTransform
+Transforming constraintlayout-2.1.4.aar (androidx.constraintlayout:constraintlayout:2.1.4) with AarToClassTransform
+Transforming annotation-jvm-1.6.0.jar (androidx.annotation:annotation-jvm:1.6.0) with IdentityTransform
+Transforming commons-logging-1.2.jar (commons-logging:commons-logging:1.2) with IdentityTransform
+Transforming pdfbox-android-2.0.27.0.aar (com.tom-roush:pdfbox-android:2.0.27.0) with AarToClassTransform
+Transforming kotlinx-coroutines-android-1.7.1.jar (org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1) with IdentityTransform
+Transforming MPAndroidChart-v3.1.0.aar (com.github.PhilJay:MPAndroidChart:v3.1.0) with AarToClassTransform
+Transforming resourceinspection-annotation-1.0.1.jar (androidx.resourceinspection:resourceinspection-annotation:1.0.1) with IdentityTransform
+Transforming annotations-23.0.0.jar (org.jetbrains:annotations:23.0.0) with IdentityTransform
+Transforming commons-text-1.10.0.jar (org.apache.commons:commons-text:1.10.0) with IdentityTransform
+Transforming commons-beanutils-1.9.4.jar (commons-beanutils:commons-beanutils:1.9.4) with IdentityTransform
+Transforming kotlinx-coroutines-core-jvm-1.7.1.jar (org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.1) with IdentityTransform
+Transforming commons-lang3-3.12.0.jar (org.apache.commons:commons-lang3:3.12.0) with IdentityTransform
+Transforming listenablefuture-1.0.jar (com.google.guava:listenablefuture:1.0) with IdentityTransform
+Transforming opencsv-5.7.1.jar (com.opencsv:opencsv:5.7.1) with IdentityTransform
+Transforming bcutil-jdk15to18-1.72.jar (org.bouncycastle:bcutil-jdk15to18:1.72) with IdentityTransform
+Transforming bcprov-jdk15to18-1.72.jar (org.bouncycastle:bcprov-jdk15to18:1.72) with IdentityTransform
+Transforming bcpkix-jdk15to18-1.72.jar (org.bouncycastle:bcpkix-jdk15to18:1.72) with IdentityTransform
+Transforming gson-2.10.1.jar (com.google.code.gson:gson:2.10.1) with IdentityTransform
+Transforming commons-collections-3.2.2.jar (commons-collections:commons-collections:3.2.2) with IdentityTransform
+Transforming commons-collections4-4.4.jar (org.apache.commons:commons-collections4:4.4) with IdentityTransform
+Transforming R.jar with ClasspathEntrySnapshotTransform
+Transforming preference-ktx-1.2.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming navigation-common-2.7.7-api.jar with ClasspathEntrySnapshotTransform
+Transforming navigation-common-ktx-2.7.7-api.jar with ClasspathEntrySnapshotTransform
+Transforming navigation-runtime-2.7.7-api.jar with ClasspathEntrySnapshotTransform
+Transforming navigation-runtime-ktx-2.7.7-api.jar with ClasspathEntrySnapshotTransform
+Transforming navigation-fragment-2.7.7-api.jar with ClasspathEntrySnapshotTransform
+Transforming navigation-fragment-ktx-2.7.7-api.jar with ClasspathEntrySnapshotTransform
+Transforming navigation-ui-ktx-2.7.7-api.jar with ClasspathEntrySnapshotTransform
+Transforming navigation-ui-2.7.7-api.jar with ClasspathEntrySnapshotTransform
+Transforming material-1.11.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming preference-1.2.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming appcompat-1.6.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming viewpager2-1.0.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming fragment-ktx-1.6.2-api.jar with ClasspathEntrySnapshotTransform
+Transforming fragment-1.6.2-api.jar with ClasspathEntrySnapshotTransform
+Transforming activity-ktx-1.8.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming activity-1.8.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming appcompat-resources-1.6.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming drawerlayout-1.1.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming coordinatorlayout-1.1.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming dynamicanimation-1.0.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming recyclerview-1.1.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming transition-1.4.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming vectordrawable-animated-1.1.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming vectordrawable-1.1.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming viewpager-1.0.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming slidingpanelayout-1.2.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming customview-1.1.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming legacy-support-core-utils-1.0.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming loader-1.0.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming core-1.12.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming work-runtime-ktx-2.9.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming work-runtime-2.9.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming lifecycle-runtime-ktx-2.6.2-api.jar with ClasspathEntrySnapshotTransform
+Transforming lifecycle-livedata-2.6.2-api.jar with ClasspathEntrySnapshotTransform
+Transforming lifecycle-viewmodel-ktx-2.6.2-api.jar with ClasspathEntrySnapshotTransform
+Transforming lifecycle-livedata-core-ktx-2.6.2-api.jar with ClasspathEntrySnapshotTransform
+Transforming lifecycle-common-2.6.2.jar with ClasspathEntrySnapshotTransform
+Transforming lifecycle-livedata-core-2.6.2-api.jar with ClasspathEntrySnapshotTransform
+Transforming lifecycle-viewmodel-2.6.2-api.jar with ClasspathEntrySnapshotTransform
+Transforming lifecycle-runtime-2.6.2-api.jar with ClasspathEntrySnapshotTransform
+Transforming lifecycle-viewmodel-savedstate-2.6.2-api.jar with ClasspathEntrySnapshotTransform
+Transforming core-ktx-1.12.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming room-common-2.6.1.jar with ClasspathEntrySnapshotTransform
+Transforming room-runtime-2.6.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming room-ktx-2.6.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming savedstate-ktx-1.2.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming savedstate-1.2.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming annotation-experimental-1.3.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming cursoradapter-1.0.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming cardview-1.0.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming sqlite-framework-2.4.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming sqlite-2.4.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming versionedparcelable-1.1.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming collection-ktx-1.1.0.jar with ClasspathEntrySnapshotTransform
+Transforming collection-1.1.0.jar with ClasspathEntrySnapshotTransform
+Transforming core-runtime-2.2.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming core-common-2.2.0.jar with ClasspathEntrySnapshotTransform
+Transforming interpolator-1.0.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming documentfile-1.0.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming localbroadcastmanager-1.0.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming print-1.0.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming annotation-jvm-1.6.0.jar with ClasspathEntrySnapshotTransform
+Transforming kotlinx-coroutines-core-jvm-1.7.1.jar with ClasspathEntrySnapshotTransform
+Transforming kotlinx-coroutines-android-1.7.1.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-stdlib-jdk8-1.8.22.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-stdlib-jdk7-1.8.22.jar with ClasspathEntrySnapshotTransform
+Transforming kotlin-stdlib-1.9.20.jar with ClasspathEntrySnapshotTransform
+Transforming annotations-23.0.0.jar with ClasspathEntrySnapshotTransform
+Transforming listenablefuture-1.0.jar with ClasspathEntrySnapshotTransform
+Transforming startup-runtime-1.1.1-api.jar with ClasspathEntrySnapshotTransform
+Transforming resourceinspection-annotation-1.0.1.jar with ClasspathEntrySnapshotTransform
+Transforming constraintlayout-2.1.4-api.jar with ClasspathEntrySnapshotTransform
+Transforming opencsv-5.7.1.jar with ClasspathEntrySnapshotTransform
+Transforming commons-text-1.10.0.jar with ClasspathEntrySnapshotTransform
+Transforming commons-lang3-3.12.0.jar with ClasspathEntrySnapshotTransform
+Transforming commons-beanutils-1.9.4.jar with ClasspathEntrySnapshotTransform
+Transforming commons-logging-1.2.jar with ClasspathEntrySnapshotTransform
+Transforming commons-collections-3.2.2.jar with ClasspathEntrySnapshotTransform
+Transforming commons-collections4-4.4.jar with ClasspathEntrySnapshotTransform
+Transforming pdfbox-android-2.0.27.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming bcpkix-jdk15to18-1.72.jar with ClasspathEntrySnapshotTransform
+Transforming bcutil-jdk15to18-1.72.jar with ClasspathEntrySnapshotTransform
+Transforming bcprov-jdk15to18-1.72.jar with ClasspathEntrySnapshotTransform
+Transforming gson-2.10.1.jar with ClasspathEntrySnapshotTransform
+Transforming MPAndroidChart-v3.1.0-api.jar with ClasspathEntrySnapshotTransform
+Transforming android.jar with ClasspathEntrySnapshotTransform
+Transforming core-lambda-stubs.jar with ClasspathEntrySnapshotTransform
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/java', not found
+file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+Caching disabled for task ':app:kspDebugKotlin' because:
+  Build cache is disabled
+Skipping task ':app:kspDebugKotlin' as it is up-to-date.
+Resolve mutations for :app:compileDebugKotlin (Thread[Execution worker Thread 4,5,main]) started.
+:app:compileDebugKotlin (Thread[Execution worker Thread 4,5,main]) started.
+Resolve mutations for :app:javaPreCompileDebug (Thread[Execution worker Thread 3,5,main]) started.
+:app:javaPreCompileDebug (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:javaPreCompileDebug UP-TO-DATE
 Caching disabled for task ':app:javaPreCompileDebug' because:
   Build cache is disabled
 Skipping task ':app:javaPreCompileDebug' as it is up-to-date.
-Resolve mutations for :app:mergeDebugShaders (Thread[Execution worker Thread 6,5,main]) started.
-:app:mergeDebugShaders (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:mergeDebugShaders (Thread[Execution worker Thread 3,5,main]) started.
+:app:mergeDebugShaders (Thread[Execution worker Thread 3,5,main]) started.
 
 > Task :app:mergeDebugShaders UP-TO-DATE
 Caching disabled for task ':app:mergeDebugShaders' because:
   Build cache is disabled
 Skipping task ':app:mergeDebugShaders' as it is up-to-date.
-Resolve mutations for :app:compileDebugShaders (Thread[Execution worker Thread 2,5,main]) started.
-:app:compileDebugShaders (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:compileDebugShaders (Thread[Execution worker Thread 3,5,main]) started.
+:app:compileDebugShaders (Thread[Execution worker Thread 5,5,main]) started.
 
 > Task :app:compileDebugShaders NO-SOURCE
 Skipping task ':app:compileDebugShaders' as it has no source files and no previous output files.
-Resolve mutations for :app:generateDebugAssets (Thread[Execution worker Thread 2,5,main]) started.
-:app:generateDebugAssets (Thread[Execution worker Thread 7,5,main]) started.
+Resolve mutations for :app:generateDebugAssets (Thread[Execution worker Thread 5,5,main]) started.
+:app:generateDebugAssets (Thread[Execution worker Thread 5,5,main]) started.
 
 > Task :app:generateDebugAssets UP-TO-DATE
 Skipping task ':app:generateDebugAssets' as it has no actions.
-Resolve mutations for :app:mergeDebugAssets (Thread[Execution worker Thread 7,5,main]) started.
-:app:mergeDebugAssets (Thread[Execution worker Thread 7,5,main]) started.
+Resolve mutations for :app:mergeDebugAssets (Thread[Execution worker Thread 5,5,main]) started.
+:app:mergeDebugAssets (Thread[Execution worker Thread 5,5,main]) started.
 
 > Task :app:mergeDebugAssets UP-TO-DATE
 Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with ExtractAarTransform
@@ -1270,22 +1464,22 @@ Transforming pdfbox-android-2.0.27.0.aar (com.tom-roush:pdfbox-android:2.0.27.0)
 Caching disabled for task ':app:mergeDebugAssets' because:
   Build cache is disabled
 Skipping task ':app:mergeDebugAssets' as it is up-to-date.
-Resolve mutations for :app:compressDebugAssets (Thread[Execution worker Thread 7,5,main]) started.
-:app:compressDebugAssets (Thread[Execution worker Thread 7,5,main]) started.
+Resolve mutations for :app:compressDebugAssets (Thread[Execution worker Thread 5,5,main]) started.
+:app:compressDebugAssets (Thread[Execution worker Thread 6,5,main]) started.
 
 > Task :app:compressDebugAssets UP-TO-DATE
 Caching disabled for task ':app:compressDebugAssets' because:
   Build cache is disabled
 Skipping task ':app:compressDebugAssets' as it is up-to-date.
-Resolve mutations for :app:desugarDebugFileDependencies (Thread[Execution worker Thread 7,5,main]) started.
-:app:desugarDebugFileDependencies (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:desugarDebugFileDependencies (Thread[Execution worker Thread 6,5,main]) started.
+:app:desugarDebugFileDependencies (Thread[Execution worker Thread 6,5,main]) started.
 
 > Task :app:desugarDebugFileDependencies UP-TO-DATE
 Caching disabled for task ':app:desugarDebugFileDependencies' because:
   Build cache is disabled
 Skipping task ':app:desugarDebugFileDependencies' as it is up-to-date.
-Resolve mutations for :app:checkDebugDuplicateClasses (Thread[Execution worker Thread 2,5,main]) started.
-:app:checkDebugDuplicateClasses (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:checkDebugDuplicateClasses (Thread[Execution worker Thread 6,5,main]) started.
+:app:checkDebugDuplicateClasses (Thread[Execution worker Thread 6,5,main]) started.
 
 > Task :app:checkDebugDuplicateClasses UP-TO-DATE
 Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with AarToClassTransform
@@ -1461,8 +1655,8 @@ Transforming print-1.0.0.aar (androidx.print:print:1.0.0) with EnumerateClassesT
 Transforming annotation-jvm-1.6.0.jar (androidx.annotation:annotation-jvm:1.6.0) with IdentityTransform
 Transforming annotation-jvm-1.6.0.jar (androidx.annotation:annotation-jvm:1.6.0) with EnumerateClassesTransform
 Transforming concurrent-futures-1.1.0.jar (androidx.concurrent:concurrent-futures:1.1.0) with IdentityTransform
-Transforming concurrent-futures-1.1.0.jar (androidx.concurrent:concurrent-futures:1.1.0) with EnumerateClassesTransform
 Transforming kotlin-stdlib-jdk7-1.8.22.jar (org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22) with IdentityTransform
+Transforming concurrent-futures-1.1.0.jar (androidx.concurrent:concurrent-futures:1.1.0) with EnumerateClassesTransform
 Transforming kotlin-stdlib-jdk7-1.8.22.jar (org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22) with EnumerateClassesTransform
 Transforming kotlin-stdlib-1.9.20.jar (org.jetbrains.kotlin:kotlin-stdlib:1.9.20) with IdentityTransform
 Transforming kotlin-stdlib-1.9.20.jar (org.jetbrains.kotlin:kotlin-stdlib:1.9.20) with EnumerateClassesTransform
@@ -1475,20 +1669,20 @@ Transforming gson-2.10.1.jar (com.google.code.gson:gson:2.10.1) with EnumerateCl
 Transforming annotations-23.0.0.jar (org.jetbrains:annotations:23.0.0) with IdentityTransform
 Transforming annotations-23.0.0.jar (org.jetbrains:annotations:23.0.0) with EnumerateClassesTransform
 Transforming commons-text-1.10.0.jar (org.apache.commons:commons-text:1.10.0) with IdentityTransform
+Transforming error_prone_annotations-2.15.0.jar (com.google.errorprone:error_prone_annotations:2.15.0) with IdentityTransform
+Transforming error_prone_annotations-2.15.0.jar (com.google.errorprone:error_prone_annotations:2.15.0) with EnumerateClassesTransform
 Transforming commons-text-1.10.0.jar (org.apache.commons:commons-text:1.10.0) with EnumerateClassesTransform
 Transforming commons-lang3-3.12.0.jar (org.apache.commons:commons-lang3:3.12.0) with IdentityTransform
 Transforming commons-lang3-3.12.0.jar (org.apache.commons:commons-lang3:3.12.0) with EnumerateClassesTransform
 Transforming commons-beanutils-1.9.4.jar (commons-beanutils:commons-beanutils:1.9.4) with IdentityTransform
 Transforming commons-beanutils-1.9.4.jar (commons-beanutils:commons-beanutils:1.9.4) with EnumerateClassesTransform
 Transforming commons-collections4-4.4.jar (org.apache.commons:commons-collections4:4.4) with IdentityTransform
-Transforming commons-collections4-4.4.jar (org.apache.commons:commons-collections4:4.4) with EnumerateClassesTransform
-Transforming error_prone_annotations-2.15.0.jar (com.google.errorprone:error_prone_annotations:2.15.0) with IdentityTransform
-Transforming bcpkix-jdk15to18-1.72.jar (org.bouncycastle:bcpkix-jdk15to18:1.72) with IdentityTransform
-Transforming error_prone_annotations-2.15.0.jar (com.google.errorprone:error_prone_annotations:2.15.0) with EnumerateClassesTransform
-Transforming bcpkix-jdk15to18-1.72.jar (org.bouncycastle:bcpkix-jdk15to18:1.72) with EnumerateClassesTransform
 Transforming constraintlayout-core-1.0.4.jar (androidx.constraintlayout:constraintlayout-core:1.0.4) with IdentityTransform
-Transforming bcutil-jdk15to18-1.72.jar (org.bouncycastle:bcutil-jdk15to18:1.72) with IdentityTransform
+Transforming commons-collections4-4.4.jar (org.apache.commons:commons-collections4:4.4) with EnumerateClassesTransform
+Transforming bcpkix-jdk15to18-1.72.jar (org.bouncycastle:bcpkix-jdk15to18:1.72) with IdentityTransform
 Transforming constraintlayout-core-1.0.4.jar (androidx.constraintlayout:constraintlayout-core:1.0.4) with EnumerateClassesTransform
+Transforming bcpkix-jdk15to18-1.72.jar (org.bouncycastle:bcpkix-jdk15to18:1.72) with EnumerateClassesTransform
+Transforming bcutil-jdk15to18-1.72.jar (org.bouncycastle:bcutil-jdk15to18:1.72) with IdentityTransform
 Transforming bcutil-jdk15to18-1.72.jar (org.bouncycastle:bcutil-jdk15to18:1.72) with EnumerateClassesTransform
 Transforming bcprov-jdk15to18-1.72.jar (org.bouncycastle:bcprov-jdk15to18:1.72) with IdentityTransform
 Transforming bcprov-jdk15to18-1.72.jar (org.bouncycastle:bcprov-jdk15to18:1.72) with EnumerateClassesTransform
@@ -1501,8 +1695,8 @@ Transforming listenablefuture-1.0.jar (com.google.guava:listenablefuture:1.0) wi
 Caching disabled for task ':app:checkDebugDuplicateClasses' because:
   Build cache is disabled
 Skipping task ':app:checkDebugDuplicateClasses' as it is up-to-date.
-Resolve mutations for :app:mergeExtDexDebug (Thread[Execution worker Thread 2,5,main]) started.
-:app:mergeExtDexDebug (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:mergeExtDexDebug (Thread[Execution worker Thread 6,5,main]) started.
+:app:mergeExtDexDebug (Thread[Execution worker Thread 6,5,main]) started.
 
 > Task :app:mergeExtDexDebug UP-TO-DATE
 Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with AarToClassTransform
@@ -1928,22 +2122,22 @@ Transforming listenablefuture-1.0.jar (com.google.guava:listenablefuture:1.0) wi
 Caching disabled for task ':app:mergeExtDexDebug' because:
   Build cache is disabled
 Skipping task ':app:mergeExtDexDebug' as it is up-to-date.
-Resolve mutations for :app:mergeLibDexDebug (Thread[Execution worker Thread 2,5,main]) started.
-:app:mergeLibDexDebug (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:mergeLibDexDebug (Thread[Execution worker,5,main]) started.
+:app:mergeLibDexDebug (Thread[Execution worker,5,main]) started.
 
 > Task :app:mergeLibDexDebug UP-TO-DATE
 Caching disabled for task ':app:mergeLibDexDebug' because:
   Build cache is disabled
 Skipping task ':app:mergeLibDexDebug' as it is up-to-date.
-Resolve mutations for :app:mergeDebugJniLibFolders (Thread[Execution worker Thread 2,5,main]) started.
-:app:mergeDebugJniLibFolders (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:mergeDebugJniLibFolders (Thread[Execution worker,5,main]) started.
+:app:mergeDebugJniLibFolders (Thread[Execution worker,5,main]) started.
 
 > Task :app:mergeDebugJniLibFolders UP-TO-DATE
 Caching disabled for task ':app:mergeDebugJniLibFolders' because:
   Build cache is disabled
 Skipping task ':app:mergeDebugJniLibFolders' as it is up-to-date.
-Resolve mutations for :app:mergeDebugNativeLibs (Thread[Execution worker Thread 2,5,main]) started.
-:app:mergeDebugNativeLibs (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:mergeDebugNativeLibs (Thread[Execution worker,5,main]) started.
+:app:mergeDebugNativeLibs (Thread[Execution worker,5,main]) started.
 
 > Task :app:mergeDebugNativeLibs NO-SOURCE
 Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with ExtractAarTransform
@@ -2129,131 +2323,34 @@ Transforming commons-logging-1.2.jar (commons-logging:commons-logging:1.2) with 
 Transforming commons-collections-3.2.2.jar (commons-collections:commons-collections:3.2.2) with ExtractJniTransform
 Transforming listenablefuture-1.0.jar (com.google.guava:listenablefuture:1.0) with ExtractJniTransform
 Skipping task ':app:mergeDebugNativeLibs' as it has no source files and no previous output files.
-Resolve mutations for :app:stripDebugDebugSymbols (Thread[Execution worker Thread 2,5,main]) started.
-:app:stripDebugDebugSymbols (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:stripDebugDebugSymbols (Thread[Execution worker,5,main]) started.
+:app:stripDebugDebugSymbols (Thread[Execution worker,5,main]) started.
 
 > Task :app:stripDebugDebugSymbols NO-SOURCE
 Skipping task ':app:stripDebugDebugSymbols' as it has no source files and no previous output files.
-Resolve mutations for :app:validateSigningDebug (Thread[Execution worker Thread 2,5,main]) started.
-:app:validateSigningDebug (Thread[Execution worker Thread 2,5,main]) started.
+Resolve mutations for :app:validateSigningDebug (Thread[Execution worker,5,main]) started.
+:app:validateSigningDebug (Thread[Execution worker,5,main]) started.
 
 > Task :app:validateSigningDebug UP-TO-DATE
 Caching disabled for task ':app:validateSigningDebug' because:
   Build cache is disabled
 Skipping task ':app:validateSigningDebug' as it is up-to-date.
-Resolve mutations for :app:writeDebugAppMetadata (Thread[Execution worker Thread 2,5,main]) started.
-:app:writeDebugAppMetadata (Thread[Execution worker Thread 7,5,main]) started.
+Resolve mutations for :app:writeDebugAppMetadata (Thread[Execution worker,5,main]) started.
+:app:writeDebugAppMetadata (Thread[Execution worker,5,main]) started.
 
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 Caching disabled for task ':app:writeDebugAppMetadata' because:
   Build cache is disabled
 Skipping task ':app:writeDebugAppMetadata' as it is up-to-date.
-Resolve mutations for :app:writeDebugSigningConfigVersions (Thread[Execution worker Thread 7,5,main]) started.
-:app:writeDebugSigningConfigVersions (Thread[Execution worker Thread 7,5,main]) started.
+Resolve mutations for :app:writeDebugSigningConfigVersions (Thread[Execution worker Thread 5,5,main]) started.
+:app:writeDebugSigningConfigVersions (Thread[Execution worker Thread 5,5,main]) started.
 
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
 Caching disabled for task ':app:writeDebugSigningConfigVersions' because:
   Build cache is disabled
 Skipping task ':app:writeDebugSigningConfigVersions' as it is up-to-date.
 
-> Task :app:kspDebugKotlin
-file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
-file or directory '/home/nabil/additioapp/app/src/debug/java', not found
-file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
-Transforming preference-ktx-1.2.1.aar (androidx.preference:preference-ktx:1.2.1) with AarToClassTransform
-Transforming navigation-common-2.7.7.aar (androidx.navigation:navigation-common:2.7.7) with AarToClassTransform
-Transforming navigation-common-ktx-2.7.7.aar (androidx.navigation:navigation-common-ktx:2.7.7) with AarToClassTransform
-Transforming navigation-runtime-2.7.7.aar (androidx.navigation:navigation-runtime:2.7.7) with AarToClassTransform
-Transforming navigation-runtime-ktx-2.7.7.aar (androidx.navigation:navigation-runtime-ktx:2.7.7) with AarToClassTransform
-Transforming navigation-fragment-2.7.7.aar (androidx.navigation:navigation-fragment:2.7.7) with AarToClassTransform
-Transforming navigation-fragment-ktx-2.7.7.aar (androidx.navigation:navigation-fragment-ktx:2.7.7) with AarToClassTransform
-Transforming navigation-ui-ktx-2.7.7.aar (androidx.navigation:navigation-ui-ktx:2.7.7) with AarToClassTransform
-Transforming navigation-ui-2.7.7.aar (androidx.navigation:navigation-ui:2.7.7) with AarToClassTransform
-Transforming material-1.11.0.aar (com.google.android.material:material:1.11.0) with AarToClassTransform
-Transforming preference-1.2.1.aar (androidx.preference:preference:1.2.1) with AarToClassTransform
-Transforming appcompat-1.6.1.aar (androidx.appcompat:appcompat:1.6.1) with AarToClassTransform
-Transforming viewpager2-1.0.0.aar (androidx.viewpager2:viewpager2:1.0.0) with AarToClassTransform
-Transforming fragment-ktx-1.6.2.aar (androidx.fragment:fragment-ktx:1.6.2) with AarToClassTransform
-Transforming fragment-1.6.2.aar (androidx.fragment:fragment:1.6.2) with AarToClassTransform
-Transforming fragment-1.6.2.aar (androidx.fragment:fragment:1.6.2) with AarToClassTransform
-Transforming activity-ktx-1.8.0.aar (androidx.activity:activity-ktx:1.8.0) with AarToClassTransform
-Transforming activity-1.8.0.aar (androidx.activity:activity:1.8.0) with AarToClassTransform
-Transforming appcompat-resources-1.6.1.aar (androidx.appcompat:appcompat-resources:1.6.1) with AarToClassTransform
-Transforming drawerlayout-1.1.1.aar (androidx.drawerlayout:drawerlayout:1.1.1) with AarToClassTransform
-Transforming coordinatorlayout-1.1.0.aar (androidx.coordinatorlayout:coordinatorlayout:1.1.0) with AarToClassTransform
-Transforming dynamicanimation-1.0.0.aar (androidx.dynamicanimation:dynamicanimation:1.0.0) with AarToClassTransform
-Transforming recyclerview-1.1.0.aar (androidx.recyclerview:recyclerview:1.1.0) with AarToClassTransform
-Transforming recyclerview-1.1.0.aar (androidx.recyclerview:recyclerview:1.1.0) with AarToClassTransform
-Transforming transition-1.4.1.aar (androidx.transition:transition:1.4.1) with AarToClassTransform
-Transforming vectordrawable-animated-1.1.0.aar (androidx.vectordrawable:vectordrawable-animated:1.1.0) with AarToClassTransform
-Transforming vectordrawable-1.1.0.aar (androidx.vectordrawable:vectordrawable:1.1.0) with AarToClassTransform
-Transforming vectordrawable-1.1.0.aar (androidx.vectordrawable:vectordrawable:1.1.0) with AarToClassTransform
-Transforming viewpager-1.0.0.aar (androidx.viewpager:viewpager:1.0.0) with AarToClassTransform
-Transforming slidingpanelayout-1.2.0.aar (androidx.slidingpanelayout:slidingpanelayout:1.2.0) with AarToClassTransform
-Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarToClassTransform
-Transforming customview-1.1.0.aar (androidx.customview:customview:1.1.0) with AarToClassTransform
-Transforming legacy-support-core-utils-1.0.0.aar (androidx.legacy:legacy-support-core-utils:1.0.0) with AarToClassTransform
-Transforming loader-1.0.0.aar (androidx.loader:loader:1.0.0) with AarToClassTransform
-Transforming loader-1.0.0.aar (androidx.loader:loader:1.0.0) with AarToClassTransform
-Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with AarToClassTransform
-Transforming core-1.12.0.aar (androidx.core:core:1.12.0) with AarToClassTransform
-Transforming work-runtime-ktx-2.9.0.aar (androidx.work:work-runtime-ktx:2.9.0) with AarToClassTransform
-Transforming work-runtime-2.9.0.aar (androidx.work:work-runtime:2.9.0) with AarToClassTransform
-Transforming lifecycle-runtime-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-runtime-ktx:2.6.2) with AarToClassTransform
-Transforming lifecycle-livedata-2.6.2.aar (androidx.lifecycle:lifecycle-livedata:2.6.2) with AarToClassTransform
-Transforming lifecycle-livedata-2.6.2.aar (androidx.lifecycle:lifecycle-livedata:2.6.2) with AarToClassTransform
-Transforming lifecycle-viewmodel-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2) with AarToClassTransform
-Transforming lifecycle-livedata-core-ktx-2.6.2.aar (androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.2) with AarToClassTransform
-Transforming lifecycle-livedata-core-2.6.2.aar (androidx.lifecycle:lifecycle-livedata-core:2.6.2) with AarToClassTransform
-Transforming lifecycle-viewmodel-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel:2.6.2) with AarToClassTransform
-Transforming lifecycle-viewmodel-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel:2.6.2) with AarToClassTransform
-Transforming lifecycle-runtime-2.6.2.aar (androidx.lifecycle:lifecycle-runtime:2.6.2) with AarToClassTransform
-Transforming lifecycle-viewmodel-savedstate-2.6.2.aar (androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2) with AarToClassTransform
-Transforming core-ktx-1.12.0.aar (androidx.core:core-ktx:1.12.0) with AarToClassTransform
-Transforming room-common-2.6.1.jar (androidx.room:room-common:2.6.1) with IdentityTransform
-Transforming room-runtime-2.6.1.aar (androidx.room:room-runtime:2.6.1) with AarToClassTransform
-Transforming room-ktx-2.6.1.aar (androidx.room:room-ktx:2.6.1) with AarToClassTransform
-Transforming savedstate-ktx-1.2.1.aar (androidx.savedstate:savedstate-ktx:1.2.1) with AarToClassTransform
-Transforming savedstate-1.2.1.aar (androidx.savedstate:savedstate:1.2.1) with AarToClassTransform
-Transforming annotation-experimental-1.3.0.aar (androidx.annotation:annotation-experimental:1.3.0) with AarToClassTransform
-Transforming lifecycle-common-2.6.2.jar (androidx.lifecycle:lifecycle-common:2.6.2) with IdentityTransform
-Transforming cursoradapter-1.0.0.aar (androidx.cursoradapter:cursoradapter:1.0.0) with AarToClassTransform
-Transforming cardview-1.0.0.aar (androidx.cardview:cardview:1.0.0) with AarToClassTransform
-Transforming sqlite-framework-2.4.0.aar (androidx.sqlite:sqlite-framework:2.4.0) with AarToClassTransform
-Transforming sqlite-2.4.0.aar (androidx.sqlite:sqlite:2.4.0) with AarToClassTransform
-Transforming versionedparcelable-1.1.1.aar (androidx.versionedparcelable:versionedparcelable:1.1.1) with AarToClassTransform
-Transforming collection-ktx-1.1.0.jar (androidx.collection:collection-ktx:1.1.0) with IdentityTransform
-Transforming core-runtime-2.2.0.aar (androidx.arch.core:core-runtime:2.2.0) with AarToClassTransform
-Transforming collection-1.1.0.jar (androidx.collection:collection:1.1.0) with IdentityTransform
-Transforming core-common-2.2.0.jar (androidx.arch.core:core-common:2.2.0) with IdentityTransform
-Transforming interpolator-1.0.0.aar (androidx.interpolator:interpolator:1.0.0) with AarToClassTransform
-Transforming documentfile-1.0.0.aar (androidx.documentfile:documentfile:1.0.0) with AarToClassTransform
-Transforming localbroadcastmanager-1.0.0.aar (androidx.localbroadcastmanager:localbroadcastmanager:1.0.0) with AarToClassTransform
-Transforming print-1.0.0.aar (androidx.print:print:1.0.0) with AarToClassTransform
-Transforming kotlin-stdlib-jdk8-1.8.22.jar (org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22) with IdentityTransform
-Transforming annotation-jvm-1.6.0.jar (androidx.annotation:annotation-jvm:1.6.0) with IdentityTransform
-Transforming kotlinx-coroutines-core-jvm-1.7.1.jar (org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.1) with IdentityTransform
-Transforming kotlin-stdlib-jdk7-1.8.22.jar (org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22) with IdentityTransform
-Transforming kotlin-stdlib-1.9.20.jar (org.jetbrains.kotlin:kotlin-stdlib:1.9.20) with IdentityTransform
-Transforming kotlinx-coroutines-android-1.7.1.jar (org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1) with IdentityTransform
-Transforming listenablefuture-1.0.jar (com.google.guava:listenablefuture:1.0) with IdentityTransform
-Transforming annotations-23.0.0.jar (org.jetbrains:annotations:23.0.0) with IdentityTransform
-Transforming startup-runtime-1.1.1.aar (androidx.startup:startup-runtime:1.1.1) with AarToClassTransform
-Transforming constraintlayout-2.1.4.aar (androidx.constraintlayout:constraintlayout:2.1.4) with AarToClassTransform
-Transforming commons-logging-1.2.jar (commons-logging:commons-logging:1.2) with IdentityTransform
-Transforming pdfbox-android-2.0.27.0.aar (com.tom-roush:pdfbox-android:2.0.27.0) with AarToClassTransform
-Transforming MPAndroidChart-v3.1.0.aar (com.github.PhilJay:MPAndroidChart:v3.1.0) with AarToClassTransform
-Transforming resourceinspection-annotation-1.0.1.jar (androidx.resourceinspection:resourceinspection-annotation:1.0.1) with IdentityTransform
-Transforming commons-beanutils-1.9.4.jar (commons-beanutils:commons-beanutils:1.9.4) with IdentityTransform
-Transforming commons-text-1.10.0.jar (org.apache.commons:commons-text:1.10.0) with IdentityTransform
-Transforming commons-collections-3.2.2.jar (commons-collections:commons-collections:3.2.2) with IdentityTransform
-Transforming commons-collections4-4.4.jar (org.apache.commons:commons-collections4:4.4) with IdentityTransform
-Transforming bcutil-jdk15to18-1.72.jar (org.bouncycastle:bcutil-jdk15to18:1.72) with IdentityTransform
-Transforming gson-2.10.1.jar (com.google.code.gson:gson:2.10.1) with IdentityTransform
-Transforming bcpkix-jdk15to18-1.72.jar (org.bouncycastle:bcpkix-jdk15to18:1.72) with IdentityTransform
-Transforming opencsv-5.7.1.jar (com.opencsv:opencsv:5.7.1) with IdentityTransform
-Transforming bcprov-jdk15to18-1.72.jar (org.bouncycastle:bcprov-jdk15to18:1.72) with IdentityTransform
-Transforming commons-lang3-3.12.0.jar (org.apache.commons:commons-lang3:3.12.0) with IdentityTransform
+> Task :app:compileDebugKotlin
 Transforming R.jar with ClasspathEntrySnapshotTransform
 Transforming preference-ktx-1.2.1-api.jar with ClasspathEntrySnapshotTransform
 Transforming navigation-common-2.7.7-api.jar with ClasspathEntrySnapshotTransform
@@ -2343,136 +2440,74 @@ Transforming gson-2.10.1.jar with ClasspathEntrySnapshotTransform
 Transforming MPAndroidChart-v3.1.0-api.jar with ClasspathEntrySnapshotTransform
 Transforming android.jar with ClasspathEntrySnapshotTransform
 Transforming core-lambda-stubs.jar with ClasspathEntrySnapshotTransform
-file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
-file or directory '/home/nabil/additioapp/app/src/debug/java', not found
-file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
-Caching disabled for task ':app:kspDebugKotlin' because:
+Caching disabled for task ':app:compileDebugKotlin' because:
   Build cache is disabled
-Task ':app:kspDebugKotlin' is not up-to-date because:
+Task ':app:compileDebugKotlin' is not up-to-date because:
   Task has failed previously.
-The input changes require a full rebuild for incremental task ':app:kspDebugKotlin'.
+The input changes require a full rebuild for incremental task ':app:compileDebugKotlin'.
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/java', not found
 file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
 file or directory '/home/nabil/additioapp/app/src/debug/java', not found
 file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/java', not found
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/java', not found
 file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
 file or directory '/home/nabil/additioapp/app/src/debug/java', not found
 file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/java', not found
 file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
 file or directory '/home/nabil/additioapp/app/src/debug/java', not found
 file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/java', not found
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/java', not found
 file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
 file or directory '/home/nabil/additioapp/app/src/debug/java', not found
 file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/java', not found
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/java', not found
 file or directory '/home/nabil/additioapp/app/src/debug/kotlin', not found
 file or directory '/home/nabil/additioapp/app/src/debug/java', not found
 file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/main/kotlin', not found
+file or directory '/home/nabil/additioapp/app/src/debug/java', not found
 Kotlin source files: /home/nabil/additioapp/app/src/main/java/com/example/additioapp/utils/ReportCardGenerator.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/worker/ReminderWorker.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/util/FormulaEvaluator.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/util/NotificationHelper.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/util/LocaleHelper.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/AdditioApplication.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/MainActivity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/widget/TodayWidgetProvider.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/receiver/ReplacementAlarmReceiver.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/StudentDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/BehaviorDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/AttendanceDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/ScheduleItemDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/TeacherAbsenceDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/AttendanceStatusDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/GradeDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/TaskDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/EventDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/SessionDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/BehaviorTypeDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/ClassDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/GradeCategoryDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/dao/UnitDao.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/repository/AppRepository.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/AppDatabase.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/BehaviorRecordEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/ClassWithSummary.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/TaskClassCrossRef.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/StudentEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/AttendanceStatusEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/BehaviorTypeEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeItemEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/ClassEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/AttendanceRecordWithType.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeCategoryEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/GradeRecordEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/StudentReportCard.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/EventClassCrossRef.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/TeacherAbsenceEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/AttendanceRecordEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/StudentGradeDetail.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/TaskEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/ScheduleItemClassCrossRef.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/AttendanceSessionSummary.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/UnitEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/SessionEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/BackupData.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/EventEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/StudentAbsenceDetail.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/data/model/ScheduleItemEntity.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/AttendanceHistoryAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/ReportAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/CalendarAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/ScheduleAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/GradeItemAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/SearchResultAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/ClassAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/GradeEntryAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/AbsenceAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/BehaviorHistoryAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/AtRiskAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/TaskAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/BehaviorAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/StudentAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/EventAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/adapters/AttendanceAdapter.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/AdditioViewModelFactory.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/HomeFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/ClassDetailFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/PlannerFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/ReportsFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/AnalyticsFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/GlobalSearchFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/SettingsFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/BehaviorFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/AttendanceHistoryFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/AttendanceFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/StudentsFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/GradeEntryFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/GradebookFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/ClassesFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/GradesFragment.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/viewmodel/BehaviorViewModel.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/viewmodel/GradeViewModel.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/viewmodel/AttendanceStatusViewModel.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/viewmodel/ClassViewModel.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/viewmodel/SessionViewModel.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/viewmodel/StudentViewModel.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/viewmodel/SettingsViewModel.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/viewmodel/BehaviorTypeViewModel.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/viewmodel/AttendanceViewModel.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/viewmodel/GradeCategoryViewModel.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/viewmodel/GlobalSearchViewModel.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AbsenceReportDialog.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AddBehaviorDialog.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AttendanceBottomSheetDialog.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/BehaviorReportDialog.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AddClassDialog.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/ImportStudentsDialog.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AddStudentDialog.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/GradesReportDialog.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/AddGradeItemDialog.kt, /home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/dialogs/StudentBehaviorBottomSheet.kt
-Java source files: 
+Java source files: /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/StudentDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/AttendanceStatusDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/GradeCategoryDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/TeacherAbsenceDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/ScheduleItemDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/BehaviorDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/BehaviorTypeDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/AttendanceDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/UnitDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/ClassDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/GradeDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/TaskDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/SessionDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/dao/EventDao_Impl.java, /home/nabil/additioapp/app/build/generated/ksp/debug/java/com/example/additioapp/data/AppDatabase_Impl.java
 Script source files: 
 Script file extensions: 
-Transforming R.jar with StructureTransformAction
-Transforming preference-ktx-1.2.1-api.jar with StructureTransformAction
-Transforming navigation-common-2.7.7-api.jar with StructureTransformAction
-Transforming navigation-common-ktx-2.7.7-api.jar with StructureTransformAction
-Transforming navigation-runtime-2.7.7-api.jar with StructureTransformAction
-Transforming navigation-runtime-ktx-2.7.7-api.jar with StructureTransformAction
-Transforming navigation-fragment-2.7.7-api.jar with StructureTransformAction
-Transforming navigation-fragment-ktx-2.7.7-api.jar with StructureTransformAction
-Transforming navigation-ui-ktx-2.7.7-api.jar with StructureTransformAction
-Transforming navigation-ui-2.7.7-api.jar with StructureTransformAction
-Transforming material-1.11.0-api.jar with StructureTransformAction
-Transforming preference-1.2.1-api.jar with StructureTransformAction
-Transforming appcompat-1.6.1-api.jar with StructureTransformAction
-Transforming viewpager2-1.0.0-api.jar with StructureTransformAction
-Transforming fragment-ktx-1.6.2-api.jar with StructureTransformAction
-Transforming fragment-1.6.2-api.jar with StructureTransformAction
-Transforming activity-ktx-1.8.0-api.jar with StructureTransformAction
-Transforming activity-1.8.0-api.jar with StructureTransformAction
-Transforming appcompat-resources-1.6.1-api.jar with StructureTransformAction
-Transforming drawerlayout-1.1.1-api.jar with StructureTransformAction
-Transforming coordinatorlayout-1.1.0-api.jar with StructureTransformAction
-Transforming dynamicanimation-1.0.0-api.jar with StructureTransformAction
-Transforming recyclerview-1.1.0-api.jar with StructureTransformAction
-Transforming transition-1.4.1-api.jar with StructureTransformAction
-Transforming vectordrawable-animated-1.1.0-api.jar with StructureTransformAction
-Transforming vectordrawable-1.1.0-api.jar with StructureTransformAction
-Transforming viewpager-1.0.0-api.jar with StructureTransformAction
-Transforming slidingpanelayout-1.2.0-api.jar with StructureTransformAction
-Transforming customview-1.1.0-api.jar with StructureTransformAction
-Transforming legacy-support-core-utils-1.0.0-api.jar with StructureTransformAction
-Transforming loader-1.0.0-api.jar with StructureTransformAction
-Transforming core-1.12.0-api.jar with StructureTransformAction
-Transforming work-runtime-ktx-2.9.0-api.jar with StructureTransformAction
-Transforming work-runtime-2.9.0-api.jar with StructureTransformAction
-Transforming lifecycle-runtime-ktx-2.6.2-api.jar with StructureTransformAction
-Transforming lifecycle-livedata-2.6.2-api.jar with StructureTransformAction
-Transforming lifecycle-viewmodel-ktx-2.6.2-api.jar with StructureTransformAction
-Transforming lifecycle-livedata-core-ktx-2.6.2-api.jar with StructureTransformAction
-Transforming lifecycle-common-2.6.2.jar with StructureTransformAction
-Transforming lifecycle-livedata-core-2.6.2-api.jar with StructureTransformAction
-Transforming lifecycle-viewmodel-2.6.2-api.jar with StructureTransformAction
-Transforming lifecycle-runtime-2.6.2-api.jar with StructureTransformAction
-Transforming lifecycle-viewmodel-savedstate-2.6.2-api.jar with StructureTransformAction
-Transforming core-ktx-1.12.0-api.jar with StructureTransformAction
-Transforming room-common-2.6.1.jar with StructureTransformAction
-Transforming room-runtime-2.6.1-api.jar with StructureTransformAction
-Transforming room-ktx-2.6.1-api.jar with StructureTransformAction
-Transforming savedstate-ktx-1.2.1-api.jar with StructureTransformAction
-Transforming savedstate-1.2.1-api.jar with StructureTransformAction
-Transforming annotation-experimental-1.3.0-api.jar with StructureTransformAction
-Transforming cursoradapter-1.0.0-api.jar with StructureTransformAction
-Transforming cardview-1.0.0-api.jar with StructureTransformAction
-Transforming sqlite-framework-2.4.0-api.jar with StructureTransformAction
-Transforming sqlite-2.4.0-api.jar with StructureTransformAction
-Transforming versionedparcelable-1.1.1-api.jar with StructureTransformAction
-Transforming collection-ktx-1.1.0.jar with StructureTransformAction
-Transforming collection-1.1.0.jar with StructureTransformAction
-Transforming core-runtime-2.2.0-api.jar with StructureTransformAction
-Transforming core-common-2.2.0.jar with StructureTransformAction
-Transforming interpolator-1.0.0-api.jar with StructureTransformAction
-Transforming documentfile-1.0.0-api.jar with StructureTransformAction
-Transforming localbroadcastmanager-1.0.0-api.jar with StructureTransformAction
-Transforming print-1.0.0-api.jar with StructureTransformAction
-Transforming annotation-jvm-1.6.0.jar with StructureTransformAction
-Transforming kotlinx-coroutines-core-jvm-1.7.1.jar with StructureTransformAction
-Transforming kotlinx-coroutines-android-1.7.1.jar with StructureTransformAction
-Transforming kotlin-stdlib-jdk8-1.8.22.jar with StructureTransformAction
-Transforming kotlin-stdlib-jdk7-1.8.22.jar with StructureTransformAction
-Transforming kotlin-stdlib-1.9.20.jar with StructureTransformAction
-Transforming annotations-23.0.0.jar with StructureTransformAction
-Transforming listenablefuture-1.0.jar with StructureTransformAction
-Transforming startup-runtime-1.1.1-api.jar with StructureTransformAction
-Transforming resourceinspection-annotation-1.0.1.jar with StructureTransformAction
-Transforming constraintlayout-2.1.4-api.jar with StructureTransformAction
-Transforming opencsv-5.7.1.jar with StructureTransformAction
-Transforming commons-text-1.10.0.jar with StructureTransformAction
-Transforming commons-lang3-3.12.0.jar with StructureTransformAction
-Transforming commons-beanutils-1.9.4.jar with StructureTransformAction
-Transforming commons-logging-1.2.jar with StructureTransformAction
-Transforming commons-collections-3.2.2.jar with StructureTransformAction
-Transforming commons-collections4-4.4.jar with StructureTransformAction
-Transforming pdfbox-android-2.0.27.0-api.jar with StructureTransformAction
-Transforming bcpkix-jdk15to18-1.72.jar with StructureTransformAction
-Transforming bcutil-jdk15to18-1.72.jar with StructureTransformAction
-Transforming bcprov-jdk15to18-1.72.jar with StructureTransformAction
-Transforming gson-2.10.1.jar with StructureTransformAction
-Transforming MPAndroidChart-v3.1.0-api.jar with StructureTransformAction
-Transforming android.jar with StructureTransformAction
-Transforming core-lambda-stubs.jar with StructureTransformAction
+Using Kotlin/JVM incremental compilation
 [KOTLIN] Kotlin compilation 'jdkHome' argument: null
-i: found daemon on port 17851 (7232207 ms old), trying to connect
+i: found daemon on port 17851 (7780497 ms old), trying to connect
 i: connected to the daemon
-i: [ksp] loaded provider(s): [androidx.room.RoomKspProcessor$Provider]
-e: file:///home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/HomeFragment.kt:466:32 Expecting an element
-e: file:///home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/HomeFragment.kt:466:45 Expecting an element
-e: file:///home/nabil/additioapp/app/src/main/java/com/example/additioapp/ui/fragments/HomeFragment.kt:466:50 Expecting an element
+Options for KOTLIN DAEMON: IncrementalCompilationOptions(super=CompilationOptions(compilerMode=INCREMENTAL_COMPILER, targetPlatform=JVM, reportCategories=[0, 3], reportSeverity=2, requestedCompilationResults=[0], kotlinScriptExtensions=[]), areFileChangesKnown=false, modifiedFiles=null, deletedFiles=null, classpathChanges=NotAvailableForNonIncrementalRun, workingDir=/home/nabil/additioapp/app/build/kotlin/compileDebugKotlin/cacheable, multiModuleICSettings=MultiModuleICSettings(buildHistoryFile=/home/nabil/additioapp/app/build/kotlin/compileDebugKotlin/local-state/build-history.bin, useModuleDetection=true), usePreciseJavaTracking=true, outputFiles=[/home/nabil/additioapp/app/build/tmp/kotlin-classes/debug, /home/nabil/additioapp/app/build/kotlin/compileDebugKotlin/cacheable, /home/nabil/additioapp/app/build/kotlin/compileDebugKotlin/local-state])
+e: file:///home/nabil/additioapp/app/src/main/java/com/example/additioapp/widget/TodayWidgetProvider.kt:81:50 Unresolved reference: textEvent3
+e: file:///home/nabil/additioapp/app/src/main/java/com/example/additioapp/widget/TodayWidgetProvider.kt:95:46 Unresolved reference: textEvent3
+e: file:///home/nabil/additioapp/app/src/main/java/com/example/additioapp/widget/TodayWidgetProvider.kt:105:50 Unresolved reference: textTask3
+e: file:///home/nabil/additioapp/app/src/main/java/com/example/additioapp/widget/TodayWidgetProvider.kt:123:46 Unresolved reference: textTask3
 
-> Task :app:kspDebugKotlin FAILED
+> Task :app:compileDebugKotlin FAILED
 
 FAILURE: Build failed with an exception.
 
 * What went wrong:
-Execution failed for task ':app:kspDebugKotlin'.
+Execution failed for task ':app:compileDebugKotlin'.
 > A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
    > Compilation error. See log for more details
 
@@ -2482,5 +2517,5 @@ Execution failed for task ':app:kspDebugKotlin'.
 > Run with --scan to get full insights.
 > Get more help at https://help.gradle.org.
 
-BUILD FAILED in 7s
-26 actionable tasks: 2 executed, 24 up-to-date
+BUILD FAILED in 18s
+27 actionable tasks: 2 executed, 25 up-to-date

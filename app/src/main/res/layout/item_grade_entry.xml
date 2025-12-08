@@ -50,7 +50,7 @@
             android:id="@+id/inputLayoutScore"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:hint="Score"
+            android:hint="@string/label_mark"
             app:boxStrokeWidth="1dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
 

@@ -140,6 +140,9 @@ class HomeFragment : Fragment() {
             loadPendingTasks(containerPendingTasks, tasks)
         }
 
+        // Load today's replacements
+        loadTodayReplacements(view.findViewById(R.id.containerTodayReplacements), view)
+
         // Navigation actions
         actionAttendance.setOnClickListener { findNavController().navigate(R.id.classesFragment) }
         actionPlanner.setOnClickListener { findNavController().navigate(R.id.plannerFragment) }
@@ -364,15 +367,20 @@ class HomeFragment : Fragment() {
     private fun addTaskRow(container: LinearLayout, task: TaskEntity, dateFormat: SimpleDateFormat) {
         val row = layoutInflater.inflate(R.layout.item_home_row, container, false)
         
-        val priorityColor = when (task.priority) {
-            "HIGH" -> "#F44336"
-            "MEDIUM" -> "#FF9800"
-            "LOW" -> "#4CAF50"
-            else -> "#9E9E9E"
+        // Color based on completion status, then priority
+        val indicatorColor = if (task.isCompleted) {
+            "#4CAF50" // Green for completed
+        } else {
+            when (task.priority) {
+                "HIGH" -> "#F44336"
+                "MEDIUM" -> "#FF9800"
+                "LOW" -> "#4CAF50"
+                else -> "#9E9E9E"
+            }
         }
         
-        row.findViewById<View>(R.id.colorIndicator).setBackgroundColor(Color.parseColor(priorityColor))
-        row.findViewById<TextView>(R.id.textRowTitle).text = task.title
+        row.findViewById<View>(R.id.colorIndicator).setBackgroundColor(Color.parseColor(indicatorColor))
+        row.findViewById<TextView>(R.id.textRowTitle).text = if (task.isCompleted) "✓ ${task.title}" else task.title
         
         val dueStr = if (task.dueDate != null) {
             val isOverdue = task.dueDate < System.currentTimeMillis()
@@ -455,6 +463,82 @@ class HomeFragment : Fragment() {
         row.findViewById<TextView>(R.id.textRowMeta).visibility = View.GONE
         row.findViewById<TextView>(R.id.textRowExtra).visibility = View.GONE
         row.setOnClickListener { onClick() }
+        container.addView(row)
+    }
+
+    private fun loadTodayReplacements(container: LinearLayout, rootView: View) {
+        container.removeAllViews()
+        val header = rootView.findViewById<View>(R.id.headerTodayReplacements)
+        val card = rootView.findViewById<View>(R.id.cardTodayReplacements)
+
+        lifecycleScope.launch {
+            val today = Calendar.getInstance()
+            today.set(Calendar.HOUR_OF_DAY, 0)
+            today.set(Calendar.MINUTE, 0)
+            today.set(Calendar.SECOND, 0)
+            today.set(Calendar.MILLISECOND, 0)
+            val startOfDay = today.timeInMillis
+
+            today.set(Calendar.HOUR_OF_DAY, 23)
+            today.set(Calendar.MINUTE, 59)
+            today.set(Calendar.SECOND, 59)
+            val endOfDay = today.timeInMillis
+
+            val replacements = withContext(Dispatchers.IO) {
+                repository.getReplacementsForDateRangeSync(startOfDay, endOfDay)
+            }
+
+            if (replacements.isNotEmpty()) {
+                header.visibility = View.VISIBLE
+                card.visibility = View.VISIBLE
+                
+                // Add click listener to View All button
+                 rootView.findViewById<View>(R.id.btnViewReplacements).setOnClickListener {
+                     val bundle = Bundle().apply { putInt("tabIndex", 3) } // Replacements tab
+                     findNavController().navigate(R.id.plannerFragment, bundle)
+                 }
+                
+                replacements.forEach { absence ->
+                    addReplacementRow(container, absence)
+                }
+            } else {
+                header.visibility = View.GONE
+                card.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun addReplacementRow(container: LinearLayout, absence: com.example.additioapp.data.model.TeacherAbsenceEntity) {
+        val row = layoutInflater.inflate(R.layout.item_home_row, container, false)
+        
+        // Resolve class names
+        val classes = absence.getClassIdList().mapNotNull { classLookup[it]?.name }.joinToString(", ")
+        val title = if (classes.isNotEmpty()) classes else "Class"
+        
+        // Color based on status: Green=Completed, Orange=Scheduled, Yellow=Pending
+        val statusColor = when (absence.status) {
+            "COMPLETED" -> Color.parseColor("#4CAF50") // Green
+            "SCHEDULED" -> Color.parseColor("#FF5722") // Orange
+            else -> Color.parseColor("#FFC107") // Yellow for Pending
+        }
+        row.findViewById<View>(R.id.colorIndicator).setBackgroundColor(statusColor)
+
+        row.findViewById<TextView>(R.id.textRowTitle).text = title
+        val typeAndRoom = if (!absence.room.isNullOrEmpty()) "${absence.sessionType} • ${absence.room}" else absence.sessionType
+        row.findViewById<TextView>(R.id.textRowMeta).text = "$typeAndRoom • ${absence.status}"
+        
+        val extraView = row.findViewById<TextView>(R.id.textRowExtra)
+        extraView.visibility = View.GONE
+        // User asked "give icone".
+        
+        // Click to go to Replacements tab
+        row.setOnClickListener {
+            val bundle = Bundle().apply { 
+                putInt("tabIndex", 3) // Replacements tab
+            }
+            findNavController().navigate(R.id.plannerFragment, bundle)
+        }
+        
         container.addView(row)
     }
 }

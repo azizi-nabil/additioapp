@@ -311,6 +311,11 @@
     <!-- Event Dialog -->
     <string name="hint_event_title">عنوان الحدث *</string>
     <string name="label_description">الوصف</string>
+    <string name="label_date_range">نطاق التاريخ</string>
+    <string name="label_location">الموقع</string>
+    <string name="hint_location">مثال: مخبر 3، عن بعد، المنزل</string>
+    <string name="label_room">القاعة</string>
+    <string name="hint_room">رقم القاعة</string>
     <string name="label_date">التاريخ</string>
     <string name="action_select_date">اختر التاريخ</string>
     <string name="label_all_day_event">حدث طوال اليوم</string>
@@ -685,5 +690,8 @@
     <string name="action_quick_grade">تقييم سريع</string>
     <string name="notification_replacement_title">📅 حصة تعويض اليوم</string>
     <string name="notification_replacement_message">%1$s (%2$s) - مجدول ليوم %3$s</string>
+    <string name="home_todays_replacements">تعويضات اليوم</string>
+    <string name="widget_todays_replacements">🔄 تعويضات اليوم</string>
+    <string name="widget_no_replacements">لا يوجد تعويضات اليوم ✓</string>
 </resources>
 

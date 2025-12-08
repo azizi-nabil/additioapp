@@ -57,51 +57,16 @@ class GradeEntryFragment : Fragment() {
 
         val titleTextView = view.findViewById<TextView>(R.id.textGradeItemTitle)
         val btnSort = view.findViewById<View>(R.id.btnSort)
+        val btnFilter = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnFilter)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewGradeEntry)
         val editSearch = view.findViewById<EditText>(R.id.editSearchStudent)
         val textStudentCount = view.findViewById<TextView>(R.id.textStudentCount)
-        
-        // FAB and toggle
-        val fab = view.findViewById<ExtendedFloatingActionButton>(R.id.fabAddGrade)
-        val btnToggleFab = view.findViewById<ImageButton>(R.id.btnToggleFab)
-        
-        // Filter chips
-        val chipAll = view.findViewById<Chip>(R.id.chipAll)
-        val chipGraded = view.findViewById<Chip>(R.id.chipGraded)
-        val chipNotGraded = view.findViewById<Chip>(R.id.chipNotGraded)
 
         titleTextView.text = gradeItemName ?: "Enter Grades"
-        
-        // FAB toggle functionality
-        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        var isFabVisible = prefs.getBoolean("pref_fab_visible_grade_entry", true)
-        
-        fun updateFabVisibility() {
-            if (isFabVisible) {
-                fab.show()
-                btnToggleFab.setImageResource(R.drawable.ic_visibility)
-                btnToggleFab.alpha = 1.0f
-            } else {
-                fab.hide()
-                btnToggleFab.setImageResource(R.drawable.ic_visibility_off)
-                btnToggleFab.alpha = 0.6f
-            }
-        }
-        updateFabVisibility()
-        
-        btnToggleFab.setOnClickListener {
-            isFabVisible = !isFabVisible
-            prefs.edit().putBoolean("pref_fab_visible_grade_entry", isFabVisible).apply()
-            updateFabVisibility()
-        }
-        
-        // FAB action - scroll to top for now
-        fab.setOnClickListener {
-            recyclerView.smoothScrollToPosition(0)
-        }
 
         val adapter = GradeEntryAdapter { item, score, status ->
             val existingId = item.gradeRecord?.id ?: 0L
+            // score of -1 means "blank/no grade" - stored as -1 in DB
             val record = GradeRecordEntity(
                 id = existingId,
                 studentId = item.student.id,
@@ -112,12 +77,24 @@ class GradeEntryFragment : Fragment() {
             gradeViewModel.saveGradeAndRecalculate(record, classId)
         }
 
+        val editFilterMin = view.findViewById<EditText>(R.id.editFilterMin)
+        val editFilterMax = view.findViewById<EditText>(R.id.editFilterMax)
+        val btnClearFilter = view.findViewById<View>(R.id.btnClearFilter)
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        var currentSortMode = "NAME_ASC"
-        var currentFilter = "ALL" // ALL, GRADED, NOT_GRADED
+        // Load default sort order from preferences
+        val sortPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val nameField = sortPrefs.getString("pref_sort_order", "lastname") ?: "lastname"
+        var currentSortMode = if (nameField == "firstname") "FIRSTNAME_ASC" else "NAME_ASC"
+        var currentFilter = "ALL" // ALL, GRADED, NOT_GRADED, NOT_PRESENT
         var searchQuery = ""
+        var filterMin: Float? = null
+        var filterMax: Float? = null
+        
+        val filterOptions = arrayOf("All", "Graded", "Not Graded", "Not Present")
+        val filterValues = arrayOf("ALL", "GRADED", "NOT_GRADED", "NOT_PRESENT")
 
         fun updateList(students: List<com.example.additioapp.data.model.StudentEntity>, records: List<GradeRecordEntity>) {
             val items = students.map { student ->
@@ -125,20 +102,35 @@ class GradeEntryFragment : Fragment() {
                 StudentGradeItem(student, record)
             }
             
-            // Filter by search and grade status
+            // Filter by search, grade status, and min/max range
             val filteredItems = items.filter { item ->
                 val matchesSearch = item.student.name.contains(searchQuery, ignoreCase = true)
                 val matchesFilter = when (currentFilter) {
-                    "GRADED" -> item.gradeRecord?.score != null
-                    "NOT_GRADED" -> item.gradeRecord?.score == null
+                    "GRADED" -> item.gradeRecord?.score != null && item.gradeRecord!!.score >= 0
+                    "NOT_GRADED" -> item.gradeRecord?.score == null || item.gradeRecord!!.score < 0
+                    "NOT_PRESENT" -> item.gradeRecord?.status in listOf("ABSENT", "MISSING", "EXCUSED")
                     else -> true
                 }
-                matchesSearch && matchesFilter
+                
+                // Min/Max range filter (only for valid scores >= 0)
+                val score = item.gradeRecord?.score
+                val matchesRange = if (score == null || score < 0) {
+                    // No grade - include if no range filter is set
+                    filterMin == null && filterMax == null
+                } else {
+                    val minOk = filterMin == null || score >= filterMin!!
+                    val maxOk = filterMax == null || score <= filterMax!!
+                    minOk && maxOk
+                }
+                
+                matchesSearch && matchesFilter && matchesRange
             }
 
             val sortedItems = when (currentSortMode) {
-                "NAME_ASC" -> filteredItems.sortedBy { it.student.name }
-                "NAME_DESC" -> filteredItems.sortedByDescending { it.student.name }
+                "NAME_ASC" -> filteredItems.sortedBy { it.student.lastNameFr.ifEmpty { it.student.name } }
+                "NAME_DESC" -> filteredItems.sortedByDescending { it.student.lastNameFr.ifEmpty { it.student.name } }
+                "FIRSTNAME_ASC" -> filteredItems.sortedBy { it.student.firstNameFr }
+                "FIRSTNAME_DESC" -> filteredItems.sortedByDescending { it.student.firstNameFr }
                 "ID_ASC" -> filteredItems.sortedBy { it.student.id }
                 else -> filteredItems
             }
@@ -163,17 +155,44 @@ class GradeEntryFragment : Fragment() {
                     }
                 })
                 
-                // Chip filter listeners
-                chipAll.setOnClickListener {
-                    currentFilter = "ALL"
-                    filterAndUpdate()
+                // Filter button - shows dialog
+                btnFilter.setOnClickListener {
+                    androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                        .setTitle("Filter By")
+                        .setItems(filterOptions) { _, which ->
+                            currentFilter = filterValues[which]
+                            btnFilter.text = filterOptions[which]
+                            filterAndUpdate()
+                        }
+                        .show()
                 }
-                chipGraded.setOnClickListener {
-                    currentFilter = "GRADED"
-                    filterAndUpdate()
-                }
-                chipNotGraded.setOnClickListener {
-                    currentFilter = "NOT_GRADED"
+
+                // Min filter text change
+                editFilterMin.addTextChangedListener(object : android.text.TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    override fun afterTextChanged(s: android.text.Editable?) {
+                        filterMin = s.toString().toFloatOrNull()
+                        filterAndUpdate()
+                    }
+                })
+
+                // Max filter text change
+                editFilterMax.addTextChangedListener(object : android.text.TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    override fun afterTextChanged(s: android.text.Editable?) {
+                        filterMax = s.toString().toFloatOrNull()
+                        filterAndUpdate()
+                    }
+                })
+
+                // Clear min/max filter button
+                btnClearFilter.setOnClickListener {
+                    editFilterMin.text?.clear()
+                    editFilterMax.text?.clear()
+                    filterMin = null
+                    filterMax = null
                     filterAndUpdate()
                 }
 
@@ -181,15 +200,19 @@ class GradeEntryFragment : Fragment() {
                 filterAndUpdate()
                 
                 btnSort.setOnClickListener {
-                    val options = arrayOf("Name (A-Z)", "Name (Z-A)", "ID")
+                    val options = arrayOf(
+                        getString(R.string.sort_az),
+                        getString(R.string.sort_za),
+                        getString(R.string.sort_id_matricule_option)
+                    )
                     androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                        .setTitle("Sort By")
+                        .setTitle(getString(R.string.dialog_sort_students_by))
                         .setItems(options) { _, which ->
                             currentSortMode = when (which) {
-                                0 -> "NAME_ASC"
-                                1 -> "NAME_DESC"
+                                0 -> if (nameField == "firstname") "FIRSTNAME_ASC" else "NAME_ASC"
+                                1 -> if (nameField == "firstname") "FIRSTNAME_DESC" else "NAME_DESC"
                                 2 -> "ID_ASC"
-                                else -> "NAME_ASC"
+                                else -> if (nameField == "firstname") "FIRSTNAME_ASC" else "NAME_ASC"
                             }
                             filterAndUpdate()
                         }

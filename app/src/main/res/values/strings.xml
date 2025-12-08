@@ -26,6 +26,7 @@
     <string name="tab_schedule">🗓️ Schedule</string>
     <string name="tab_replacements">📋 Replacements</string>
     <string name="action_add_absence">Add Absence</string>
+    <string name="action_refresh">Refresh</string>
     
     <!-- Navigation -->
     <string name="nav_home">Home</string>
@@ -280,6 +281,8 @@
     <string name="filter_negative">Negative</string>
     <string name="filter_graded">Graded</string>
     <string name="filter_not_graded">Not Graded</string>
+    <string name="filter_not_present">Not Present</string>
+    <string name="label_mark">Mark</string>
     
     <!-- Dialogs -->
     <string name="dialog_delete_title">Delete</string>
@@ -292,6 +295,11 @@
     <string name="status_excused">Excused</string>
     <string name="label_grade_avg">Grade Avg:</string>
     <string name="label_attendance">Attendance:</string>
+    <string name="label_date_range">Date Range</string>
+    <string name="label_location">Location</string>
+    <string name="hint_location">e.g. Lab 3, Online, Home</string>
+    <string name="label_room">Room</string>
+    <string name="hint_room">Room number</string>
     <string name="student_name">Student Name</string>
     <string name="dialog_import_title">Import Students</string>
     <string name="dialog_restore_title">Restore Data</string>
@@ -624,6 +632,11 @@
     <string name="sort_firstname_asc_option">First Name (A-Z)</string>
     <string name="sort_firstname_desc_option">First Name (Z-A)</string>
     <string name="sort_id_matricule_option">ID/Matricule</string>
+    <string name="sort_az">A-Z</string>
+    <string name="sort_za">Z-A</string>
+    <string name="sort_display_az">Sort: A-Z</string>
+    <string name="sort_display_za">Sort: Z-A</string>
+    <string name="sort_display_id">Sort: ID</string>
     
     <string name="action_import_from_csv">Import from CSV</string>
     <string name="action_export_to_csv">Export to CSV</string>
@@ -698,5 +711,8 @@
     <string name="action_quick_grade">Quick Grade</string>
     <string name="notification_replacement_title">📅 Replacement Session Today</string>
     <string name="notification_replacement_message">%1$s (%2$s) - Scheduled for %3$s</string>
+    <string name="home_todays_replacements">Today\'s Replacements</string>
+    <string name="widget_todays_replacements">🔄 Today\'s Replacements</string>
+    <string name="widget_no_replacements">No replacements today ✓</string>
 </resources>
 

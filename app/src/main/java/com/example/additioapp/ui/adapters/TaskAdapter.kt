@@ -66,6 +66,7 @@ class TaskAdapter(
         private val textTitle: TextView = itemView.findViewById(R.id.textTaskTitle)
         private val textDue: TextView = itemView.findViewById(R.id.textTaskDue)
         private val textClass: TextView = itemView.findViewById(R.id.textTaskClass)
+        private val textLocation: TextView = itemView.findViewById(R.id.textTaskLocation)
         private val btnDelete: ImageButton = itemView.findViewById(R.id.btnDeleteTask)
 
         fun bind(task: TaskEntity) {
@@ -117,6 +118,14 @@ class TaskAdapter(
                 textClass.visibility = View.VISIBLE
             } else {
                 textClass.visibility = View.GONE
+            }
+
+            // Location
+            if (!task.location.isNullOrEmpty()) {
+                textLocation.text = task.location
+                textLocation.visibility = View.VISIBLE
+            } else {
+                textLocation.visibility = View.GONE
             }
 
             checkTask.setOnCheckedChangeListener { _, isChecked ->

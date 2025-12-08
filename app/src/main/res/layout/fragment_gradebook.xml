@@ -16,7 +16,8 @@
             android:layout_height="?attr/actionBarSize"
             app:title="📊 Gradebook"
             app:titleTextColor="@android:color/white"
-            android:background="?attr/colorPrimary"/>
+            android:background="?attr/colorPrimary"
+            app:menu="@menu/menu_gradebook"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView

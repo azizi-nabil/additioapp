@@ -344,34 +344,31 @@ class StudentsFragment : Fragment() {
             }
             
             val sortText = when (sortMode) {
-                "LASTNAME_ASC", "NAME_ASC" -> getString(R.string.sort_lastname_asc)
-                "LASTNAME_DESC", "NAME_DESC" -> getString(R.string.sort_lastname_desc)
-                "FIRSTNAME_ASC" -> getString(R.string.sort_firstname_asc)
-                "FIRSTNAME_DESC" -> getString(R.string.sort_firstname_desc)
-                "ID_ASC" -> getString(R.string.sort_id_matricule)
+                "LASTNAME_ASC", "NAME_ASC", "FIRSTNAME_ASC" -> getString(R.string.sort_display_az)
+                "LASTNAME_DESC", "NAME_DESC", "FIRSTNAME_DESC" -> getString(R.string.sort_display_za)
+                "ID_ASC" -> getString(R.string.sort_display_id)
                 else -> getString(R.string.sort_default)
             }
             btnSort.text = sortText
         }
 
         btnSort.setOnClickListener {
+            // Get name preference from settings
+            val nameField = sortPrefs.getString("pref_sort_order", "lastname") ?: "lastname"
+            
             val options = arrayOf(
-                getString(R.string.sort_lastname_asc_option),
-                getString(R.string.sort_lastname_desc_option),
-                getString(R.string.sort_firstname_asc_option),
-                getString(R.string.sort_firstname_desc_option),
+                getString(R.string.sort_az),
+                getString(R.string.sort_za),
                 getString(R.string.sort_id_matricule_option)
             )
             androidx.appcompat.app.AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.dialog_sort_students_by))
                 .setItems(options) { _, which ->
                     sortMode = when (which) {
-                        0 -> "LASTNAME_ASC"
-                        1 -> "LASTNAME_DESC"
-                        2 -> "FIRSTNAME_ASC"
-                        3 -> "FIRSTNAME_DESC"
-                        4 -> "ID_ASC"
-                        else -> "LASTNAME_ASC"
+                        0 -> if (nameField == "firstname") "FIRSTNAME_ASC" else "LASTNAME_ASC"
+                        1 -> if (nameField == "firstname") "FIRSTNAME_DESC" else "LASTNAME_DESC"
+                        2 -> "ID_ASC"
+                        else -> if (nameField == "firstname") "FIRSTNAME_ASC" else "LASTNAME_ASC"
                     }
                     updateUI()
                 }

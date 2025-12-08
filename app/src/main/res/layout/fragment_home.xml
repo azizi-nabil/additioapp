@@ -450,6 +450,62 @@
                 android:padding="12dp"/>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Today's Replacements -->
+        <LinearLayout
+            android:id="@+id/headerTodayReplacements"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:paddingHorizontal="24dp"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_swap_horiz"
+                app:tint="#FF5722"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/home_todays_replacements"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/btnViewReplacements"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_view_all"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:padding="4dp"
+                android:background="?attr/selectableItemBackground"/>
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardTodayReplacements"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/containerTodayReplacements"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp"/>
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Upcoming Events -->
         <LinearLayout
             android:layout_width="match_parent"

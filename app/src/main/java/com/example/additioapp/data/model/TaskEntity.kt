@@ -23,6 +23,7 @@ data class TaskEntity(
     val description: String = "",
     val dueDate: Long? = null,               // Due date timestamp
     val classId: Long? = null,               // Optional link to class
+    val location: String? = null,            // Optional location
     val isCompleted: Boolean = false,
     val priority: String = "MEDIUM",         // HIGH, MEDIUM, LOW
     val createdAt: Long = System.currentTimeMillis()

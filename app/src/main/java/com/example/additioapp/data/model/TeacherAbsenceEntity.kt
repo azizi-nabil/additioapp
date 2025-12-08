@@ -15,6 +15,7 @@ data class TeacherAbsenceEntity(
     val absenceDate: Long,                 // Original session date missed
     val reason: String? = null,            // Optional reason
     val replacementDate: Long? = null,     // Scheduled replacement date
+    val room: String? = null,              // Optional room for replacement
     val status: String = "PENDING",        // "PENDING", "SCHEDULED", "COMPLETED"
     val notes: String? = null,
     val createdAt: Long = System.currentTimeMillis()

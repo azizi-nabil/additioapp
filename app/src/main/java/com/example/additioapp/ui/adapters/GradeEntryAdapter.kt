@@ -85,6 +85,7 @@ class GradeEntryAdapter(
         private var textWatcher: TextWatcher? = null
 
         fun bind(item: StudentGradeItem, position: Int, isCalculated: Boolean, maxScore: Float, onGradeChanged: (StudentGradeItem, Float, String) -> Unit) {
+            val maxScoreLocal = maxScore // Capture for use in inner functions
             // Check preferences
             val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(itemView.context)
             val nameLang = prefs.getString("pref_name_language", "french") ?: "french"
@@ -142,9 +143,10 @@ class GradeEntryAdapter(
                 scoreEditText.removeTextChangedListener(textWatcher)
             }
 
-            // Set current score
+            // Set current score (-1 means blank/no grade)
             val currentText = scoreEditText.text.toString()
-            val newText = item.gradeRecord?.score?.toString() ?: ""
+            val scoreValue = item.gradeRecord?.score
+            val newText = if (scoreValue == null || scoreValue < 0) "" else scoreValue.toString()
             if (currentText != newText) {
                 scoreEditText.setText(newText)
             }
@@ -176,7 +178,10 @@ class GradeEntryAdapter(
             // Save on Focus Loss
             scoreEditText.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
-                    saveGrade(item, scoreEditText.text.toString(), "PRESENT", onGradeChanged)
+                    val validated = validateAndSaveGrade(item, scoreEditText.text.toString(), "PRESENT", maxScoreLocal, scoreEditText, scoreInputLayout, onGradeChanged)
+                    if (!validated) {
+                        scoreEditText.setText(item.gradeRecord?.score?.toString() ?: "")
+                    }
                 }
             }
 
@@ -184,7 +189,10 @@ class GradeEntryAdapter(
             scoreEditText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_NEXT ||
                     actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE) {
-                    saveGrade(item, scoreEditText.text.toString(), "PRESENT", onGradeChanged)
+                    val validated = validateAndSaveGrade(item, scoreEditText.text.toString(), "PRESENT", maxScoreLocal, scoreEditText, scoreInputLayout, onGradeChanged)
+                    if (!validated) {
+                        scoreEditText.setText(item.gradeRecord?.score?.toString() ?: "")
+                    }
                     false 
                 } else {
                     false
@@ -219,6 +227,45 @@ class GradeEntryAdapter(
                 }
                 popup.show()
             }
+        }
+
+        private fun validateAndSaveGrade(
+            item: StudentGradeItem,
+            text: String,
+            status: String,
+            maxScore: Float,
+            scoreEditText: EditText,
+            scoreInputLayout: com.google.android.material.textfield.TextInputLayout,
+            onGradeChanged: (StudentGradeItem, Float, String) -> Unit
+        ): Boolean {
+            // Allow blank - save as -1 to indicate "clear/no grade"
+            if (text.isBlank()) {
+                scoreInputLayout.error = null
+                // Save with -1 to indicate no grade
+                onGradeChanged(item, -1f, status)
+                return true
+            }
+            
+            val score = text.toFloatOrNull()
+            
+            // Reject non-numeric
+            if (score == null) {
+                scoreInputLayout.error = "Invalid"
+                return false
+            }
+            
+            // Reject > max
+            if (score > maxScore) {
+                scoreInputLayout.error = "Max: $maxScore"
+                return false
+            }
+            
+            // Valid - clear error and save
+            scoreInputLayout.error = null
+            if (item.gradeRecord == null || item.gradeRecord?.score != score || item.gradeRecord?.status != status) {
+                onGradeChanged(item, score, status)
+            }
+            return true
         }
 
         private fun saveGrade(item: StudentGradeItem, text: String, status: String, onGradeChanged: (StudentGradeItem, Float, String) -> Unit) {

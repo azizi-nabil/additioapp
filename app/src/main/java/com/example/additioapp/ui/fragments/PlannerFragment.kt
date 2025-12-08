@@ -453,7 +453,7 @@ class PlannerFragment : Fragment() {
 
         // Handle tabIndex argument from navigation
         val tabIndex = arguments?.getInt("tabIndex", 0) ?: 0
-        if (tabIndex in 0..2) {
+        if (tabIndex in 0..3) {
             tabLayout.getTabAt(tabIndex)?.select()
         }
         
@@ -1353,6 +1353,7 @@ class PlannerFragment : Fragment() {
 
         val editTitle = dialogView.findViewById<TextInputEditText>(R.id.editTaskTitle)
         val editDescription = dialogView.findViewById<TextInputEditText>(R.id.editTaskDescription)
+        val editLocation = dialogView.findViewById<TextInputEditText>(R.id.editTaskLocation)
         val editDueDate = dialogView.findViewById<TextInputEditText>(R.id.inputTaskDueDate)
         val radioPriority = dialogView.findViewById<RadioGroup>(R.id.radioPriority)
         val btnSelectClasses = dialogView.findViewById<TextView>(R.id.btnSelectClasses)
@@ -1407,6 +1408,7 @@ class PlannerFragment : Fragment() {
         existingTask?.let {
             editTitle.setText(it.title)
             editDescription.setText(it.description)
+            editLocation.setText(it.location)
             dueDate = it.dueDate
             when (it.priority) {
                 "LOW" -> radioPriority.check(R.id.radioLow)
@@ -1498,6 +1500,7 @@ class PlannerFragment : Fragment() {
                     id = existingTask?.id ?: 0,
                     title = title,
                     description = editDescription.text.toString().trim(),
+                    location = editLocation.text.toString().trim(),
                     dueDate = dueDate,
                     classId = primaryClassId,
                     isCompleted = existingTask?.isCompleted ?: false,
@@ -1854,6 +1857,8 @@ class PlannerFragment : Fragment() {
         val radioCourse = dialogView.findViewById<RadioButton>(R.id.radioCourse)
         val editAbsenceDate = dialogView.findViewById<TextInputEditText>(R.id.editAbsenceDate)
         val editReplacementDate = dialogView.findViewById<TextInputEditText>(R.id.editReplacementDate)
+        val layoutReplacementRoom = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.layoutReplacementRoom)
+        val editReplacementRoom = dialogView.findViewById<TextInputEditText>(R.id.editReplacementRoom)
         val editReason = dialogView.findViewById<TextInputEditText>(R.id.editReason)
         val editNotes = dialogView.findViewById<TextInputEditText>(R.id.editNotes)
         
@@ -1882,19 +1887,27 @@ class PlannerFragment : Fragment() {
             chipGroupClasses.addView(chip)
         }
         
-        // Set existing values
+        // Populate existing data
         existingAbsence?.let { absence ->
-            // Set session type
+            // ... (class loading logic remains) 
+            
+            // We need to reload class IDs, already handled by chip logic below but we need to trigger it
+
+
             when (absence.sessionType) {
-                TeacherAbsenceEntity.TYPE_TD -> radioTD.isChecked = true
-                TeacherAbsenceEntity.TYPE_TP -> radioTP.isChecked = true
-                else -> radioCourse.isChecked = true
+                TeacherAbsenceEntity.TYPE_TD -> radioGroup.check(R.id.radioTD)
+                TeacherAbsenceEntity.TYPE_TP -> radioGroup.check(R.id.radioTP)
+                else -> radioGroup.check(R.id.radioCourse)
             }
             
-            // Set dates
+            selectedAbsenceDate = absence.absenceDate
             editAbsenceDate.setText(dateFormat.format(Date(absence.absenceDate)))
+            
             absence.replacementDate?.let {
+                selectedReplacementDate = it
                 editReplacementDate.setText(dateFormat.format(Date(it)))
+                layoutReplacementRoom.visibility = View.VISIBLE
+                editReplacementRoom.setText(absence.room ?: "")
             }
             editReason.setText(absence.reason ?: "")
             editNotes.setText(absence.notes ?: "")
@@ -1912,6 +1925,7 @@ class PlannerFragment : Fragment() {
             showDatePickerForAbsence { date ->
                 selectedReplacementDate = date
                 editReplacementDate.setText(dateFormat.format(Date(date)))
+                layoutReplacementRoom.visibility = View.VISIBLE
             }
         }
         
@@ -1951,10 +1965,11 @@ class PlannerFragment : Fragment() {
                     classIds = TeacherAbsenceEntity.createClassIdsString(selectedClassIds.toList()),
                     sessionType = sessionType,
                     absenceDate = absenceDate,
-                    reason = editReason.text.toString().takeIf { it.isNotBlank() },
+                    reason = editReason.text.toString().trim().takeIf { it.length > 0 },
                     replacementDate = selectedReplacementDate,
+                    room = editReplacementRoom.text.toString().trim().takeIf { it.length > 0 },
                     status = status,
-                    notes = editNotes.text.toString().takeIf { it.isNotBlank() },
+                    notes = editNotes.text.toString().trim().takeIf { it.length > 0 },
                     createdAt = existingAbsence?.createdAt ?: System.currentTimeMillis()
                 )
                 

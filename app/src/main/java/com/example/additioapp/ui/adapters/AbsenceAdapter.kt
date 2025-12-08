@@ -43,7 +43,9 @@ class AbsenceAdapter(
         private val chipSessionType: Chip = itemView.findViewById(R.id.chipSessionType)
         private val textAbsenceDate: TextView = itemView.findViewById(R.id.textAbsenceDate)
         private val layoutReplacement: LinearLayout = itemView.findViewById(R.id.layoutReplacement)
+
         private val textReplacementDate: TextView = itemView.findViewById(R.id.textReplacementDate)
+        val textReplacementRoom: TextView = itemView.findViewById(R.id.textReplacementRoom) // Expose internal
         private val textStatus: TextView = itemView.findViewById(R.id.textStatus)
         private val btnSchedule: ImageButton = itemView.findViewById(R.id.btnSchedule)
         private val btnComplete: ImageButton = itemView.findViewById(R.id.btnComplete)
@@ -71,6 +73,14 @@ class AbsenceAdapter(
                     R.string.absence_replacement_on,
                     dateFormat.format(Date(absence.replacementDate))
                 )
+                
+                // Room display
+                if (!absence.room.isNullOrEmpty()) {
+                    textReplacementRoom.text = "(${absence.room})"
+                    textReplacementRoom.visibility = View.VISIBLE
+                } else {
+                    textReplacementRoom.visibility = View.GONE
+                }
             } else {
                 layoutReplacement.visibility = View.GONE
             }

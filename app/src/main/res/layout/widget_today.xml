@@ -32,6 +32,140 @@
             android:textSize="12sp"/>
     </LinearLayout>
 
+    <!-- Schedule Section (Classes) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_todays_classes"
+        android:textColor="#333333"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"/>
+
+    <LinearLayout
+        android:id="@+id/scheduleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textSchedule1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/widget_item_background"
+            android:padding="6dp"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/textSchedule2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/widget_item_background"
+            android:padding="6dp"
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/textSchedule3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/widget_item_background"
+            android:padding="6dp"
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/textSchedule4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/widget_item_background"
+            android:padding="6dp"
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textNoSchedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_no_classes"
+        android:textColor="#999999"
+        android:textSize="11sp"/>
+
+    <!-- Divider -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginVertical="4dp"/>
+
+    <!-- Replacements Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🔄 Today's Replacements"
+        android:textColor="#333333"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"/>
+
+    <LinearLayout
+        android:id="@+id/replacementsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textReplacement1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/widget_item_background"
+            android:padding="6dp"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/textReplacement2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/widget_item_background"
+            android:padding="6dp"
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textNoReplacements"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_no_replacements"
+        android:textColor="#999999"
+        android:textSize="11sp"/>
+
+    <!-- Divider -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginVertical="4dp"/>
+
     <!-- Events Section -->
     <TextView
         android:layout_width="wrap_content"
@@ -71,18 +205,8 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/textEvent3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
+            
+        <!-- Removed 3rd event to save space since adding replacements -->
     </LinearLayout>
 
     <TextView
@@ -161,72 +285,5 @@
         android:textColor="#999999"
         android:textSize="11sp"
         android:layout_marginBottom="4dp"/>
-
-    <!-- Divider -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#E0E0E0"
-        android:layout_marginVertical="4dp"/>
-
-    <!-- Schedule Section -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/widget_todays_classes"
-        android:textColor="#333333"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="4dp"/>
-
-    <LinearLayout
-        android:id="@+id/scheduleContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textSchedule1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/textSchedule2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/textSchedule3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textNoSchedule"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/widget_no_classes"
-        android:textColor="#999999"
-        android:textSize="11sp"/>
 
 </LinearLayout>

@@ -59,7 +59,10 @@ class BehaviorFragment : Fragment() {
 
         var currentStudents: List<com.example.additioapp.data.model.StudentEntity> = emptyList()
         var currentBehaviors: List<com.example.additioapp.data.model.BehaviorRecordEntity> = emptyList()
-        var sortMode = "NAME_ASC" // NAME_ASC, NAME_DESC, ID_ASC
+        // Load default sort order from preferences
+        val sortPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val nameField = sortPrefs.getString("pref_sort_order", "lastname") ?: "lastname"
+        var sortMode = if (nameField == "firstname") "FIRSTNAME_ASC" else "NAME_ASC"
         var filterMode = "ALL" // ALL, POSITIVE, NEGATIVE
         var searchQuery = ""
 
@@ -83,8 +86,10 @@ class BehaviorFragment : Fragment() {
             }
 
             val sortedItems = when (sortMode) {
-                "NAME_ASC" -> filteredItems.sortedBy { it.student.name }
-                "NAME_DESC" -> filteredItems.sortedByDescending { it.student.name }
+                "NAME_ASC" -> filteredItems.sortedBy { it.student.lastNameFr.ifEmpty { it.student.name } }
+                "NAME_DESC" -> filteredItems.sortedByDescending { it.student.lastNameFr.ifEmpty { it.student.name } }
+                "FIRSTNAME_ASC" -> filteredItems.sortedBy { it.student.firstNameFr }
+                "FIRSTNAME_DESC" -> filteredItems.sortedByDescending { it.student.firstNameFr }
                 "ID_ASC" -> filteredItems.sortedBy { it.student.id }
                 else -> filteredItems
             }
@@ -93,9 +98,9 @@ class BehaviorFragment : Fragment() {
             textTotalStudents.text = getString(R.string.msg_student_count_simple, sortedItems.size)
 
             val sortText = when (sortMode) {
-                "NAME_ASC" -> getString(R.string.sort_name_asc)
-                "NAME_DESC" -> getString(R.string.sort_name_desc)
-                "ID_ASC" -> getString(R.string.sort_id)
+                "NAME_ASC", "FIRSTNAME_ASC" -> getString(R.string.sort_display_az)
+                "NAME_DESC", "FIRSTNAME_DESC" -> getString(R.string.sort_display_za)
+                "ID_ASC" -> getString(R.string.sort_display_id)
                 else -> getString(R.string.sort_default)
             }
             btnSort.text = sortText
@@ -109,15 +114,19 @@ class BehaviorFragment : Fragment() {
         }
 
         btnSort.setOnClickListener {
-            val options = arrayOf(getString(R.string.sort_name_asc_option), getString(R.string.sort_name_desc_option), getString(R.string.sort_id_option))
+            val options = arrayOf(
+                getString(R.string.sort_az),
+                getString(R.string.sort_za),
+                getString(R.string.sort_id_matricule_option)
+            )
             androidx.appcompat.app.AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.dialog_sort_students_by))
                 .setItems(options) { _, which ->
                     sortMode = when (which) {
-                        0 -> "NAME_ASC"
-                        1 -> "NAME_DESC"
+                        0 -> if (nameField == "firstname") "FIRSTNAME_ASC" else "NAME_ASC"
+                        1 -> if (nameField == "firstname") "FIRSTNAME_DESC" else "NAME_DESC"
                         2 -> "ID_ASC"
-                        else -> "NAME_ASC"
+                        else -> if (nameField == "firstname") "FIRSTNAME_ASC" else "NAME_ASC"
                     }
                     updateList()
                 }

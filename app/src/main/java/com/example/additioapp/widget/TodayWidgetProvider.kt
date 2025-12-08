@@ -78,7 +78,6 @@ class TodayWidgetProvider : AppWidgetProvider() {
                     // Clear all event views first
                     views.setViewVisibility(R.id.textEvent1, View.GONE)
                     views.setViewVisibility(R.id.textEvent2, View.GONE)
-                    views.setViewVisibility(R.id.textEvent3, View.GONE)
                     
                     // Show events
                     if (events.isEmpty()) {
@@ -86,13 +85,12 @@ class TodayWidgetProvider : AppWidgetProvider() {
                     } else {
                         views.setViewVisibility(R.id.textNoEvents, View.GONE)
                         
-                        events.take(3).forEachIndexed { index, event: EventEntity ->
+                        events.take(2).forEachIndexed { index, event: EventEntity ->
                             val time = event.startTime ?: ""
                             val text = if (time.isNotEmpty()) "$time - ${event.title}" else event.title
                             val viewId = when (index) {
                                 0 -> R.id.textEvent1
-                                1 -> R.id.textEvent2
-                                else -> R.id.textEvent3
+                                else -> R.id.textEvent2
                             }
                             views.setTextViewText(viewId, text)
                             views.setViewVisibility(viewId, View.VISIBLE)
@@ -111,12 +109,12 @@ class TodayWidgetProvider : AppWidgetProvider() {
                         views.setViewVisibility(R.id.textNoTasks, View.GONE)
                         
                         tasks.take(3).forEachIndexed { index, task: TaskEntity ->
-                            val priority = when (task.priority) {
+                            val priorityEmoji = when (task.priority) {
                                 "HIGH" -> "🔴"
                                 "MEDIUM" -> "🟡"
                                 else -> "🟢"
                             }
-                            val text = "$priority ${task.title}"
+                            val text = "$priorityEmoji ${task.title}"
                             val viewId = when (index) {
                                 0 -> R.id.textTask1
                                 1 -> R.id.textTask2
@@ -131,6 +129,7 @@ class TodayWidgetProvider : AppWidgetProvider() {
                     views.setViewVisibility(R.id.textSchedule1, View.GONE)
                     views.setViewVisibility(R.id.textSchedule2, View.GONE)
                     views.setViewVisibility(R.id.textSchedule3, View.GONE)
+                    views.setViewVisibility(R.id.textSchedule4, View.GONE)
                     
                     // Get today's day of week (Calendar.SUNDAY=1, we need 0=Sunday for our DB)
                     val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
@@ -142,19 +141,63 @@ class TodayWidgetProvider : AppWidgetProvider() {
                     } else {
                         views.setViewVisibility(R.id.textNoSchedule, View.GONE)
                         
-                        scheduleItems.take(3).forEachIndexed { index, item ->
+                        scheduleItems.take(4).forEachIndexed { index, item ->
                             val time = item.startTime
                             val info = if (item.room.isNotEmpty()) "${item.sessionType} (${item.room})" else item.sessionType
                             val text = "$time - $info"
                             val viewId = when (index) {
                                 0 -> R.id.textSchedule1
                                 1 -> R.id.textSchedule2
-                                else -> R.id.textSchedule3
+                                2 -> R.id.textSchedule3
+                                else -> R.id.textSchedule4
                             }
                             views.setTextViewText(viewId, text)
                             views.setViewVisibility(viewId, View.VISIBLE)
                         }
                     }
+
+                    // Get today's replacements (Manual filter since DAO method was removed)
+                    val allAbsences = db.teacherAbsenceDao().getAllAbsencesSync()
+                    val replacements = allAbsences.filter { absence ->
+                        absence.status != "COMPLETED" &&
+                        absence.replacementDate != null &&
+                        absence.replacementDate >= startOfDay &&
+                        absence.replacementDate <= endOfDay
+                    }.sortedBy { it.replacementDate }
+                    
+                    // Clear replacements views first
+                    views.setViewVisibility(R.id.textReplacement1, View.GONE)
+                    views.setViewVisibility(R.id.textReplacement2, View.GONE)
+
+                    if (replacements.isEmpty()) {
+                        views.setViewVisibility(R.id.textNoReplacements, View.VISIBLE)
+                    } else {
+                        views.setViewVisibility(R.id.textNoReplacements, View.GONE)
+                        
+                        // We need to resolve class names. Since we are in background, we can query classDao
+                        val allClasses = db.classDao().getAllClassesSync().associateBy { it.id }
+                        
+                        replacements.take(2).forEachIndexed { index, absence ->
+                            // Resolve class names
+                            val classIds = absence.getClassIdList()
+                            val classNames = classIds.mapNotNull { allClasses[it]?.name }.joinToString(", ")
+                            val title = if (classNames.isNotEmpty()) classNames else "Class"
+                            
+                            val roomInfo = if (!absence.room.isNullOrEmpty()) " - ${absence.room}" else ""
+                            val statusEmoji = when (absence.status) {
+                                "SCHEDULED" -> "🔄"
+                                else -> "⏳" // Pending
+                            }
+                            val text = "$statusEmoji $title (${absence.sessionType}$roomInfo)"
+                            val viewId = when (index) {
+                                0 -> R.id.textReplacement1
+                                else -> R.id.textReplacement2
+                            }
+                            views.setTextViewText(viewId, text)
+                            views.setViewVisibility(viewId, View.VISIBLE)
+                        }
+                    }
+
                     
                     // Open app on click (entire widget clickable)
                     val intent = Intent(context, MainActivity::class.java)

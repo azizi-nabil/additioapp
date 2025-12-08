@@ -42,6 +42,30 @@ class GradesFragment : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewGradeItems)
         val fab = view.findViewById<ExtendedFloatingActionButton>(R.id.fabAddGradeItem)
+        val btnToggleFab = view.findViewById<android.widget.ImageButton>(R.id.btnToggleFab)
+        
+        // FAB toggle functionality
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
+        var isFabVisible = prefs.getBoolean("pref_fab_visible_grades", true)
+        
+        fun updateFabVisibility() {
+            if (isFabVisible) {
+                fab.show()
+                btnToggleFab.setImageResource(R.drawable.ic_visibility)
+                btnToggleFab.alpha = 1.0f
+            } else {
+                fab.hide()
+                btnToggleFab.setImageResource(R.drawable.ic_visibility_off)
+                btnToggleFab.alpha = 0.6f
+            }
+        }
+        updateFabVisibility()
+        
+        btnToggleFab.setOnClickListener {
+            isFabVisible = !isFabVisible
+            prefs.edit().putBoolean("pref_fab_visible_grades", isFabVisible).apply()
+            updateFabVisibility()
+        }
 
         val adapter = GradeItemAdapter(
             onItemClick = { gradeItem ->
@@ -86,8 +110,11 @@ class GradesFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        val textAssessmentCount = view.findViewById<android.widget.TextView>(R.id.textAssessmentCount)
+
         viewModel.getGradeItemsForClass(classId).observe(viewLifecycleOwner) { items ->
             adapter.submitList(items)
+            textAssessmentCount.text = "${items.size} Assessments"
         }
 
         fab.setOnClickListener {

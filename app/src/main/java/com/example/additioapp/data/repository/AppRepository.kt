@@ -580,4 +580,16 @@ class AppRepository(
     
     suspend fun deleteAllAbsences() = 
         teacherAbsenceDao.deleteAll()
+
+    // Query for replacements within a date range (for Widget and Home)
+    suspend fun getReplacementsForDateRangeSync(startOfDay: Long, endOfDay: Long): List<TeacherAbsenceEntity> {
+        return teacherAbsenceDao.getAllAbsencesSync()
+            .filter { absence ->
+                absence.status != "COMPLETED" &&
+                absence.replacementDate != null &&
+                absence.replacementDate >= startOfDay &&
+                absence.replacementDate <= endOfDay
+            }
+            .sortedBy { it.replacementDate }
+    }
 }

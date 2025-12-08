@@ -16,7 +16,19 @@
             android:layout_height="?attr/actionBarSize"
             app:title="📅 Planner"
             app:titleTextColor="@android:color/white"
-            android:background="?attr/colorPrimary"/>
+            android:background="?attr/colorPrimary">
+            
+            <ImageButton
+                android:id="@+id/btnToggleFab"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_visibility"
+                app:tint="@android:color/white"
+                android:contentDescription="Toggle Add Button"/>
+
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
@@ -82,15 +94,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Next month"/>
                     
-                <ImageButton
-                    android:id="@+id/btnToggleFab"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_visibility"
-                    app:tint="?attr/colorOnSurface"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:layout_marginStart="8dp"
-                    android:contentDescription="Show/Hide Add Button"/>
+
 
                 <ImageButton
                     android:id="@+id/btnToggleCalendar"

@@ -110,6 +110,24 @@
             android:drawableEnd="@drawable/ic_calendar_today_24dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Room (Optional, for replacement) -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutReplacementRoom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/label_room"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="12dp"
+        android:visibility="gone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editReplacementRoom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapCharacters"
+            android:maxLines="1"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
     <!-- Reason (Optional) -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
