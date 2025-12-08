@@ -273,7 +273,7 @@
                                 android:id="@+id/textNameLanguage"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="French"
+                                android:text="@string/language_french"
                                 android:textAppearance="?attr/textAppearanceBodyMedium"
                                 android:textColor="?attr/colorOnSurfaceVariant"/>
                         </LinearLayout>
@@ -379,7 +379,7 @@
                                 android:id="@+id/textSortOrder"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="By Last Name"
+                                android:text="@string/sort_by_last_name"
                                 android:textAppearance="?attr/textAppearanceBodyMedium"
                                 android:textColor="?attr/colorOnSurfaceVariant"/>
                         </LinearLayout>
@@ -423,7 +423,7 @@
                                 android:id="@+id/textListSize"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Normal"
+                                android:text="@string/density_normal"
                                 android:textAppearance="?attr/textAppearanceBodyMedium"
                                 android:textColor="?attr/colorOnSurfaceVariant"/>
                         </LinearLayout>

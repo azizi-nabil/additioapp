@@ -398,6 +398,10 @@
     <string name="label_students_count">%d Étudiants</string>
     <string name="label_grade_item_name">Nom de l\'élément de notation</string>
     
+    <!-- Settings Fragment Strings -->
+    <string name="language_french">Français</string>
+    <string name="sort_by_last_name">Par nom de famille</string>
+    <string name="density_normal">Normal</string>
     <!-- Settings Fragment -->
     <string name="settings_toolbar_title">⚙️ Paramètres</string>
     <string name="settings_section_data">💾 Gestion des données</string>

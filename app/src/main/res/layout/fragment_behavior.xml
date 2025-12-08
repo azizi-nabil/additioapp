@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="Search students..."
+                android:hint="@string/hint_search_students"
                 android:textSize="14sp"
                 android:inputType="textPersonName"
                 android:maxLines="1"

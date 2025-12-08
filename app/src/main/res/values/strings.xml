@@ -408,6 +408,11 @@
     <string name="label_students_count">%d Students</string>
     <string name="label_grade_item_name">Grade Item Name</string>
     
+    <!-- Settings Fragment Strings -->
+    <string name="language_french">French</string>
+    <string name="sort_by_last_name">By Last Name</string>
+    <string name="density_normal">Normal</string>
+    
     <!-- Settings Fragment -->
     <string name="settings_toolbar_title">⚙️ Settings</string>
     <string name="settings_section_data">💾 Data Management</string>

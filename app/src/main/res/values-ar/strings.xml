@@ -398,6 +398,11 @@
     <string name="label_students_count">%d طالب</string>
     <string name="label_grade_item_name">اسم عنصر الدرجة</string>
     
+    <!-- Settings Fragment Strings -->
+    <string name="language_french">الفرنسية</string>
+    <string name="sort_by_last_name">حسب اسم العائلة</string>
+    <string name="density_normal">عادي</string>
+    
     <!-- Settings Fragment -->
     <string name="settings_toolbar_title">⚙️ الإعدادات</string>
     <string name="settings_section_data">💾 إدارة البيانات</string>

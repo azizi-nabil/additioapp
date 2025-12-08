@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="Grade Item Name"
+        android:text="@string/label_grade_item_name"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:textColor="?attr/colorOnSurface"
         app:layout_constraintTop_toTopOf="parent"
@@ -52,7 +52,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="Search students..."
+                android:hint="@string/hint_search_students"
                 android:textSize="14sp"
                 android:inputType="textPersonName"
                 android:maxLines="1"
@@ -63,7 +63,7 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="A-Z"
+                android:text="@string/sort_by_name_asc"
                 android:textSize="12sp"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:hint="Min"
+            android:hint="@string/hint_min"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:hint="Max"
+            android:hint="@string/hint_max"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -117,7 +117,7 @@
         android:id="@+id/textStudentCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0 Students"
+        android:text="@string/label_students_count"
         android:textSize="12sp"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:layout_marginTop="8dp"
