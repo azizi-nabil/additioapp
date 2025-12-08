@@ -51,9 +51,13 @@ class AbsenceAdapter(
 
         fun bind(absence: TeacherAbsenceEntity) {
             val context = itemView.context
-            val classEntity = classMap[absence.classId]
             
-            textClassName.text = classEntity?.name ?: "Unknown Class"
+            // Get class names for all class IDs
+            val classNames = absence.getClassIdList().mapNotNull { classId ->
+                classMap[classId]?.name
+            }.takeIf { it.isNotEmpty() }?.joinToString(", ") ?: "Unknown Class"
+            
+            textClassName.text = classNames
             chipSessionType.text = absence.sessionType
             textAbsenceDate.text = context.getString(
                 R.string.absence_absent_on, 
@@ -91,7 +95,7 @@ class AbsenceAdapter(
                     textStatus.text = context.getString(R.string.absence_status_completed)
                     textStatus.setBackgroundColor(Color.parseColor("#4CAF50"))
                     statusIndicator.setBackgroundColor(Color.parseColor("#4CAF50"))
-                    btnSchedule.visibility = View.GONE
+                    btnSchedule.visibility = View.VISIBLE  // Allow reverting to scheduled
                     btnComplete.visibility = View.GONE
                 }
             }

@@ -31,7 +31,7 @@ interface TeacherAbsenceDao {
     @Query("SELECT * FROM teacher_absences WHERE status = 'SCHEDULED' ORDER BY replacementDate ASC")
     fun getScheduledAbsences(): Flow<List<TeacherAbsenceEntity>>
     
-    @Query("SELECT * FROM teacher_absences WHERE classId = :classId ORDER BY absenceDate DESC")
+    @Query("SELECT * FROM teacher_absences WHERE classIds LIKE '%' || :classId || '%' ORDER BY absenceDate DESC")
     fun getAbsencesForClass(classId: Long): Flow<List<TeacherAbsenceEntity>>
     
     @Query("SELECT * FROM teacher_absences WHERE id = :id")

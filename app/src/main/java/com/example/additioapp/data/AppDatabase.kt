@@ -61,7 +61,7 @@ import com.example.additioapp.data.model.UnitEntity
         ScheduleItemClassCrossRef::class,
         TeacherAbsenceEntity::class
     ],
-    version = 18,
+    version = 19,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

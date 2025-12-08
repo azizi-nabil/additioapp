@@ -15,20 +15,26 @@
         android:textStyle="bold"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Class Spinner -->
-    <com.google.android.material.textfield.TextInputLayout
+    <!-- Classes (Multi-select) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/class_name"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp"/>
+
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/class_name"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:scrollbars="none"
         android:layout_marginBottom="12dp">
 
-        <AutoCompleteTextView
-            android:id="@+id/spinnerAbsenceClass"
-            android:layout_width="match_parent"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupClasses"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="none"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            app:singleSelection="false"/>
+    </HorizontalScrollView>
 
     <!-- Session Type -->
     <TextView

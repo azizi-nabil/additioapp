@@ -195,7 +195,7 @@ class PlannerFragment : Fragment() {
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_events)))
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_tasks)))
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_schedule)))
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_absences)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_replacements)))
 
         // Setup day chips for schedule (chipGroupDays is now used internally)
         setupDayButtons(chipGroupDays, textScheduleDay, recyclerSchedule, textNoSchedule)
@@ -1676,7 +1676,7 @@ class PlannerFragment : Fragment() {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_add_absence, null)
         
-        val spinnerClass = dialogView.findViewById<AutoCompleteTextView>(R.id.spinnerAbsenceClass)
+        val chipGroupClasses = dialogView.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chipGroupClasses)
         val radioGroup = dialogView.findViewById<RadioGroup>(R.id.radioGroupSessionType)
         val radioTD = dialogView.findViewById<RadioButton>(R.id.radioTD)
         val radioTP = dialogView.findViewById<RadioButton>(R.id.radioTP)
@@ -1689,21 +1689,30 @@ class PlannerFragment : Fragment() {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         var selectedAbsenceDate: Long? = existingAbsence?.absenceDate
         var selectedReplacementDate: Long? = existingAbsence?.replacementDate
-        var selectedClassId: Long? = existingAbsence?.classId
+        val selectedClassIds = mutableSetOf<Long>()
         
-        // Setup class spinner
-        val classNames = classes.map { "${it.name} (${it.year})" }
-        val classAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, classNames)
-        spinnerClass.setAdapter(classAdapter)
+        // Pre-select existing classes
+        existingAbsence?.getClassIdList()?.let { selectedClassIds.addAll(it) }
+        
+        // Populate class chips
+        classes.forEach { classEntity ->
+            val chip = com.google.android.material.chip.Chip(requireContext()).apply {
+                text = classEntity.name
+                isCheckable = true
+                isChecked = selectedClassIds.contains(classEntity.id)
+                setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        selectedClassIds.add(classEntity.id)
+                    } else {
+                        selectedClassIds.remove(classEntity.id)
+                    }
+                }
+            }
+            chipGroupClasses.addView(chip)
+        }
         
         // Set existing values
         existingAbsence?.let { absence ->
-            // Set class
-            val classIndex = classes.indexOfFirst { it.id == absence.classId }
-            if (classIndex >= 0) {
-                spinnerClass.setText(classNames[classIndex], false)
-            }
-            
             // Set session type
             when (absence.sessionType) {
                 TeacherAbsenceEntity.TYPE_TD -> radioTD.isChecked = true
@@ -1718,11 +1727,6 @@ class PlannerFragment : Fragment() {
             }
             editReason.setText(absence.reason ?: "")
             editNotes.setText(absence.notes ?: "")
-        }
-        
-        // Class selection
-        spinnerClass.setOnItemClickListener { _, _, position, _ ->
-            selectedClassId = classes[position].id
         }
         
         // Date pickers
@@ -1749,7 +1753,7 @@ class PlannerFragment : Fragment() {
         
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                val classId = selectedClassId ?: run {
+                if (selectedClassIds.isEmpty()) {
                     Toast.makeText(requireContext(), getString(R.string.toast_select_class_first), Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
@@ -1773,7 +1777,7 @@ class PlannerFragment : Fragment() {
                 
                 val absence = TeacherAbsenceEntity(
                     id = existingAbsence?.id ?: 0,
-                    classId = classId,
+                    classIds = TeacherAbsenceEntity.createClassIdsString(selectedClassIds.toList()),
                     sessionType = sessionType,
                     absenceDate = absenceDate,
                     reason = editReason.text.toString().takeIf { it.isNotBlank() },
