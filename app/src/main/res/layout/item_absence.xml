@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <!-- Class Name & Type -->
+            <!-- Class Name & Session Type on same line -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,9 +38,8 @@
 
                 <TextView
                     android:id="@+id/textClassName"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="L3 G1"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -50,9 +49,11 @@
                     android:id="@+id/chipSessionType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:text="TD"
-                    android:textSize="12sp"
-                    app:chipMinHeight="24dp"/>
+                    android:textSize="11sp"
+                    app:chipMinHeight="24dp"
+                    app:chipMinTouchTargetSize="24dp"/>
             </LinearLayout>
 
             <!-- Absence Date -->
@@ -103,22 +104,43 @@
                     android:textColor="@color/primary"/>
             </LinearLayout>
 
-            <!-- Status Badge -->
-            <TextView
-                android:id="@+id/textStatus"
-                android:layout_width="wrap_content"
+            <!-- Status Badge and Delete on same row -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="PENDING"
-                android:textSize="11sp"
-                android:textColor="@android:color/white"
-                android:background="@drawable/bg_status_pending"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="2dp"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/textStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PENDING"
+                    android:textSize="11sp"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/bg_status_pending"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:id="@+id/btnDelete"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_delete_24dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/action_delete"
+                    app:tint="@color/behavior_negative"/>
+            </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Actions -->
+        <!-- Actions (Schedule & Complete only) -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -142,15 +164,6 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/mark_completed"
                 app:tint="@color/behavior_positive"/>
-
-            <ImageButton
-                android:id="@+id/btnDelete"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_delete_24dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/action_delete"
-                app:tint="@color/behavior_negative"/>
 
         </LinearLayout>
 
