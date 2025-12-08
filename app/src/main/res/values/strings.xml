@@ -413,6 +413,23 @@
     <string name="sort_by_last_name">By Last Name</string>
     <string name="density_normal">Normal</string>
     
+    <!-- Toast Messages -->
+    <string name="toast_select_class_first">Select a class first</string>
+    <string name="toast_sort_order_updated">Sort order updated</string>
+    <string name="toast_list_size_updated">List size updated</string>
+    <string name="toast_global_search_enabled">Global search enabled</string>
+    <string name="toast_global_search_hidden">Global search hidden</string>
+    <string name="toast_saved">Saved</string>
+    <string name="toast_report_exported">Report exported: %s</string>
+    <string name="toast_excel_exported">Excel exported: %s</string>
+    <string name="toast_session_deleted">Session deleted</string>
+    <string name="toast_no_attendance_to_export">No attendance to export</string>
+    <string name="toast_exported_to">Exported to %s</string>
+    <string name="toast_no_attendance_to_share">No attendance to share</string>
+    <string name="toast_share_failed">Share failed: %s</string>
+    <string name="toast_create_class_first">Create a class first</string>
+    <string name="toast_select_at_least_one_class">Please select at least one class</string>
+    
     <!-- Settings Fragment -->
     <string name="settings_toolbar_title">⚙️ Settings</string>
     <string name="settings_section_data">💾 Data Management</string>

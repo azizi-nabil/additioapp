@@ -402,6 +402,25 @@
     <string name="language_french">Français</string>
     <string name="sort_by_last_name">Par nom de famille</string>
     <string name="density_normal">Normal</string>
+    
+    <!-- Toast Messages -->
+    <string name="toast_select_class_first">Sélectionnez d\'abord une classe</string>
+    <string name="toast_sort_order_updated">Ordre de tri mis à jour</string>
+    <string name="toast_list_size_updated">Taille de liste mise à jour</string>
+    <string name="toast_global_search_enabled">Recherche globale activée</string>
+    <string name="toast_global_search_hidden">Recherche globale masquée</string>
+    <string name="toast_saved">Enregistré</string>
+    <string name="toast_report_exported">Rapport exporté : %s</string>
+    <string name="toast_export_failed">Échec de l\'export : %s</string>
+    <string name="toast_excel_exported">Excel exporté : %s</string>
+    <string name="toast_session_deleted">Session supprimée</string>
+    <string name="toast_no_attendance_to_export">Aucune présence à exporter</string>
+    <string name="toast_exported_to">Exporté vers %s</string>
+    <string name="toast_no_attendance_to_share">Aucune présence à partager</string>
+    <string name="toast_share_failed">Échec du partage : %s</string>
+    <string name="toast_create_class_first">Créez d\'abord une classe</string>
+    <string name="toast_select_at_least_one_class">Veuillez sélectionner au moins une classe</string>
+    
     <!-- Settings Fragment -->
     <string name="settings_toolbar_title">⚙️ Paramètres</string>
     <string name="settings_section_data">💾 Gestion des données</string>

@@ -403,6 +403,24 @@
     <string name="sort_by_last_name">حسب اسم العائلة</string>
     <string name="density_normal">عادي</string>
     
+    <!-- Toast Messages -->
+    <string name="toast_select_class_first">اختر فصلاً أولاً</string>
+    <string name="toast_sort_order_updated">تم تحديث ترتيب الفرز</string>
+    <string name="toast_list_size_updated">تم تحديث حجم القائمة</string>
+    <string name="toast_global_search_enabled">تم تفعيل البحث الشامل</string>
+    <string name="toast_global_search_hidden">تم إخفاء البحث الشامل</string>
+    <string name="toast_saved">تم الحفظ</string>
+    <string name="toast_report_exported">تم تصدير التقرير: %s</string>
+    <string name="toast_export_failed">فشل التصدير: %s</string>
+    <string name="toast_excel_exported">تم تصدير Excel: %s</string>
+    <string name="toast_session_deleted">تم حذف الجلسة</string>
+    <string name="toast_no_attendance_to_export">لا يوجد حضور للتصدير</string>
+    <string name="toast_exported_to">تم التصدير إلى %s</string>
+    <string name="toast_no_attendance_to_share">لا يوجد حضور للمشاركة</string>
+    <string name="toast_share_failed">فشلت المشاركة: %s</string>
+    <string name="toast_create_class_first">أنشئ فصلاً أولاً</string>
+    <string name="toast_select_at_least_one_class">الرجاء اختيار فصل واحد على الأقل</string>
+    
     <!-- Settings Fragment -->
     <string name="settings_toolbar_title">⚙️ الإعدادات</string>
     <string name="settings_section_data">💾 إدارة البيانات</string>
