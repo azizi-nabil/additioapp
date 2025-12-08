@@ -159,26 +159,36 @@ class PlannerFragment : Fragment() {
             updateCalendarVisibility()
         }
 
-        val btnToggleFab = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnToggleFab)
+        val btnToggleFab = view.findViewById<ImageButton>(R.id.btnToggleFab)
         val plannerPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
         var isFabVisibleByUser = plannerPrefs.getBoolean("pref_fab_visible_planner", true)
+        
+        // Helper function to update icon
+        fun updateToggleFabIcon() {
+            if (isFabVisibleByUser) {
+                btnToggleFab.setImageResource(R.drawable.ic_visibility)
+                btnToggleFab.alpha = 1.0f
+            } else {
+                btnToggleFab.setImageResource(R.drawable.ic_visibility_off)
+                btnToggleFab.alpha = 0.6f
+            }
+        }
         
         // Initial state
         if (!isFabVisibleByUser) {
             fabAddEvent.hide()
-            btnToggleFab.alpha = 0.5f
         }
+        updateToggleFabIcon()
         
         btnToggleFab.setOnClickListener {
             isFabVisibleByUser = !isFabVisibleByUser
             plannerPrefs.edit().putBoolean("pref_fab_visible_planner", isFabVisibleByUser).apply()
             if (isFabVisibleByUser) {
                 fabAddEvent.show()
-                btnToggleFab.alpha = 1.0f
             } else {
                 fabAddEvent.hide()
-                btnToggleFab.alpha = 0.5f
             }
+            updateToggleFabIcon()
         }
 
         // Setup tabs
