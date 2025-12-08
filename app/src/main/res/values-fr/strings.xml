@@ -683,4 +683,6 @@
     <string name="absence_section_title">📋 Absences Enseignant</string>
     <string name="absence_completed_count">✅ Terminés (%d)</string>
     <string name="action_quick_grade">Note Rapide</string>
+    <string name="notification_replacement_title">📅 Séance de Remplacement</string>
+    <string name="notification_replacement_message">%1$s (%2$s) - Prévu pour le %3$s</string>
 </resources>

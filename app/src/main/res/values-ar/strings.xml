@@ -683,5 +683,7 @@
     <string name="absence_section_title">📋 غيابات المعلم</string>
     <string name="absence_completed_count">✅ المكتملة (%d)</string>
     <string name="action_quick_grade">تقييم سريع</string>
+    <string name="notification_replacement_title">📅 حصة تعويض اليوم</string>
+    <string name="notification_replacement_message">%1$s (%2$s) - مجدول ليوم %3$s</string>
 </resources>
 

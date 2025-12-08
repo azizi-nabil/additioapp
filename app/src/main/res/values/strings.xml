@@ -696,5 +696,7 @@
     <string name="absence_section_title">📋 Teacher Absences</string>
     <string name="absence_completed_count">✅ Completed (%d)</string>
     <string name="action_quick_grade">Quick Grade</string>
+    <string name="notification_replacement_title">📅 Replacement Session Today</string>
+    <string name="notification_replacement_message">%1$s (%2$s) - Scheduled for %3$s</string>
 </resources>
 

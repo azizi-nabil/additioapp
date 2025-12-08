@@ -103,4 +103,32 @@ object NotificationHelper {
             true
         }
     }
+    
+    fun showReplacementNotification(context: Context, title: String, message: String, absenceId: Long) {
+        if (!hasNotificationPermission(context)) return
+        
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("navigate_to", "planner")
+            putExtra("tab", 3) // Replacements tab
+        }
+        
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            absenceId.toInt() + 20000,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID_REMINDERS)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
+        
+        NotificationManagerCompat.from(context).notify(notificationId++, notification)
+    }
 }

@@ -1993,6 +1993,17 @@ class PlannerFragment : Fragment() {
             
             lifecycleScope.launch {
                 repository.scheduleReplacement(absence.id, date)
+                
+                // Schedule notification for the replacement date
+                val classNames = absence.getClassIdList().mapNotNull { classMap[it]?.name }.joinToString(", ")
+                com.example.additioapp.receiver.ReplacementAlarmReceiver.scheduleNotification(
+                    requireContext(),
+                    absence.id,
+                    classNames.ifEmpty { "Class" },
+                    absence.sessionType,
+                    date
+                )
+                
                 withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), getString(R.string.toast_replacement_scheduled), Toast.LENGTH_SHORT).show()
                 }
@@ -2023,7 +2034,13 @@ class PlannerFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.action_delete)
             .setMessage(getString(R.string.toast_absence_deleted) + "?")
-            .setPositiveButton(R.string.action_delete) { dialog, which ->
+            .setPositiveButton(R.string.action_delete) { _, _ ->
+                // Cancel any scheduled notification
+                com.example.additioapp.receiver.ReplacementAlarmReceiver.cancelNotification(
+                    requireContext(),
+                    absence.id
+                )
+                
                 lifecycleScope.launch {
                     repository.deleteAbsence(absence)
                     withContext(Dispatchers.Main) {

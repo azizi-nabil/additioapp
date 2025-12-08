@@ -4,6 +4,8 @@
 
     <!-- Notification permission for Android 13+ -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Exact alarm permission for Android 12+ -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:name=".AdditioApplication"
@@ -47,6 +49,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_today_info" />
         </receiver>
+        
+        <!-- Replacement Reminder Alarm Receiver -->
+        <receiver
+            android:name=".receiver.ReplacementAlarmReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>
