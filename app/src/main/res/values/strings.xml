@@ -692,5 +692,6 @@
     <string name="toast_replacement_scheduled">Replacement scheduled</string>
     <string name="toast_marked_completed">Marked as completed</string>
     <string name="absence_section_title">📋 Teacher Absences</string>
+    <string name="absence_completed_count">✅ Completed (%d)</string>
 </resources>
 

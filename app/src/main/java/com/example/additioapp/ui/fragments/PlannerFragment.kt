@@ -1625,13 +1625,29 @@ class PlannerFragment : Fragment() {
     // ===== TEACHER ABSENCE FUNCTIONS =====
     
     private fun loadAbsences(recyclerView: RecyclerView, textNoAbsences: TextView, textPendingCount: TextView) {
+        val view = requireView()
+        val completedSection = view.findViewById<LinearLayout>(R.id.completedAbsencesSection)
+        val completedHeader = view.findViewById<LinearLayout>(R.id.completedAbsencesHeader)
+        val recyclerCompleted = view.findViewById<RecyclerView>(R.id.recyclerCompletedAbsences)
+        val textCompletedTitle = view.findViewById<TextView>(R.id.textCompletedAbsencesTitle)
+        val iconExpand = view.findViewById<ImageView>(R.id.iconExpandCompletedAbsences)
+        
+        var isCompletedExpanded = false
+        
+        // Toggle completed section
+        completedHeader.setOnClickListener {
+            isCompletedExpanded = !isCompletedExpanded
+            recyclerCompleted.visibility = if (isCompletedExpanded) View.VISIBLE else View.GONE
+            iconExpand.setImageResource(if (isCompletedExpanded) R.drawable.ic_expand_less else R.drawable.ic_expand_more)
+        }
+        
         lifecycleScope.launch {
             // Update class map for display
             classViewModel.allClasses.observe(viewLifecycleOwner) { classList ->
                 classes = classList
                 classMap = classList.associateBy { it.id }
                 
-                // Initialize adapter if needed
+                // Initialize adapters if needed
                 if (!::absenceAdapter.isInitialized) {
                     absenceAdapter = AbsenceAdapter(
                         classMap = classMap,
@@ -1642,22 +1658,46 @@ class PlannerFragment : Fragment() {
                     )
                     recyclerView.adapter = absenceAdapter
                     recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    
+                    // Completed adapter
+                    val completedAdapter = AbsenceAdapter(
+                        classMap = classMap,
+                        onScheduleClick = { absence -> showScheduleReplacementDialog(absence, recyclerView, textNoAbsences, textPendingCount) },
+                        onCompleteClick = { absence -> markAbsenceCompleted(absence, recyclerView, textNoAbsences, textPendingCount) },
+                        onDeleteClick = { absence -> deleteAbsence(absence, recyclerView, textNoAbsences, textPendingCount) },
+                        onItemClick = { absence -> showAddAbsenceDialog(absence, recyclerView, textNoAbsences, textPendingCount) }
+                    )
+                    recyclerCompleted.adapter = completedAdapter
+                    recyclerCompleted.layoutManager = LinearLayoutManager(requireContext())
                 }
             }
             
-            // Observe absences
-            repository.allAbsences.collect { absences ->
-                if (absences.isEmpty()) {
+            // Observe absences - split by status
+            repository.allAbsences.collect { allAbsences ->
+                val pendingOrScheduled = allAbsences.filter { it.status != TeacherAbsenceEntity.STATUS_COMPLETED }
+                val completed = allAbsences.filter { it.status == TeacherAbsenceEntity.STATUS_COMPLETED }
+                
+                // Pending/Scheduled list
+                if (pendingOrScheduled.isEmpty()) {
                     recyclerView.visibility = View.GONE
                     textNoAbsences.visibility = View.VISIBLE
                 } else {
                     recyclerView.visibility = View.VISIBLE
                     textNoAbsences.visibility = View.GONE
                 }
-                absenceAdapter.submitList(absences)
+                absenceAdapter.submitList(pendingOrScheduled)
+                
+                // Completed list
+                if (completed.isNotEmpty()) {
+                    completedSection.visibility = View.VISIBLE
+                    textCompletedTitle.text = getString(R.string.absence_completed_count, completed.size)
+                    (recyclerCompleted.adapter as? AbsenceAdapter)?.submitList(completed)
+                } else {
+                    completedSection.visibility = View.GONE
+                }
                 
                 // Update pending count
-                val pendingCount = absences.count { it.status == TeacherAbsenceEntity.STATUS_PENDING }
+                val pendingCount = pendingOrScheduled.count { it.status == TeacherAbsenceEntity.STATUS_PENDING }
                 textPendingCount.text = if (pendingCount > 0) {
                     getString(R.string.absence_pending_count, pendingCount)
                 } else {

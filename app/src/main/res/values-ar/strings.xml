@@ -679,5 +679,6 @@
     <string name="toast_replacement_scheduled">تم جدولة التعويض</string>
     <string name="toast_marked_completed">تم وضع علامة مكتمل</string>
     <string name="absence_section_title">📋 غيابات المعلم</string>
+    <string name="absence_completed_count">✅ المكتملة (%d)</string>
 </resources>
 
