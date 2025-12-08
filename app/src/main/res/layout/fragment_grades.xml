@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:alpha="0.70"
-        android:text="Add"
+        android:text="@string/action_add"
         android:textColor="@android:color/white"
         app:icon="@drawable/ic_assignment_add"
         app:iconTint="@android:color/white"

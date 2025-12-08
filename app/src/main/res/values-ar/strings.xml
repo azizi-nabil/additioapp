@@ -16,6 +16,12 @@
     <string name="action_import">استيراد</string>
     <string name="action_backup">نسخ احتياطي</string>
     <string name="action_restore">استعادة</string>
+    <string name="action_add_event">إضافة حدث</string>
+    <string name="action_add_task">إضافة مهمة</string>
+    <string name="action_add_schedule">إضافة جدول</string>
+    <string name="tab_events">📅 الأحداث</string>
+    <string name="tab_tasks">📝 المهام</string>
+    <string name="tab_schedule">🗓️ الجدول</string>
     
     <!-- Navigation -->
     <string name="nav_home">الرئيسية</string>
@@ -86,10 +92,14 @@
     <string name="attendance_mark_all_present">الكل ✓</string>
     <string name="attendance_mark_all_absent">الكل ✗</string>
     <string name="attendance_clear">مسح</string>
-    <string name="attendance_summary">حاضر: %1$d | غائب: %2$d | متأخر: %3$d</string>
+    <string name="attendance_summary">حاضر: %1$d | غائب: %2$d | متأخر: %3$d | معذور: %4$d</string>
     <string name="attendance_today">اليوم</string>
     <string name="attendance_history">السجل</string>
     <string name="attendance_export">تصدير CSV</string>
+    <string name="attendance_total_sessions">إجمالي الحصص</string>
+    <string name="attendance_avg_attendance">معدل الحضور</string>
+    <string name="sort_newest">الأحدث</string>
+    <string name="action_share">مشاركة</string>
     
     <!-- Session Types -->
     <string name="session_type_td">TD</string>
@@ -105,6 +115,53 @@
     <string name="grades_max_score">الدرجة القصوى</string>
     <string name="grades_average">المعدل</string>
     <string name="grades_empty">لا توجد درجات مسجلة</string>
+    <string name="gradebook_select_class">اختر فصلاً</string>
+    <string name="gradebook_tests">الاختبارات</string>
+    <string name="gradebook_avg_percent">المعدل %</string>
+    <string name="gradebook_count">العدد</string>
+    <string name="gradebook_distribution">📈 توزيع الدرجات</string>
+    <string name="gradebook_student_grades">👨‍🎓 درجات الطلاب</string>
+    <string name="gradebook_assessments">📝 التقييمات</string>
+    <string name="grade_weight_format">المعامل: %s</string>
+    <string name="grade_score_format">%1$s / %2$s</string>
+    <string name="grade_score_placeholder">-- / 20</string>
+    <string name="grade_separator">" / "</string>
+    <string name="grade_max_suffix">" / %s"</string>
+
+    <!-- Import Dialog -->
+    <string name="import_guide_title">📄 دليل CSV</string>
+    <string name="import_guide_btn">حسناً</string>
+    <string name="import_success_toast">تم استيراد %d طالب</string>
+    <string name="import_status_found">✅ تم العثور على %d طالب\n\nمعاينة:\n</string>
+    <string name="import_status_empty">⚠️ لم يتم العثور على طلاب.\n\nتحقق من ملف CSV:\n• الأعمدة: رقم القيد، اللقب، الاسم\n• وجود بيانات بعد العنوان</string>
+    <string name="import_status_error">❌ خطأ في القراءة:\n%s</string>
+    <string name="import_instructions">
+        📋 تعليمات ملف CSV\n\n
+        يجب أن يحتوي الملف على 3 أعمدة:\n\n
+        العمود 1: رقم القيد (Matricule)\n
+        العمود 2: اللقب (Nom)\n
+        العمود 3: الاسم (Prénom)\n\n
+        ─────────────────────────\n\n
+        📝 مثال (فرنسي + عربي):\n
+        Matricule,Nom,Prénom\n
+        202034052475,ABDERREZAK/عبد الرزاق,MAISSOUN/ميسون\n\n
+        💡 نصائح:\n
+        • احفظ ملف Excel بصيغة CSV\n
+        • يمكن استخدام الفاصلة (,) أو الفاصلة المنقوطة (;)\n
+        • السطر الأول يمكن أن يكون للعناوين (سيتم تخطيه)
+    </string>
+    
+    <string name="absence_excused_suffix">" (بعذر)"</string>
+    <string name="label_none">لا يوجد</string>
+
+    <string name="behavior_positive_title">سلوكيات إيجابية</string>
+    <string name="behavior_negative_title">سلوكيات سلبية</string>
+    <string name="student_id_format">رقم القيد: %s</string>
+    <string name="backup_success">تم النسخ الاحتياطي بنجاح</string>
+    <string name="restore_success">تمت الاستعادة بنجاح</string>
+    <string name="restore_error_generic">فشل الاستعادة: %s</string>
+    <string name="restore_error_file">فشل: تعذر قراءة الملف أو الملف فارغ</string>
+
     
     <!-- Grade Categories -->
     <string name="grade_category_exam">امتحان</string>
@@ -183,7 +240,7 @@
     <string name="analytics_title">التحليلات</string>
     <string name="analytics_attendance_rate">معدل الحضور</string>
     <string name="analytics_average_grade">المعدل العام</string>
-    <string name="analytics_at_risk">الطلاب المعرضون للخطر</string>
+    <string name="analytics_at_risk_students">الطلاب المعرضون للخطر</string>
     <string name="analytics_export_pdf">تصدير PDF</string>
     <string name="analytics_export_excel">تصدير Excel</string>
     
@@ -236,10 +293,7 @@
     <string name="import_error">فشل الاستيراد: %s</string>
     <string name="export_success">تم تصدير %d طالب</string>
     <string name="export_error">فشل التصدير: %s</string>
-    <string name="backup_success">تم النسخ الاحتياطي بنجاح</string>
-    <string name="backup_error">فشل النسخ الاحتياطي: %s</string>
-    <string name="restore_success">تمت استعادة البيانات بنجاح</string>
-    <string name="restore_error">فشلت الاستعادة: %s</string>
+
     
     <!-- Schedule Dialog -->
     <string name="label_classes">الفصول</string>
@@ -298,9 +352,12 @@
     <string name="dialog_grades_report">تقرير الدرجات</string>
     <string name="label_student_name">اسم الطالب</string>
     <string name="label_td_absences">غياب TD (%d)</string>
+    <string name="label_td_absences_total">غياب TD (%1$d/%2$d)</string>
     <string name="label_tp_absences">غياب TP (%d)</string>
+    <string name="label_tp_absences_total">غياب TP (%1$d/%2$d)</string>
     <string name="label_cours_absences">غياب المحاضرات (%d)</string>
-    <string name="label_none">لا يوجد</string>
+    <string name="label_cours_presence">حضور المحاضرات (%1$d/%2$d)</string>
+
     <string name="label_no_records_found">لم يتم العثور على سجلات.</string>
     <string name="label_no_grades_recorded">لا توجد درجات مسجلة.</string>
     
@@ -329,8 +386,8 @@
     <string name="label_no_classes_scheduled">🗓️ لا توجد فصول مجدولة\n\nاضغط + لإضافة فصل</string>
     <string name="label_no_results_found">لم يتم العثور على نتائج</string>
     <string name="hint_search_all">البحث عن الطلاب والفصول والأحداث والمهام...</string>
-    <string name="label_all_present">الكل ✓</string>
-    <string name="label_all_absent">الكل ✗</string>
+    <string name="label_all_present">الكل</string>
+    <string name="label_all_absent">الكل</string>
     <string name="action_clear">مسح</string>
     <string name="label_overview">نظرة عامة</string>
     <string name="label_from">من</string>
@@ -340,4 +397,237 @@
     <string name="hint_max">الحد الأقصى</string>
     <string name="label_students_count">%d طالب</string>
     <string name="label_grade_item_name">اسم عنصر الدرجة</string>
+    
+    <!-- Settings Fragment -->
+    <string name="settings_toolbar_title">⚙️ الإعدادات</string>
+    <string name="settings_section_data">💾 إدارة البيانات</string>
+    <string name="settings_section_display">🌐 العرض</string>
+    <string name="settings_section_customization">🎨 التخصيص</string>
+    <string name="settings_section_help">💡 المساعدة والنصائح</string>
+    <string name="settings_section_about">ℹ️ حول التطبيق</string>
+    <string name="settings_backup_title">نسخ احتياطي للبيانات</string>
+    <string name="settings_backup_desc">تصدير بياناتك إلى ملف JSON</string>
+    <string name="settings_restore_title">استعادة البيانات</string>
+    <string name="settings_restore_desc">استيراد البيانات من ملف النسخ الاحتياطي</string>
+    <string name="settings_name_display_title">عرض أسماء الطلاب</string>
+    <string name="settings_sort_order_title">ترتيب الفرز الافتراضي</string>
+    <string name="settings_list_size_title">حجم قائمة الطلاب</string>
+    <string name="settings_show_search_title">إظهار البحث الشامل</string>
+    <string name="settings_show_search_desc">عرض زر البحث على الشاشات الرئيسية</string>
+    <string name="settings_edit_positive">تعديل السلوكيات الإيجابية</string>
+    <string name="settings_edit_negative">تعديل السلوكيات السلبية</string>
+    <string name="settings_edit_categories">تعديل فئات الدرجات</string>
+    <string name="settings_hidden_features">الميزات المخفية</string>
+    <string name="settings_tip_longpress_student">ضغط مطول على بطاقة الطالب</string>
+    <string name="settings_tip_longpress_student_desc">اختيار عدة طلاب للحذف الجماعي</string>
+    <string name="settings_tip_longpress_class">ضغط مطول على بطاقة الفصل</string>
+    <string name="settings_tip_longpress_class_desc">تعديل أو نسخ أو أرشفة أو حذف</string>
+    <string name="settings_tip_longpress_add">ضغط مطول على زر الإضافة</string>
+    <string name="settings_tip_longpress_add_desc">استيراد أو تصدير الطلاب كـ CSV</string>
+    <string name="settings_tip_dice">اضغط على زر النرد</string>
+    <string name="settings_tip_dice_desc">اختيار طالب عشوائياً</string>
+    <string name="settings_tip_swipe">مرر التبويبات</string>
+    <string name="settings_tip_swipe_desc">التبديل السريع بين الطلاب والحضور والدرجات والسلوك</string>
+    <string name="settings_tip_eye">اضغط على زر العين 👁️</string>
+    <string name="settings_tip_eye_desc">إخفاء أو إظهار زر الإضافة في شاشات الطلاب والمخطط</string>
+    <string name="settings_version">الإصدار 2.3.0 - متعدد اللغات</string>
+    <string name="settings_tagline">شريكك الكامل في التدريس</string>
+    
+    <!-- Home Fragment -->
+    <string name="home_greeting_morning">صباح الخير 👋</string>
+    <string name="home_greeting_afternoon">مساء الخير 👋</string>
+    <string name="home_greeting_evening">مساء الخير 👋</string>
+    <string name="home_university">جامعة عباس لغرور - خنشلة</string>
+    <string name="home_todays_classes">📅 فصول اليوم</string>
+    <string name="home_upcoming_events_title">🎯 الأحداث القادمة</string>
+    <string name="home_view_all">عرض الكل</string>
+    <string name="home_reports">التقارير</string>
+    
+    <!-- Classes Fragment -->
+    <string name="classes_toolbar_title">📚 فصولي</string>
+    <string name="classes_filter">تصفية الفصول</string>
+    <string name="classes_class_list">📋 قائمة الفصول</string>
+    <string name="classes_add_btn">+ إضافة</string>
+    <string name="classes_archived">المؤرشفة</string>
+    <string name="classes_no_classes">لا توجد فصول بعد</string>
+    <string name="classes_create_first">اضغط + إضافة لإنشاء فصلك الأول</string>
+    <string name="classes_quick_stats">📊 إحصائيات سريعة</string>
+    
+    <!-- Students Fragment -->
+    <string name="students_toolbar_title">👨‍🎓 الطلاب</string>
+    <string name="students_selected">%d محدد</string>
+    <string name="students_delete_btn">🗑️ حذف</string>
+    <string name="students_not_found">لم يتم العثور على طلاب</string>
+    
+    <!-- Analytics Fragment -->
+    <string name="analytics_attendance_overview">📊 نظرة عامة على الحضور</string>
+    <string name="analytics_export_reports">📤 تصدير التقارير</string>
+    <string name="analytics_at_risk">⚠️ الطلاب المعرضون للخطر (%d)</string>
+    <string name="analytics_no_at_risk">✅ لا يوجد طلاب معرضون للخطر</string>
+    <string name="analytics_at_risk_desc">الطلاب الذين لديهم 3 غيابات أو أكثر</string>
+    <string name="analytics_class_label">الفصل:</string>
+    <string name="analytics_sessions">الحصص</string>
+    <string name="analytics_pdf">📄 PDF</string>
+    <string name="analytics_excel">📊 Excel</string>
+    
+    <!-- Reports Fragment -->
+    <string name="reports_select_class">اختر فصلاً للتقرير</string>
+    <string name="reports_performance_summary">📊 ملخص الأداء</string>
+    <string name="reports_student_rankings">🏆 ترتيب الطلاب</string>
+    <string name="reports_needing_attention">⚠️ الطلاب الذين يحتاجون اهتماماً</string>
+    <string name="reports_avg_grade">المعدل</string>
+    
+    <!-- Dialog Titles -->
+    <string name="dialog_delete_class">حذف الفصل</string>
+    <string name="dialog_delete_student">حذف الطالب</string>
+    <string name="dialog_delete_students">حذف الطلاب</string>
+    <string name="dialog_delete_event">حذف الحدث</string>
+    <string name="dialog_delete_recurring_event">حذف الحدث المتكرر</string>
+    <string name="dialog_delete_task">حذف المهمة</string>
+    <string name="dialog_delete_schedule">حذف الجدول</string>
+    <string name="dialog_delete_session">حذف الحصة</string>
+    <string name="dialog_delete_grade_item">حذف عنصر الدرجة</string>
+    <string name="dialog_sort_students">ترتيب الطلاب حسب</string>
+    <string name="dialog_sort_by">ترتيب حسب</string>
+    <string name="dialog_student_options">خيارات الطالب</string>
+    <string name="dialog_random_student">🎲 طالب عشوائي</string>
+    <string name="dialog_select_classes">اختر الفصول</string>
+    <string name="dialog_clear_completed">مسح المكتملة</string>
+    <string name="dialog_duplicate_task">تكرار المهمة</string>
+    <string name="dialog_duplicate_event">تكرار الحدث</string>
+    <string name="dialog_update_recurring">تحديث الحدث المتكرر</string>
+    <string name="dialog_filter_behavior">تصفية حسب السلوك</string>
+    <string name="dialog_restore_data">استعادة البيانات</string>
+    
+    <!-- Language Settings -->
+    <string name="settings_section_language">اللغة</string>
+    <string name="settings_language">لغة التطبيق</string>
+    <string name="settings_language_system">الافتراضي للنظام</string>
+    <string name="dialog_select_language">اختر اللغة</string>
+    
+    <!-- Notification Settings -->
+    <string name="settings_section_notifications">الإشعارات</string>
+    <string name="settings_notifications_enable">تذكيرات الأحداث والمهام</string>
+    <string name="settings_notifications_enable_desc">تلقي إشعارات للأحداث والمهام القادمة</string>
+    <string name="settings_reminder_time">وقت التذكير</string>
+    <string name="settings_reminder_time_default">ساعة واحدة قبل</string>
+    <string name="settings_reminder_30min">30 دقيقة قبل</string>
+    <string name="settings_reminder_1hour">ساعة واحدة قبل</string>
+    <string name="settings_reminder_2hours">ساعتين قبل</string>
+    <string name="settings_reminder_1day">يوم واحد قبل</string>
+    <string name="dialog_student_name_display">عرض اسم الطالب</string>
+    <string name="dialog_default_sort">ترتيب افتراضي</string>
+    <string name="dialog_list_size">حجم القائمة</string>
+    
+    <!-- Dialog Messages -->
+    <string name="msg_delete_class_confirm">هل أنت متأكد من حذف %s؟ لا يمكن التراجع عن هذا.</string>
+    <string name="msg_delete_student_confirm">هل أنت متأكد من حذف %s؟</string>
+    <string name="msg_delete_students_confirm">هل أنت متأكد من حذف %d طالب(ة)?\n\nسيتم أيضاً حذف سجلات الحضور والدرجات والسلوك.</string>
+    <string name="msg_delete_event_confirm">حذف \"%s\"؟</string>
+    <string name="msg_delete_task_confirm">حذف \"%s\"؟</string>
+    <string name="msg_delete_schedule_confirm">إزالة هذا الفصل من الجدول؟</string>
+    <string name="msg_delete_session_confirm">هل أنت متأكد من حذف هذه الحصة؟ لا يمكن التراجع عن هذا.</string>
+    <string name="msg_delete_grade_confirm">هل أنت متأكد من حذف \'%s\'؟ ستفقد جميع درجات الطلاب لهذا العنصر.</string>
+    <string name="msg_clear_completed_confirm">حذف جميع المهام المكتملة؟</string>
+    <string name="msg_duplicate_task_confirm">إنشاء نسخة من \"%s\"؟</string>
+    <string name="msg_duplicate_event_confirm">إنشاء نسخة من \"%s\"؟</string>
+    <string name="msg_restore_data_confirm">سيؤدي الاستيراد إلى استبدال البيانات الموجودة. هل تريد المتابعة؟</string>
+    <!-- Planner Actions & Messages -->
+    <string name="action_duplicate">تكرار</string>
+    <string name="dialog_edit_event">تعديل الحدث</string>
+    <string name="dialog_edit_task">تعديل المهمة</string>
+    <string name="msg_title_required">العنوان مطلوب</string>
+    <string name="msg_classes_selected_count">تم تحديد %d فصل</string>
+    <string name="option_update_event_only">تحديث هذا الحدث فقط</string>
+    <string name="option_update_future_events">تحديث جميع الأحداث المستقبلية</string>
+    
+    <!-- Full Day Names -->
+    <string name="day_sunday_full">الأحد</string>
+    <string name="day_monday_full">الاثنين</string>
+    <string name="day_tuesday_full">الثلاثاء</string>
+    <string name="day_wednesday_full">الأربعاء</string>
+    <string name="day_thursday_full">الخميس</string>
+    <string name="day_friday_full">الجمعة</string>
+    <string name="day_saturday_full">السبت</string>
+
+    <string name="hint_task_title_required">عنوان المهمة *</string>
+    <string name="prefix_copy_of">نسخة من %s</string>
+    <string name="msg_task_duplicated">تم نسخ المهمة</string>
+    <string name="msg_event_duplicated">تم نسخ الحدث</string>
+    <!-- Students Fragment -->
+    <string name="toast_export_success">تم تصدير %d طالب</string>
+    <string name="toast_export_failed">فشل التصدير: %s</string>
+    <string name="toast_no_students">لا يوجد طلاب في هذا الفصل</string>
+    <string name="msg_students_found">تم العثور على %d طالب</string>
+    <string name="msg_no_students_found">0 طالب</string>
+    <string name="msg_deleting">جاري الحذف...</string>
+    <string name="action_confirm">تأكيد</string>
+    
+    <!-- Attendance Fragment -->
+    <string name="title_mark_all_present">تحديد الكل حاضر</string>
+    <string name="msg_mark_all_present">هل أنت متأكد من تحديد جميع الطلاب كحاضرين؟</string>
+    <string name="title_mark_all_absent">تحديد الكل غائب</string>
+    <string name="msg_mark_all_absent">هل أنت متأكد من تحديد جميع الطلاب كغائبين؟</string>
+    <string name="title_clear_attendance">مسح الحضور</string>
+    <string name="msg_clear_attendance">هل أنت متأكد من مسح جميع سجلات الحضور لهذه الحصة؟ لا يمكن التراجع عن هذا.</string>
+    <string name="msg_unlock_to_modify">فتح القفل لتعديل الحضور</string>
+    <string name="msg_students_deleted">تم حذف %d طالب</string>
+    <string name="sort_default">ترتيب</string>
+    <string name="sort_lastname_asc">ترتيب: اللقب (أ-ي)</string>
+    <string name="sort_lastname_desc">ترتيب: اللقب (ي-أ)</string>
+    <string name="sort_firstname_asc">ترتيب: الاسم (أ-ي)</string>
+    <string name="sort_firstname_desc">ترتيب: الاسم (ي-أ)</string>
+    <string name="sort_id_matricule">ترتيب: رقم القيد</string>
+    
+    <string name="dialog_sort_students_by">ترتيب الطلاب حسب</string>
+    <string name="sort_lastname_asc_option">اللقب (أ-ي)</string>
+    <string name="sort_lastname_desc_option">اللقب (ي-أ)</string>
+    <string name="sort_firstname_asc_option">الاسم (أ-ي)</string>
+    <string name="sort_firstname_desc_option">الاسم (ي-أ)</string>
+    <string name="sort_id_matricule_option">رقم القيد</string>
+    
+    <string name="action_import_from_csv">استيراد من CSV</string>
+    <string name="action_export_to_csv">تصدير إلى CSV</string>
+    <string name="toast_no_students_to_export">لا يوجد طلاب للتصدير</string>
+    
+    <string name="dialog_random_student_title">🎲 طالب عشوائي</string>
+    <string name="action_pick_again">اختر مجدداً</string>
+    <string name="msg_student_count_simple">%d طالب</string>
+    <string name="sort_name_asc">ترتيب حسب الاسم (أ-ي)</string>
+    <string name="sort_name_desc">ترتيب حسب الاسم (ي-أ)</string>
+    <string name="sort_id">ترتيب حسب الرقم</string>
+    <string name="sort_name_asc_option">الاسم (أ-ي)</string>
+    <string name="sort_name_desc_option">الاسم (ي-أ)</string>
+    <string name="sort_id_option">الرقم</string>
+    
+    <string name="filter_pos">إيجابي</string>
+    <string name="filter_neg">سلبي</string>
+
+    <string name="dialog_filter_behavior_title">تصفية الطلاب حسب السلوك</string>
+    <string name="filter_all_students_option">جميع الطلاب</string>
+    <string name="filter_pos_option">سلوك إيجابي (≠0)</string>
+    <string name="filter_neg_option">سلوك سلبي (≠0)</string>
+    <string name="action_yes">نعم</string>
+    <string name="dialog_restore_data_title">استعادة البيانات</string>
+    <string name="toast_notifications_enabled">تم تفعيل الإشعارات</string>
+    <string name="toast_notifications_disabled">تم تعطيل الإشعارات</string>
+    <string name="dialog_edit_positive_behaviors">تعديل السلوكيات الإيجابية</string>
+    <string name="dialog_edit_negative_behaviors">تعديل السلوكيات السلبية</string>
+    <string name="dialog_edit_grade_categories">تعديل فئات الدرجات</string>
+    <string name="toast_backup_failed">فشل النسخ الاحتياطي: %s</string>
+    <string name="toast_restore_failed">فشل الاستعادة: %s</string>
+    <string name="version_format">الإصدار %s</string>
+    <string name="lang_french">الفرنسية</string>
+    <string name="lang_arabic">العربية (Arabic)</string>
+    <string name="toast_name_display_updated">تم تحديث عرض الاسم</string>
+    <!-- Widget -->
+    <string name="widget_todays_classes">🗓️ فصول اليوم</string>
+    <string name="widget_no_classes">لا توجد فصول اليوم ✓</string>
+    
+    <!-- Theme -->
+    <string name="settings_theme_title">المظهر</string>
+    <string name="settings_theme_system">النظام</string>
+    <string name="settings_theme_light">فاتح</string>
+    <string name="settings_theme_dark">داكن</string>
 </resources>
+

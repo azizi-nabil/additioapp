@@ -15,6 +15,7 @@
         android:layout_marginTop="12dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="4dp"
+        app:cardBackgroundColor="?attr/colorSurfaceVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -38,7 +39,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="Search students..."
+                android:hint="@string/hint_search_students"
                 android:textSize="14sp"
                 android:inputType="textPersonName"
                 android:maxLines="1"
@@ -56,11 +57,23 @@
                 android:paddingHorizontal="4dp"/>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnToggleFab"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="👁️"
+                android:textSize="16sp"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingHorizontal="8dp"
+                android:tooltipText="Show/Hide Add Button"/>
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSort"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="A-Z"
+                android:text="@string/sort_by_name_asc"
                 android:textSize="12sp"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
@@ -115,7 +128,7 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="All"
+                android:text="@string/filter_all"
                 android:textColor="?attr/colorOnPrimaryContainer"
                 android:minWidth="0dp"/>
 
@@ -124,7 +137,7 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🗑️ Delete"
+                android:text="@string/students_delete_btn"
                 android:textColor="#D32F2F"
                 android:minWidth="0dp"/>
         </LinearLayout>
@@ -178,7 +191,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="No students found"
+            android:text="@string/students_not_found"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textColor="?attr/colorOutline" />
     </LinearLayout>
@@ -190,7 +203,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:alpha="0.70"
-        android:text="Add"
+        android:text="@string/action_add"
         android:textColor="@android:color/white"
         app:icon="@drawable/ic_person_add"
         app:iconTint="@android:color/white"

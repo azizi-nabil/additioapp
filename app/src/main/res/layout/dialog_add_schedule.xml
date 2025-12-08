@@ -48,19 +48,20 @@
             android:visibility="gone"/>
 
         <!-- Day of Week -->
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutDayOfWeek"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/label_day_of_week_required"
-            android:textSize="12sp"
-            android:textColor="?attr/colorOnSurfaceVariant"/>
+            android:hint="@string/label_day_of_week_required"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-        <Spinner
-            android:id="@+id/spinnerDayOfWeek"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"/>
+            <AutoCompleteTextView
+                android:id="@+id/inputDayOfWeek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Time Row -->
         <LinearLayout
@@ -69,71 +70,60 @@
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutScheduleStartTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginEnd="8dp">
+                android:layout_marginEnd="8dp"
+                android:hint="@string/label_start_time_required"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_start_time_required"
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"/>
-
-                <TextView
-                    android:id="@+id/textScheduleStartTime"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputScheduleStartTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="12dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:drawableEnd="@android:drawable/ic_menu_recent_history"
                     android:text="09:00"
-                    android:textSize="16sp"/>
-            </LinearLayout>
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:drawableEnd="@android:drawable/ic_menu_recent_history"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutScheduleEndTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="8dp">
+                android:layout_marginStart="8dp"
+                android:hint="@string/label_end_time_required"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_end_time_required"
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"/>
-
-                <TextView
-                    android:id="@+id/textScheduleEndTime"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputScheduleEndTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="12dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:drawableEnd="@android:drawable/ic_menu_recent_history"
                     android:text="10:30"
-                    android:textSize="16sp"/>
-            </LinearLayout>
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:drawableEnd="@android:drawable/ic_menu_recent_history"/>
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <!-- Session Type -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/label_session_type"
-            android:textSize="12sp"
-            android:textColor="?attr/colorOnSurfaceVariant"/>
-
-        <Spinner
-            android:id="@+id/spinnerSessionType"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutSessionType"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/inputSessionType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:hint="@string/label_session_type" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Room -->
         <com.google.android.material.textfield.TextInputLayout

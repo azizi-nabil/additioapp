@@ -49,8 +49,14 @@ class GlobalSearchFragment : Fragment() {
         // Setup RecyclerView
         adapter = SearchResultAdapter(
             onStudentClick = { student ->
-                // Close search and return
-                parentFragmentManager.popBackStack()
+                // Navigate to student's class with student filter
+                val bundle = Bundle().apply {
+                    putLong("classId", student.classId)
+                    putLong("studentId", student.id)
+                    putString("studentName", student.displayNameFr)
+                }
+                androidx.navigation.Navigation.findNavController(requireView())
+                    .navigate(R.id.classDetailFragment, bundle)
             },
             onClassClick = { classEntity ->
                 // Navigate to class detail

@@ -39,23 +39,23 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Due Date -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/label_due_date_optional"
-            android:textSize="12sp"
-            android:textColor="?attr/colorOnSurfaceVariant"/>
-
-        <TextView
-            android:id="@+id/textTaskDueDate"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutTaskDueDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:background="?attr/selectableItemBackground"
-            android:drawableEnd="@android:drawable/ic_menu_my_calendar"
-            android:text="@string/label_no_due_date"
-            android:textSize="16sp"/>
+            android:layout_marginTop="16dp"
+            android:hint="@string/label_due_date_optional"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputTaskDueDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_no_due_date"
+                android:focusable="false"
+                android:clickable="true"
+                android:drawableEnd="@android:drawable/ic_menu_my_calendar"/>
+        </com.google.android.material.textfield.TextInputLayout>
             
         <!-- Quick Date Shortcuts -->
         <LinearLayout

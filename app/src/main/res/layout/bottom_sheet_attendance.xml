@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -12,7 +13,8 @@
         android:id="@+id/textStudentName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Student Name"
+        android:text="@string/student_name"
+        tools:text="Student Name"
         android:textAppearance="?attr/textAppearanceHeadlineSmall"
         android:textStyle="bold"
         android:layout_marginBottom="4dp"/>
@@ -21,7 +23,8 @@
         android:id="@+id/textStudentId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ID: 12345"
+        android:text="@string/student_id_format"
+        tools:text="ID: 12345"
         android:textAppearance="?attr/textAppearanceBodyMedium"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:layout_marginBottom="24dp"/>
@@ -30,7 +33,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Status"
+        android:text="@string/label_status"
         android:textAppearance="?attr/textAppearanceTitleMedium"
         android:layout_marginBottom="12dp"/>
 
@@ -48,7 +51,7 @@
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Present"
+            android:text="@string/status_present"
             android:textColor="#22C55E"
             app:chipStrokeColor="#22C55E"
             app:chipBackgroundColor="@android:color/transparent"/>
@@ -58,7 +61,7 @@
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Absent"
+            android:text="@string/status_absent"
             android:textColor="#EF4444"
             app:chipStrokeColor="#EF4444"
             app:chipBackgroundColor="@android:color/transparent"/>
@@ -68,7 +71,7 @@
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Late"
+            android:text="@string/status_late"
             android:textColor="#EAB308"
             app:chipStrokeColor="#EAB308"
             app:chipBackgroundColor="@android:color/transparent"/>
@@ -78,7 +81,7 @@
             style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Excused"
+            android:text="@string/status_excused"
             android:textColor="#6B7280"
             app:chipStrokeColor="#6B7280"
             app:chipBackgroundColor="@android:color/transparent"/>
@@ -89,7 +92,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Comment (Optional)"
+        android:hint="@string/hint_comment_optional"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_marginBottom="24dp">
 
@@ -112,7 +115,7 @@
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"
+            android:text="@string/action_save"
             style="@style/Widget.Material3.Button"/>
     </LinearLayout>
 

@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 class StudentsFragment : Fragment() {
 
     private var classId: Long = -1
+    private var highlightStudentId: Long = -1L
     private val studentViewModel: StudentViewModel by viewModels {
         AdditioViewModelFactory((requireActivity().application as AdditioApplication).repository)
     }
@@ -69,9 +70,9 @@ class StudentsFragment : Fragment() {
                 }
                 writer.flush()
             }
-            android.widget.Toast.makeText(requireContext(), "Exported ${currentStudents.size} students", android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(requireContext(), getString(R.string.toast_export_success, currentStudents.size), android.widget.Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            android.widget.Toast.makeText(requireContext(), "Export failed: ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(requireContext(), getString(R.string.toast_export_failed, e.message), android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -79,6 +80,7 @@ class StudentsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             classId = it.getLong("classId")
+            highlightStudentId = it.getLong("studentId", -1L)
         }
     }
 
@@ -95,6 +97,11 @@ class StudentsFragment : Fragment() {
         val fab = view.findViewById<ExtendedFloatingActionButton>(R.id.fabAddStudent)
         val btnSort = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSort)
         val btnRandomPicker = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnRandomPicker)
+        val btnToggleFab = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnToggleFab)
+        
+        // Load FAB visibility preference
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
+        var isFabVisibleByUser = prefs.getBoolean("pref_fab_visible_students", true)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewStudents)
         val textTotalStudents = view.findViewById<android.widget.TextView>(R.id.textTotalStudents)
 
@@ -107,7 +114,7 @@ class StudentsFragment : Fragment() {
             if (currentStudents.isNotEmpty()) {
                 showRandomStudentDialog()
             } else {
-                android.widget.Toast.makeText(requireContext(), "No students in this class", android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(requireContext(), getString(R.string.toast_no_students), android.widget.Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -124,11 +131,29 @@ class StudentsFragment : Fragment() {
                 selectionToolbar.visibility = View.VISIBLE
                 searchCard.visibility = View.GONE
                 fab.hide()
-                textSelectionCount.text = "$count selected"
+                textSelectionCount.text = getString(R.string.students_selected, count)
             } else {
                 selectionToolbar.visibility = View.GONE
                 searchCard.visibility = View.VISIBLE
+                if (isFabVisibleByUser) fab.show()
+            }
+        }
+        
+        // Initial state
+        if (!isFabVisibleByUser) {
+            fab.hide()
+            btnToggleFab.alpha = 0.5f
+        }
+
+        btnToggleFab.setOnClickListener {
+            isFabVisibleByUser = !isFabVisibleByUser
+            prefs.edit().putBoolean("pref_fab_visible_students", isFabVisibleByUser).apply()
+            if (isFabVisibleByUser) {
                 fab.show()
+                btnToggleFab.alpha = 1.0f
+            } else {
+                fab.hide()
+                btnToggleFab.alpha = 0.5f
             }
         }
 
@@ -147,7 +172,7 @@ class StudentsFragment : Fragment() {
                 dialog.show(parentFragmentManager, "EditStudentDialog")
             },
             onReportClick = { student ->
-                val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(student.id, student.name)
+                val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(student.id, student.name, classId)
                 dialog.show(parentFragmentManager, "AbsenceReportDialog")
             },
             onGradesClick = { student ->
@@ -178,14 +203,14 @@ class StudentsFragment : Fragment() {
             val selectedStudents = adapter.getSelectedStudents()
             if (selectedStudents.isNotEmpty()) {
                 androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                    .setTitle("Delete Students")
-                    .setMessage("Are you sure you want to delete ${selectedStudents.size} student(s)?\n\nThis will also delete their attendance, grades, and behavior records.")
-                    .setPositiveButton("Delete") { _, _ ->
+                    .setTitle(R.string.dialog_delete_students)
+                    .setMessage(getString(R.string.msg_delete_students_confirm, selectedStudents.size))
+                    .setPositiveButton(R.string.action_delete) { _, _ ->
                         // Disable buttons to prevent double-tap
                         btnDeleteSelected.isEnabled = false
                         btnSelectAll.isEnabled = false
                         btnCancelSelection.isEnabled = false
-                        (btnDeleteSelected as? com.google.android.material.button.MaterialButton)?.text = "Deleting..."
+                        (btnDeleteSelected as? com.google.android.material.button.MaterialButton)?.text = getString(R.string.msg_deleting)
                         
                         // Delete students
                         selectedStudents.forEach { student ->
@@ -194,15 +219,15 @@ class StudentsFragment : Fragment() {
                         
                         // Exit selection mode and show toast
                         adapter.exitSelectionMode()
-                        android.widget.Toast.makeText(requireContext(), "${selectedStudents.size} students deleted", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(requireContext(), getString(R.string.msg_students_found, selectedStudents.size).replace("found", "deleted"), android.widget.Toast.LENGTH_SHORT).show()
                         
                         // Re-enable buttons (toolbar will be hidden by exitSelectionMode)
                         btnDeleteSelected.isEnabled = true
                         btnSelectAll.isEnabled = true
                         btnCancelSelection.isEnabled = true
-                        (btnDeleteSelected as? com.google.android.material.button.MaterialButton)?.text = "🗑️ Delete"
+                        (btnDeleteSelected as? com.google.android.material.button.MaterialButton)?.text = getString(R.string.students_delete_btn)
                     }
-                    .setNegativeButton("Cancel", null)
+                    .setNegativeButton(R.string.action_cancel, null)
                     .show()
             }
         }
@@ -216,11 +241,11 @@ class StudentsFragment : Fragment() {
                 if (adapter.itemCount == 0) {
                     recyclerView.visibility = View.GONE
                     layoutEmptyState.visibility = View.VISIBLE
-                    textTotalStudents.text = "0 Students found"
+                    textTotalStudents.text = getString(R.string.msg_no_students_found)
                 } else {
                     recyclerView.visibility = View.VISIBLE
                     layoutEmptyState.visibility = View.GONE
-                    textTotalStudents.text = "${adapter.itemCount} Students found"
+                    textTotalStudents.text = getString(R.string.msg_students_found, adapter.itemCount)
                 }
             }
             override fun afterTextChanged(s: android.text.Editable?) {}
@@ -230,8 +255,8 @@ class StudentsFragment : Fragment() {
         var currentGrades: List<com.example.additioapp.data.model.GradeRecordEntity> = emptyList()
         
         // Load default sort order from preferences
-        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
-        val defaultSort = when (prefs.getString("pref_sort_order", "lastname")) {
+        val sortPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val defaultSort = when (sortPrefs.getString("pref_sort_order", "lastname")) {
             "firstname" -> "FIRSTNAME_ASC"
             "id" -> "ID_ASC"
             else -> "LASTNAME_ASC"
@@ -311,28 +336,34 @@ class StudentsFragment : Fragment() {
             if (adapter.itemCount == 0) {
                 recyclerView.visibility = View.GONE
                 layoutEmptyState.visibility = View.VISIBLE
-                textTotalStudents.text = "0 Students found"
+                textTotalStudents.text = getString(R.string.msg_no_students_found)
             } else {
                 recyclerView.visibility = View.VISIBLE
                 layoutEmptyState.visibility = View.GONE
-                textTotalStudents.text = "${adapter.itemCount} Students found"
+                textTotalStudents.text = getString(R.string.msg_students_found, adapter.itemCount)
             }
             
             val sortText = when (sortMode) {
-                "LASTNAME_ASC", "NAME_ASC" -> "Sort: Last Name (A-Z)"
-                "LASTNAME_DESC", "NAME_DESC" -> "Sort: Last Name (Z-A)"
-                "FIRSTNAME_ASC" -> "Sort: First Name (A-Z)"
-                "FIRSTNAME_DESC" -> "Sort: First Name (Z-A)"
-                "ID_ASC" -> "Sort: ID/Matricule"
-                else -> "Sort"
+                "LASTNAME_ASC", "NAME_ASC" -> getString(R.string.sort_lastname_asc)
+                "LASTNAME_DESC", "NAME_DESC" -> getString(R.string.sort_lastname_desc)
+                "FIRSTNAME_ASC" -> getString(R.string.sort_firstname_asc)
+                "FIRSTNAME_DESC" -> getString(R.string.sort_firstname_desc)
+                "ID_ASC" -> getString(R.string.sort_id_matricule)
+                else -> getString(R.string.sort_default)
             }
             btnSort.text = sortText
         }
 
         btnSort.setOnClickListener {
-            val options = arrayOf("Last Name (A-Z)", "Last Name (Z-A)", "First Name (A-Z)", "First Name (Z-A)", "ID/Matricule")
+            val options = arrayOf(
+                getString(R.string.sort_lastname_asc_option),
+                getString(R.string.sort_lastname_desc_option),
+                getString(R.string.sort_firstname_asc_option),
+                getString(R.string.sort_firstname_desc_option),
+                getString(R.string.sort_id_matricule_option)
+            )
             androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Sort Students By")
+                .setTitle(getString(R.string.dialog_sort_students_by))
                 .setItems(options) { _, which ->
                     sortMode = when (which) {
                         0 -> "LASTNAME_ASC"
@@ -350,6 +381,22 @@ class StudentsFragment : Fragment() {
         studentViewModel.getStudentsForClass(classId).observe(viewLifecycleOwner) { students ->
             currentStudents = students
             updateUI()
+            
+            // Scroll to highlighted student if navigated from search
+            if (highlightStudentId != -1L) {
+                val position = students.indexOfFirst { it.id == highlightStudentId }
+                if (position != -1) {
+                    recyclerView.post {
+                        recyclerView.scrollToPosition(position)
+                        // Apply search filter for the student name
+                        val student = students.find { it.id == highlightStudentId }
+                        student?.let {
+                            etSearch.setText(it.displayNameFr)
+                        }
+                    }
+                }
+                highlightStudentId = -1L // Reset after scrolling
+            }
         }
 
         attendanceViewModel.getAttendanceWithTypeForClass(classId).observe(viewLifecycleOwner) { records ->
@@ -380,9 +427,9 @@ class StudentsFragment : Fragment() {
 
         // Long press to show import/export options
         fab.setOnLongClickListener {
-            val options = arrayOf("Add Student", "Import from CSV", "Export to CSV")
+            val options = arrayOf(getString(R.string.action_add_student), getString(R.string.action_import_from_csv), getString(R.string.action_export_to_csv))
             androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Student Options")
+                .setTitle(getString(R.string.dialog_student_options))
                 .setItems(options) { _, which ->
                     when (which) {
                         0 -> {
@@ -408,7 +455,7 @@ class StudentsFragment : Fragment() {
                             if (currentStudents.isNotEmpty()) {
                                 exportLauncher.launch("students_export.csv")
                             } else {
-                                android.widget.Toast.makeText(requireContext(), "No students to export", android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(requireContext(), getString(R.string.toast_no_students_to_export), android.widget.Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
@@ -440,10 +487,10 @@ class StudentsFragment : Fragment() {
         val randomStudent = currentStudents.random()
         
         val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-            .setTitle("🎲 Random Student")
+            .setTitle(getString(R.string.dialog_random_student_title))
             .setView(dialogView)
-            .setPositiveButton("Pick Again") { _, _ -> }
-            .setNegativeButton("Close", null)
+            .setPositiveButton(getString(R.string.action_pick_again)) { _, _ -> }
+            .setNegativeButton(getString(R.string.action_close), null)
             .create()
 
         dialog.show()
@@ -495,9 +542,10 @@ class StudentsFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(classId: Long) = StudentsFragment().apply {
+        fun newInstance(classId: Long, studentId: Long = -1L) = StudentsFragment().apply {
             arguments = Bundle().apply {
                 putLong("classId", classId)
+                putLong("studentId", studentId)
             }
         }
     }

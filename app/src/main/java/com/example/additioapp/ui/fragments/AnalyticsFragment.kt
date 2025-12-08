@@ -79,7 +79,7 @@ class AnalyticsFragment : Fragment() {
 
         // Setup RecyclerView
         atRiskAdapter = AtRiskAdapter { item ->
-            val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(item.student.id, item.student.name)
+            val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(item.student.id, item.student.name, selectedClassId)
             dialog.show(parentFragmentManager, "AbsenceReportDialog")
         }
         recyclerAtRisk.adapter = atRiskAdapter

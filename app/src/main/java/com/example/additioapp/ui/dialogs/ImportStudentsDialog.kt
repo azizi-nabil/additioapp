@@ -78,7 +78,7 @@ class ImportStudentsDialog(
         btnImport.setOnClickListener {
             if (parsedStudents.isNotEmpty()) {
                 onImport(parsedStudents)
-                Toast.makeText(context, "Imported ${parsedStudents.size} students", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.import_success_toast, parsedStudents.size), Toast.LENGTH_SHORT).show()
                 dismiss()
             }
         }
@@ -89,42 +89,10 @@ class ImportStudentsDialog(
     }
 
     private fun showFormatDialog() {
-        val message = """
-            📋 CSV Format Instructions
-            
-            Your CSV file should have 3 columns:
-            
-            Column 1: Matricule (Student ID)
-            Column 2: Nom (Last Name)
-            Column 3: Prénom (First Name)
-            
-            ─────────────────────────
-            
-            📝 Example (French only):
-            Matricule,Nom,Prénom
-            202034052475,ABDERREZAK,MAISSOUN
-            191934055534,ABIDI,YASSAMINE
-            
-            ─────────────────────────
-            
-            📝 Example (French + Arabic):
-            Matricule,Nom,Prénom
-            202034052475,ABDERREZAK/عبد الرزاق,MAISSOUN/ميسون
-            191934055534,ABIDI/عبيدي,YASSAMINE/ياسمين
-            
-            ─────────────────────────
-            
-            💡 Tips:
-            • Save Excel as CSV (File → Save As → CSV)
-            • Use comma (,) or semicolon (;) as separator
-            • First row can be headers (will be skipped)
-            • Arabic names are optional (use / to separate)
-        """.trimIndent()
-
         androidx.appcompat.app.AlertDialog.Builder(requireContext())
-            .setTitle("📄 CSV Format Guide")
-            .setMessage(message)
-            .setPositiveButton("Got it!", null)
+            .setTitle(getString(R.string.import_guide_title))
+            .setMessage(getString(R.string.import_instructions))
+            .setPositiveButton(getString(R.string.import_guide_btn), null)
             .show()
     }
 
@@ -189,17 +157,17 @@ class ImportStudentsDialog(
             layoutResult.visibility = View.VISIBLE
 
             if (students.isNotEmpty()) {
-                textStatus.text = "✅ Found ${students.size} students\n\nPreview:\n" +
+                textStatus.text = getString(R.string.import_status_found, students.size) +
                     students.take(5).mapIndexed { i, s -> "${i+1}. ${s.displayNameFr} (${s.matricule})" }.joinToString("\n")
                 btnImport.isEnabled = true
             } else {
-                textStatus.text = "⚠️ No students found.\n\nCheck that your CSV has:\n• Matricule, Nom, Prénom columns\n• Data rows after the header"
+                textStatus.text = getString(R.string.import_status_empty)
                 btnImport.isEnabled = false
             }
         } catch (e: Exception) {
             layoutInstructions.visibility = View.GONE
             layoutResult.visibility = View.VISIBLE
-            textStatus.text = "❌ Error reading file:\n${e.message}"
+            textStatus.text = getString(R.string.import_status_error, e.message)
             btnImport.isEnabled = false
         }
     }

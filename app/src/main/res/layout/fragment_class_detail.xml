@@ -36,7 +36,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:paddingHorizontal="14dp"
-                    android:text="Students"
+                    android:text="@string/nav_students"
                     android:textSize="13sp"
                     android:textColor="@android:color/white"
                     android:textStyle="bold"/>

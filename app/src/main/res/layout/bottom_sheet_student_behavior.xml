@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,7 +18,7 @@
         android:id="@+id/textSheetStudentName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Student Name"
+        tools:text="Student Name"
         android:textAppearance="?attr/textAppearanceHeadlineSmall"
         android:layout_marginBottom="16dp"/>
 
@@ -25,7 +26,7 @@
         android:id="@+id/fabAddBehavior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Behavior"
+        android:text="@string/dialog_add_behavior"
         android:textColor="?attr/colorOnPrimaryContainer"
         android:backgroundTint="?attr/colorPrimaryContainer"
         app:icon="@drawable/ic_add"
@@ -36,7 +37,7 @@
         android:id="@+id/textEmptyBehavior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="No behavior records found."
+        android:text="@string/behavior_empty"
         android:gravity="center"
         android:padding="32dp"
         android:visibility="gone"/>

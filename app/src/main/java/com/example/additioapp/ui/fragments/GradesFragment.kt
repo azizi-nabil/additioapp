@@ -54,25 +54,25 @@ class GradesFragment : Fragment() {
             },
             onMoreClick = { gradeItem, anchor ->
                 val popup = androidx.appcompat.widget.PopupMenu(requireContext(), anchor)
-                popup.menu.add("Edit")
-                popup.menu.add("Delete")
+                popup.menu.add(getString(R.string.action_edit))
+                popup.menu.add(getString(R.string.action_delete))
                 popup.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.title) {
-                        "Edit" -> {
+                        getString(R.string.action_edit) -> {
                             val dialog = AddGradeItemDialog(classId, gradeItem) { updatedItem ->
                                 viewModel.insertGradeItem(updatedItem)
                             }
                             dialog.show(parentFragmentManager, "EditGradeItemDialog")
                             true
                         }
-                        "Delete" -> {
+                        getString(R.string.action_delete) -> {
                             androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                                .setTitle("Delete Grade Item")
-                                .setMessage("Are you sure you want to delete '${gradeItem.name}'? All student grades for this item will be lost.")
-                                .setPositiveButton("Delete") { _, _ ->
+                                .setTitle(getString(R.string.dialog_delete_grade_item))
+                                .setMessage(getString(R.string.msg_delete_grade_confirm, gradeItem.name))
+                                .setPositiveButton(getString(R.string.action_delete)) { _, _ ->
                                     viewModel.deleteGradeItem(gradeItem)
                                 }
-                                .setNegativeButton("Cancel", null)
+                                .setNegativeButton(getString(R.string.action_cancel), null)
                                 .show()
                             true
                         }

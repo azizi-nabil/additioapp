@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -15,7 +16,7 @@
             android:id="@+id/textTaskTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Grade quizzes"
+            tools:text="Grade quizzes"
             android:textAppearance="?attr/textAppearanceBody1"
             android:textStyle="bold"/>
 
@@ -23,7 +24,7 @@
             android:id="@+id/textTaskDue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Due today"
+            tools:text="Due today"
             android:textAppearance="?attr/textAppearanceCaption"/>
     </LinearLayout>
 
@@ -31,7 +32,7 @@
         android:id="@+id/textTaskTag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Assessments"
+        android:text="@string/label_assessments"
         android:textStyle="bold"
         android:textSize="12sp"
         android:textColor="#1565C0"

@@ -193,7 +193,7 @@ class StudentAdapter(
                 student.displayNameFr
             }
             nameTextView.text = displayName
-            idTextView.text = "ID: ${student.displayMatricule}"
+            idTextView.text = itemView.context.getString(R.string.student_id_format, student.displayMatricule)
             
             // Show notes indicator if student has notes
             iconNotes?.visibility = if (student.hasNotes) View.VISIBLE else View.GONE
@@ -211,7 +211,10 @@ class StudentAdapter(
                     cardView?.strokeColor = android.graphics.Color.parseColor("#EF5350") // Red border
                     cardView?.strokeWidth = 2
                 } else {
-                    cardView?.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(itemView.context, android.R.color.white))
+                    // Use theme-aware color for dark mode support
+                    val typedValue = android.util.TypedValue()
+                    itemView.context.theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
+                    cardView?.setCardBackgroundColor(typedValue.data)
                     cardView?.strokeWidth = 0
                 }
                 
@@ -222,8 +225,11 @@ class StudentAdapter(
                 orderTextView.visibility = View.VISIBLE
                 
                 // Reset card styling
+                // Reset card styling with theme-aware color
                 val cardView = itemView as? com.google.android.material.card.MaterialCardView
-                cardView?.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(itemView.context, android.R.color.white))
+                val typedValue = android.util.TypedValue()
+                itemView.context.theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
+                cardView?.setCardBackgroundColor(typedValue.data)
                 cardView?.strokeWidth = 0
                 
                 itemView.setOnClickListener { onStudentClick(student) }

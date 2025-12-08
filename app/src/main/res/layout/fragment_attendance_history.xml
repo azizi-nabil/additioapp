@@ -17,7 +17,7 @@
             android:id="@+id/btnNewSession"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Take Attendance (Today)"
+            android:text="@string/action_take_attendance_today"
             app:icon="@drawable/ic_check_24dp"
             android:layout_marginBottom="24dp"
             android:gravity="center"
@@ -57,7 +57,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="From"
+                        android:text="@string/label_from"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnSurfaceVariant"/>
                     
@@ -65,7 +65,7 @@
                         android:id="@+id/textStartDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Oct 12, 2023"
+                        tools:text="Oct 12, 2023"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textStyle="bold"/>
                 </LinearLayout>
@@ -91,7 +91,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="To"
+                        android:text="@string/label_to"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -99,7 +99,7 @@
                         android:id="@+id/textEndDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nov 12, 2023"
+                        tools:text="Nov 12, 2023"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textStyle="bold"/>
                 </LinearLayout>
@@ -124,7 +124,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Overview"
+                    android:text="@string/label_overview"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
                     android:textColor="?attr/colorOnSurfaceVariant"
                     android:layout_marginBottom="12dp"/>
@@ -144,14 +144,14 @@
                             android:id="@+id/textTotalSessions"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            tools:text="0"
                             android:textAppearance="?attr/textAppearanceHeadlineMedium"
                             android:textStyle="bold"
                             android:textColor="?attr/colorOnSurface"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Total Sessions"
+                            android:text="@string/attendance_total_sessions"
                             android:textAppearance="?attr/textAppearanceBodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant"/>
                     </LinearLayout>
@@ -165,14 +165,14 @@
                             android:id="@+id/textAvgAttendance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0%"
+                            tools:text="0%"
                             android:textAppearance="?attr/textAppearanceHeadlineMedium"
                             android:textStyle="bold"
                             android:textColor="?attr/colorPrimary"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Avg. Attendance"
+                            android:text="@string/attendance_avg_attendance"
                             android:textAppearance="?attr/textAppearanceBodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant"/>
                     </LinearLayout>
@@ -198,7 +198,7 @@
                     android:id="@+id/chipFilterAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All"
+                    android:text="@string/filter_all"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:checked="true"/>
 
@@ -206,21 +206,21 @@
                     android:id="@+id/chipFilterCours"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cours"
+                    android:text="@string/session_type_course"
                     style="@style/Widget.Material3.Chip.Filter"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipFilterTD"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TD"
+                    android:text="@string/session_type_td"
                     style="@style/Widget.Material3.Chip.Filter"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipFilterTP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TP"
+                    android:text="@string/session_type_tp"
                     style="@style/Widget.Material3.Chip.Filter"/>
 
             </com.google.android.material.chip.ChipGroup>
@@ -260,7 +260,7 @@
                 android:id="@+id/btnSortHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Newest"
+                android:text="@string/sort_newest"
                 app:icon="@drawable/ic_sort_24dp"
                 style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
@@ -268,7 +268,7 @@
                 android:id="@+id/btnExportCsv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Export"
+                android:text="@string/action_export"
                 app:icon="@drawable/ic_download_24dp"
                 style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
@@ -276,7 +276,7 @@
                 android:id="@+id/btnShareCsv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Share"
+                android:text="@string/action_share"
                 app:icon="@drawable/ic_share_24dp"
                 style="@style/Widget.MaterialComponents.Button.TextButton"/>
         </LinearLayout>

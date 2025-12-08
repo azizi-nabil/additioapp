@@ -77,3 +77,4 @@ lint/tmp/
 # OS files
 .DS_Store
 Thumbs.db
+android-sdk/

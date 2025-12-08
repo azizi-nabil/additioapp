@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="📚 My Classes"
+            app:title="@string/classes_toolbar_title"
             app:titleTextColor="@android:color/white"
             android:background="?attr/colorPrimary"/>
     </com.google.android.material.appbar.AppBarLayout>
@@ -47,7 +47,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Filter Classes"
+                        android:text="@string/classes_filter"
                         android:textSize="12sp"
                         android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -127,7 +127,7 @@
                     android:layout_marginEnd="6dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="#E8F5E9">
+                    app:cardBackgroundColor="@color/soft_green">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -148,7 +148,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Classes"
+                            android:text="@string/nav_classes"
                             android:textSize="11sp"
                             android:textColor="#388E3C"/>
                     </LinearLayout>
@@ -162,7 +162,7 @@
                     android:layout_marginHorizontal="6dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="#E3F2FD">
+                    app:cardBackgroundColor="@color/soft_blue">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -183,7 +183,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Students"
+                            android:text="@string/nav_students"
                             android:textSize="11sp"
                             android:textColor="#1976D2"/>
                     </LinearLayout>
@@ -197,7 +197,7 @@
                     android:layout_marginStart="6dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="#FFF3E0">
+                    app:cardBackgroundColor="@color/soft_orange">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -218,7 +218,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Archived"
+                            android:text="@string/classes_archived"
                             android:textSize="11sp"
                             android:textColor="#F57C00"/>
                     </LinearLayout>
@@ -250,7 +250,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="📋 Class List"
+                            android:text="@string/classes_class_list"
                             android:textSize="16sp"
                             android:textStyle="bold"/>
 
@@ -258,7 +258,7 @@
                             android:id="@+id/btnAddClassInline"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
-                            android:text="+ Add"
+                            android:text="@string/classes_add_btn"
                             android:textSize="12sp"
                             style="@style/Widget.MaterialComponents.Button.TextButton"/>
                     </LinearLayout>
@@ -289,7 +289,7 @@
                             android:id="@+id/textEmptyTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="No classes yet"
+                            android:text="@string/classes_no_classes"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:layout_marginTop="8dp"/>
@@ -298,7 +298,7 @@
                             android:id="@+id/textEmptySubtitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tap + Add to create your first class"
+                            android:text="@string/classes_create_first"
                             android:textSize="13sp"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:layout_marginTop="4dp"/>
@@ -322,7 +322,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊 Quick Stats"
+                        android:text="@string/classes_quick_stats"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>

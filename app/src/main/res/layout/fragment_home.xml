@@ -30,7 +30,7 @@
                     android:id="@+id/textGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Good Morning 👋"
+                    android:text="@string/home_greeting_morning"
                     android:textAppearance="?attr/textAppearanceHeadlineSmall"
                     android:textColor="?attr/colorOnPrimary"
                     android:textStyle="bold"/>
@@ -38,7 +38,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Abbes Laghrour University - Khenchela"
+                    android:text="@string/home_university"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?attr/colorOnPrimary"
                     android:alpha="0.9"
@@ -124,7 +124,7 @@
                         android:src="@drawable/ic_school_24dp"
                         app:tint="#4CAF50"
                         android:background="@drawable/bg_circle_primary_container"
-                        android:backgroundTint="#E8F5E9"
+                        android:backgroundTint="@color/soft_green"
                         android:padding="8dp"/>
 
                     <TextView
@@ -139,7 +139,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Classes"
+                        android:text="@string/nav_classes"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnSurfaceVariant"/>
                 </LinearLayout>
@@ -172,7 +172,7 @@
                         android:src="@drawable/ic_person_24dp"
                         app:tint="#2196F3"
                         android:background="@drawable/bg_circle_secondary_container"
-                        android:backgroundTint="#E3F2FD"
+                        android:backgroundTint="@color/soft_blue"
                         android:padding="8dp"/>
 
                     <TextView
@@ -187,7 +187,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Students"
+                        android:text="@string/nav_students"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnSurfaceVariant"/>
                 </LinearLayout>
@@ -220,7 +220,7 @@
                         android:src="@drawable/ic_check_24dp"
                         app:tint="#FF9800"
                         android:background="@drawable/bg_circle_secondary_container"
-                        android:backgroundTint="#FFF3E0"
+                        android:backgroundTint="@color/soft_orange"
                         android:padding="8dp"/>
 
                     <TextView
@@ -235,7 +235,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tasks"
+                        android:text="@string/planner_tasks"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnSurfaceVariant"/>
                 </LinearLayout>
@@ -246,7 +246,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quick Actions"
+            android:text="@string/home_quick_actions"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textStyle="bold"
             android:layout_marginStart="24dp"
@@ -277,7 +277,7 @@
                     android:layout_height="52dp"
                     app:cardCornerRadius="14dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#E8F5E9">
+                    app:cardBackgroundColor="@color/soft_green">
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -289,7 +289,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Attendance"
+                    android:text="@string/attendance_title"
                     android:textSize="11sp"
                     android:layout_marginTop="4dp"
                     android:gravity="center"/>
@@ -313,7 +313,7 @@
                     android:layout_height="52dp"
                     app:cardCornerRadius="14dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#E3F2FD">
+                    app:cardBackgroundColor="@color/soft_blue">
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -325,7 +325,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Planner"
+                    android:text="@string/nav_planner"
                     android:textSize="11sp"
                     android:layout_marginTop="4dp"
                     android:gravity="center"/>
@@ -349,7 +349,7 @@
                     android:layout_height="52dp"
                     app:cardCornerRadius="14dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#FFF3E0">
+                    app:cardBackgroundColor="@color/soft_orange">
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -361,7 +361,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Grades"
+                    android:text="@string/grades_title"
                     android:textSize="11sp"
                     android:layout_marginTop="4dp"
                     android:gravity="center"/>
@@ -385,7 +385,7 @@
                     android:layout_height="52dp"
                     app:cardCornerRadius="14dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#FCE4EC">
+                    app:cardBackgroundColor="@color/soft_pink">
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -397,7 +397,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Reports"
+                    android:text="@string/home_reports"
                     android:textSize="11sp"
                     android:layout_marginTop="4dp"
                     android:gravity="center"/>
@@ -418,7 +418,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="📅 Today's Classes"
+                android:text="@string/home_todays_classes"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:textStyle="bold"/>
 
@@ -426,7 +426,7 @@
                 android:id="@+id/btnViewSchedule"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="View All"
+                android:text="@string/home_view_all"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="13sp"
                 android:padding="4dp"
@@ -463,7 +463,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="🎯 Upcoming Events"
+                android:text="@string/home_upcoming_events_title"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:textStyle="bold"/>
 
@@ -471,7 +471,7 @@
                 android:id="@+id/btnViewEvents"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="View All"
+                android:text="@string/home_view_all"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="13sp"
                 android:padding="4dp"
@@ -508,7 +508,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="📝 Pending Tasks"
+                android:text="@string/label_pending_tasks"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:textStyle="bold"/>
 
@@ -516,7 +516,7 @@
                 android:id="@+id/btnViewTasks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="View All"
+                android:text="@string/home_view_all"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="13sp"
                 android:padding="4dp"

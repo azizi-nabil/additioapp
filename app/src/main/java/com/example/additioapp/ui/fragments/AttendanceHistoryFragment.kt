@@ -102,11 +102,12 @@ class AttendanceHistoryFragment : Fragment() {
         }
         
         adapter = AttendanceHistoryAdapter(
-            onItemClick = { date ->
-                // Navigate to AttendanceFragment with selected date
+            onItemClick = { sessionId, date ->
+                // Navigate to AttendanceFragment with selected date and sessionId
                 val bundle = Bundle().apply {
                     putLong("classId", classId)
                     putLong("selectedDate", date)
+                    putString("sessionId", sessionId)
                 }
                 findNavController().navigate(R.id.attendanceFragment, bundle)
             },
@@ -243,7 +244,7 @@ class AttendanceHistoryFragment : Fragment() {
         val file = File(requireContext().filesDir, fileName)
         try {
             FileWriter(file).use { writer ->
-                writer.appendLine("sessionId,date,present,absent,late,other,total,attendancePercent")
+                                writer.appendLine("sessionId,date,present,absent,late,excused,total,attendancePercent")
                 filteredSummaries.forEach { s ->
                     val attended = s.presentCount + s.lateCount
                     val pct = if (s.totalCount > 0) (attended * 100f / s.totalCount) else 0f
@@ -254,7 +255,7 @@ class AttendanceHistoryFragment : Fragment() {
                             s.presentCount,
                             s.absentCount,
                             s.lateCount,
-                            s.otherCount,
+                            s.excusedCount,
                             s.totalCount,
                             String.format(Locale.getDefault(), "%.1f", pct)
                         ).joinToString(",")
@@ -277,7 +278,7 @@ class AttendanceHistoryFragment : Fragment() {
         }
         try {
             FileWriter(file).use { writer ->
-                writer.appendLine("sessionId,date,present,absent,late,other,total,attendancePercent")
+                                writer.appendLine("sessionId,date,present,absent,late,excused,total,attendancePercent")
                 filteredSummaries.forEach { s ->
                     val attended = s.presentCount + s.lateCount
                     val pct = if (s.totalCount > 0) (attended * 100f / s.totalCount) else 0f
@@ -288,7 +289,7 @@ class AttendanceHistoryFragment : Fragment() {
                             s.presentCount,
                             s.absentCount,
                             s.lateCount,
-                            s.otherCount,
+                            s.excusedCount,
                             s.totalCount,
                             String.format(Locale.getDefault(), "%.1f", pct)
                         ).joinToString(",")

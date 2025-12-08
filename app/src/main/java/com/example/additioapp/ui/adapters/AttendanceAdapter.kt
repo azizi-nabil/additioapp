@@ -47,7 +47,7 @@ class AttendanceAdapter(
     }
 
     override fun onBindViewHolder(holder: AttendanceViewHolder, position: Int) {
-        holder.bind(items[position], statusCycle, onStatusChanged)
+        holder.bind(items[position], position, statusCycle, onStatusChanged)
     }
 
     override fun getItemCount(): Int = items.size
@@ -60,6 +60,7 @@ class AttendanceAdapter(
 
         fun bind(
             item: StudentAttendanceItem,
+            position: Int, // Add position
             statuses: List<AttendanceStatusEntity>,
             onStatusChanged: (StudentEntity, String) -> Unit
         ) {
@@ -80,13 +81,13 @@ class AttendanceAdapter(
             val paddingPx = (padding * itemView.context.resources.displayMetrics.density).toInt()
             (itemView as? com.google.android.material.card.MaterialCardView)?.setContentPadding(paddingPx, paddingPx, paddingPx, paddingPx)
             
-            // Use proper display name
+            // Name with Order Number
             val displayName = if (nameLang == "arabic" && !item.student.displayNameAr.isNullOrEmpty()) {
                 item.student.displayNameAr
             } else {
-                item.student.displayNameFr
+                item.student.displayNameFr // Revert to displayNameFr as it was working
             }
-            nameTextView.text = displayName
+            nameTextView.text = "${position + 1}. $displayName"
             idTextView.text = "ID: ${item.student.displayMatricule}"
             
             val comment = item.attendance?.comment

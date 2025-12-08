@@ -24,7 +24,7 @@ class SettingsViewModel(private val repository: AppRepository) : ViewModel() {
     private val _restoreStatus = MutableLiveData<Result<String>>()
     val restoreStatus: LiveData<Result<String>> = _restoreStatus
 
-    fun backupData(uri: Uri, contentResolver: ContentResolver) {
+    fun backupData(uri: Uri, context: android.content.Context) {
         viewModelScope.launch {
             try {
                 val data = repository.getAllData()
@@ -32,24 +32,24 @@ class SettingsViewModel(private val repository: AppRepository) : ViewModel() {
                     val gson = GsonBuilder().setPrettyPrinting().create()
                     val json = gson.toJson(data)
                     
-                    contentResolver.openOutputStream(uri)?.use { outputStream ->
+                    context.contentResolver.openOutputStream(uri)?.use { outputStream ->
                         OutputStreamWriter(outputStream).use { writer ->
                             writer.write(json)
                         }
                     }
                 }
-                _backupStatus.postValue(Result.success("Backup completed successfully"))
+                _backupStatus.postValue(Result.success(context.getString(com.example.additioapp.R.string.backup_success)))
             } catch (e: Exception) {
                 _backupStatus.postValue(Result.failure(e))
             }
         }
     }
 
-    fun restoreData(uri: Uri, contentResolver: ContentResolver) {
+    fun restoreData(uri: Uri, context: android.content.Context) {
         viewModelScope.launch {
             try {
                 val data = withContext(Dispatchers.IO) {
-                    contentResolver.openInputStream(uri)?.use { inputStream ->
+                    context.contentResolver.openInputStream(uri)?.use { inputStream ->
                         InputStreamReader(inputStream).use { reader ->
                             // Read JSON as string first
                             val jsonString = reader.readText()
@@ -106,6 +106,31 @@ class SettingsViewModel(private val repository: AppRepository) : ViewModel() {
                                 gson.fromJson(it, com.example.additioapp.data.model.BehaviorRecordEntity::class.java) 
                             } ?: emptyList()
                             
+                            // Parse v2 planner data (events, tasks, scheduleItems, and cross-refs)
+                            val events = jsonObject.getAsJsonArray("events")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.EventEntity::class.java)
+                            } ?: emptyList()
+                            
+                            val tasks = jsonObject.getAsJsonArray("tasks")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.TaskEntity::class.java)
+                            } ?: emptyList()
+                            
+                            val scheduleItems = jsonObject.getAsJsonArray("scheduleItems")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.ScheduleItemEntity::class.java)
+                            } ?: emptyList()
+                            
+                            val eventClassRefs = jsonObject.getAsJsonArray("eventClassRefs")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.EventClassCrossRef::class.java)
+                            } ?: emptyList()
+                            
+                            val taskClassRefs = jsonObject.getAsJsonArray("taskClassRefs")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.TaskClassCrossRef::class.java)
+                            } ?: emptyList()
+                            
+                            val scheduleItemClassRefs = jsonObject.getAsJsonArray("scheduleItemClassRefs")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.ScheduleItemClassCrossRef::class.java)
+                            } ?: emptyList()
+                            
                             BackupData(
                                 version = version,
                                 timestamp = timestamp,
@@ -115,7 +140,13 @@ class SettingsViewModel(private val repository: AppRepository) : ViewModel() {
                                 attendanceRecords = attendanceRecords,
                                 gradeItems = gradeItems,
                                 gradeRecords = gradeRecords,
-                                behaviorRecords = behaviorRecords
+                                behaviorRecords = behaviorRecords,
+                                events = events,
+                                tasks = tasks,
+                                scheduleItems = scheduleItems,
+                                eventClassRefs = eventClassRefs,
+                                taskClassRefs = taskClassRefs,
+                                scheduleItemClassRefs = scheduleItemClassRefs
                             )
                         }
                     }
@@ -126,20 +157,20 @@ class SettingsViewModel(private val repository: AppRepository) : ViewModel() {
                     Log.d("SettingsVM", "Restoring: ${data.classes.size} classes, ${data.students.size} students, ${data.sessions.size} sessions")
                     try {
                         repository.restoreData(data)
-                        _restoreStatus.postValue(Result.success("Restore completed successfully"))
+                        _restoreStatus.postValue(Result.success(context.getString(com.example.additioapp.R.string.restore_success)))
                     } catch (e: Exception) {
                         // Detailed error logging for repository operation
                         Log.e("SettingsVM", "Restore failed during repository operation: ${e.message}", e)
-                        _restoreStatus.postValue(Result.failure(Exception("Restore Failed: ${e.message?.take(100) ?: "Unknown error during data restoration"}")))
+                        _restoreStatus.postValue(Result.failure(Exception(context.getString(com.example.additioapp.R.string.restore_error_generic, e.message?.take(100) ?: "Unknown error"))))
                     }
                 } else {
                     Log.e("SettingsVM", "Restore failed: Could not read backup file or file was empty.")
-                    _restoreStatus.postValue(Result.failure(Exception("Restore Failed: Could not read file or file was empty")))
+                    _restoreStatus.postValue(Result.failure(Exception(context.getString(com.example.additioapp.R.string.restore_error_file))))
                 }
             } catch (e: Exception) {
                 // Detailed error logging for file read/parsing
                 Log.e("SettingsVM", "File read or parsing failed: ${e.message}", e)
-                _restoreStatus.postValue(Result.failure(Exception("Restore Failed: ${e.message?.take(100) ?: "File read or parsing error"}")))
+                _restoreStatus.postValue(Result.failure(Exception(context.getString(com.example.additioapp.R.string.restore_error_generic, e.message?.take(100) ?: "File read error"))))
             }
         }
     }

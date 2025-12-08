@@ -39,23 +39,23 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Date -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/label_date"
-            android:textSize="12sp"
-            android:textColor="?attr/colorOnSurfaceVariant"/>
-
-        <TextView
-            android:id="@+id/textEventDate"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutEventDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:background="?attr/selectableItemBackground"
-            android:drawableEnd="@android:drawable/ic_menu_my_calendar"
-            android:text="@string/action_select_date"
-            android:textSize="16sp"/>
+            android:layout_marginTop="16dp"
+            android:hint="@string/label_date"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputEventDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_select_date"
+                android:focusable="false"
+                android:clickable="true"
+                android:drawableEnd="@android:drawable/ic_menu_my_calendar"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- All Day Checkbox -->
         <CheckBox
@@ -72,86 +72,77 @@
             android:layout_marginTop="12dp"
             android:orientation="horizontal">
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutStartTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginEnd="8dp">
+                android:layout_marginEnd="8dp"
+                android:hint="@string/label_start_time"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_start_time"
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"/>
-
-                <TextView
-                    android:id="@+id/textStartTime"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputStartTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="12dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:drawableEnd="@android:drawable/ic_menu_recent_history"
                     android:text="09:00"
-                    android:textSize="16sp"/>
-            </LinearLayout>
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:drawableEnd="@android:drawable/ic_menu_recent_history"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutEndTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="8dp">
+                android:layout_marginStart="8dp"
+                android:hint="@string/label_end_time"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_end_time"
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"/>
-
-                <TextView
-                    android:id="@+id/textEndTime"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputEndTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="12dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:drawableEnd="@android:drawable/ic_menu_recent_history"
                     android:text="10:00"
-                    android:textSize="16sp"/>
-            </LinearLayout>
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:drawableEnd="@android:drawable/ic_menu_recent_history"/>
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <!-- Event Type -->
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutEventType"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/label_event_type"
-            android:textSize="12sp"
-            android:textColor="?attr/colorOnSurfaceVariant"/>
+            android:hint="@string/label_event_type"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-        <Spinner
-            android:id="@+id/spinnerEventType"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"/>
+            <AutoCompleteTextView
+                android:id="@+id/inputEventType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:hint="@string/label_event_type" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Recurrence -->
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutRecurrence"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/label_repeat"
-            android:textSize="12sp"
-            android:textColor="?attr/colorOnSurfaceVariant"/>
+            android:hint="@string/label_repeat"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-        <Spinner
-            android:id="@+id/spinnerRecurrence"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"/>
+            <AutoCompleteTextView
+                android:id="@+id/inputRecurrence"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Link to Classes (multi-select) -->
         <TextView

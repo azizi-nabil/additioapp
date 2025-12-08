@@ -58,10 +58,10 @@ class GradesReportDialog : BottomSheetDialogFragment() {
 
             if (grades.isEmpty()) {
                 textNoGrades.visibility = View.VISIBLE
-                view.findViewById<TextView>(R.id.textOverallGrade).text = "-- / 20"
+                view.findViewById<TextView>(R.id.textOverallGrade).setText(R.string.grade_score_placeholder)
             } else {
                 textNoGrades.visibility = View.GONE
-                val fmt = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+                val fmt = java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM, Locale.getDefault())
                 val decimalFormat = java.text.DecimalFormat("#.##")
 
                 // Find calculated item for Continuous calendar (CC)
@@ -81,23 +81,23 @@ class GradesReportDialog : BottomSheetDialogFragment() {
                     itemView.findViewById<TextView>(R.id.textGradeDate).text = fmt.format(grade.date)
                     itemView.findViewById<TextView>(R.id.textGradeScore).text = decimalFormat.format(grade.score)
                     itemView.findViewById<TextView>(R.id.textGradeMax).text = " / ${decimalFormat.format(grade.maxScore)}"
-                    itemView.findViewById<TextView>(R.id.textGradeWeight).text = "Weight: ${decimalFormat.format(grade.weight)}"
+                    itemView.findViewById<TextView>(R.id.textGradeWeight).text = getString(R.string.grade_weight_format, decimalFormat.format(grade.weight))
 
                     layoutList.addView(itemView)
                 }
 
                 // Set CC Header Score
                 if (calculatedItem != null) {
-                    view.findViewById<TextView>(R.id.textOverallGrade).text = "${decimalFormat.format(calculatedItem.score)} / ${decimalFormat.format(calculatedItem.maxScore)}"
+                    view.findViewById<TextView>(R.id.textOverallGrade).text = getString(R.string.grade_score_format, decimalFormat.format(calculatedItem.score), decimalFormat.format(calculatedItem.maxScore))
                 } else {
-                    view.findViewById<TextView>(R.id.textOverallGrade).text = "-- / 20"
+                    view.findViewById<TextView>(R.id.textOverallGrade).setText(R.string.grade_score_placeholder)
                 }
 
                 // Set Exam Header Score
                 if (examItem != null) {
-                    view.findViewById<TextView>(R.id.textExamGrade).text = "${decimalFormat.format(examItem.score)} / ${decimalFormat.format(examItem.maxScore)}"
+                    view.findViewById<TextView>(R.id.textExamGrade).text = getString(R.string.grade_score_format, decimalFormat.format(examItem.score), decimalFormat.format(examItem.maxScore))
                 } else {
-                    view.findViewById<TextView>(R.id.textExamGrade).text = "-- / 20"
+                    view.findViewById<TextView>(R.id.textExamGrade).setText(R.string.grade_score_placeholder)
                 }
             }
         }

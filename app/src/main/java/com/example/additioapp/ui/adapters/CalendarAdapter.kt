@@ -71,21 +71,45 @@ class CalendarAdapter(
             container.setOnClickListener { onDayClick(day) }
 
             // Style based on state
+            val context = itemView.context
+            
+            // Get theme-aware colors
+            val typedValue = android.util.TypedValue()
+            context.theme.resolveAttribute(com.google.android.material.R.attr.colorOnSurface, typedValue, true)
+            val colorOnSurface = typedValue.data
+            context.theme.resolveAttribute(com.google.android.material.R.attr.colorOnSurfaceVariant, typedValue, true)
+            val colorOnSurfaceVariant = typedValue.data
+            context.theme.resolveAttribute(com.google.android.material.R.attr.colorPrimary, typedValue, true)
+            val colorPrimary = typedValue.data
+            context.theme.resolveAttribute(com.google.android.material.R.attr.colorPrimaryContainer, typedValue, true)
+            val colorPrimaryContainer = typedValue.data
+            context.theme.resolveAttribute(com.google.android.material.R.attr.colorOnPrimaryContainer, typedValue, true)
+            val colorOnPrimaryContainer = typedValue.data
+            
             when {
                 day.date == selectedDate -> {
                     textDay.setTextColor(Color.WHITE)
-                    container.setBackgroundColor(Color.parseColor("#2196F3"))
+                    // Use a rounded drawable for selected state with accent color
+                    val drawable = GradientDrawable().apply {
+                        shape = GradientDrawable.OVAL
+                        setColor(colorPrimary)
+                    }
+                    container.background = drawable
                 }
                 day.isToday -> {
-                    textDay.setTextColor(Color.parseColor("#2196F3"))
-                    container.setBackgroundColor(Color.parseColor("#E3F2FD"))
+                    textDay.setTextColor(colorOnPrimaryContainer)
+                    val drawable = GradientDrawable().apply {
+                        shape = GradientDrawable.OVAL
+                        setColor(colorPrimaryContainer)
+                    }
+                    container.background = drawable
                 }
                 !day.isCurrentMonth -> {
-                    textDay.setTextColor(Color.GRAY)
+                    textDay.setTextColor(colorOnSurfaceVariant)
                     container.setBackgroundColor(Color.TRANSPARENT)
                 }
                 else -> {
-                    textDay.setTextColor(Color.BLACK)
+                    textDay.setTextColor(colorOnSurface)
                     container.setBackgroundColor(Color.TRANSPARENT)
                 }
             }

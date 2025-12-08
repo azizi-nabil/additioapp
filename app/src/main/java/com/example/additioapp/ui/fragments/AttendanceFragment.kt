@@ -53,6 +53,9 @@ class AttendanceFragment : Fragment() {
     private var currentStudents: List<com.example.additioapp.data.model.StudentEntity> = emptyList()
     private var summaryTextView: TextView? = null
     private var currentSessionType: String = "Cours"
+    private var isSessionTypeReady = false
+    private var originalSessionId: String? = null // For legacy 2-part sessionIds
+    private var currentFilter: String? = null // null means "All", otherwise P/A/L/E
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +65,24 @@ class AttendanceFragment : Fragment() {
             val dateMillis = it.getLong("selectedDate", -1L)
             if (dateMillis != -1L) {
                 selectedDate.timeInMillis = dateMillis
+            }
+            // If sessionId is passed, parse the session type from it
+            val passedSessionId = it.getString("sessionId")
+            if (!passedSessionId.isNullOrEmpty()) {
+                // SessionId format can be:
+                // - Legacy: classId_date (2 parts) - type needs to be loaded from DB
+                // - New: classId_date_type (3 parts) - type is in the ID
+                val parts = passedSessionId.split("_")
+                if (parts.size >= 3) {
+                    // New format: extract type from sessionId
+                    currentSessionType = parts.last()
+                } else {
+                    // Legacy 2-part format - store for use in queries
+                    originalSessionId = passedSessionId
+                }
+                
+                // Disable auto-fill for existing sessions opened from history
+                shouldAutoFill = false
             }
         }
     }
@@ -100,31 +121,69 @@ class AttendanceFragment : Fragment() {
         updateDateDisplay(textDate)
         updateLockState(view)
         
-        // Setup Spinner
-        val natureOptions = listOf("Cours", "TD", "TP")
-        val spinnerAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, natureOptions)
+        // Load session type from database
+        val passedSessionId = arguments?.getString("sessionId")
+        val isLegacySessionId = passedSessionId != null && passedSessionId.split("_").size == 2
+        
+        lifecycleScope.launch {
+            if (passedSessionId.isNullOrEmpty()) {
+                // New session - load from database
+                attendanceViewModel.loadSessionType(classId, selectedDate.timeInMillis)
+                currentSessionType = attendanceViewModel.currentSessionType.value ?: "Cours"
+            } else if (isLegacySessionId) {
+                // Legacy 2-part sessionId - load type from sessions table
+                attendanceViewModel.loadSessionType(classId, selectedDate.timeInMillis)
+                currentSessionType = attendanceViewModel.currentSessionType.value ?: "Cours"
+            } else {
+                // New 3-part sessionId - type was already parsed in onCreate
+                attendanceViewModel.setSessionType(currentSessionType)
+            }
+            
+            // Mark session type as ready and trigger refresh if students are loaded
+            isSessionTypeReady = true
+            if (currentStudents.isNotEmpty()) {
+                summaryTextView?.let { refreshData(currentStudents, it) }
+            }
+        }
+        
+        // Setup Spinner - use raw values for data, localized strings for display
+        val sessionTypeValues = listOf("Cours", "TD", "TP") // Raw values stored in DB
+        val sessionTypeLabels = listOf(getString(R.string.session_type_course), getString(R.string.session_type_td), getString(R.string.session_type_tp)) // Display labels
+        val spinnerAdapter = android.widget.ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, sessionTypeLabels)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerNature.adapter = spinnerAdapter
         spinnerNature.isEnabled = !isLocked
 
-        // Observe Session Type
+        // Observe Session Type - match against raw values
         attendanceViewModel.currentSessionType.observe(viewLifecycleOwner) { type ->
             currentSessionType = type // Sync local variable
-            val index = natureOptions.indexOf(type)
+            val index = sessionTypeValues.indexOf(type)
             if (index >= 0 && spinnerNature.selectedItemPosition != index) {
                 spinnerNature.setSelection(index)
             }
         }
 
-        // Handle Spinner Selection
+        // Handle Spinner Selection - use raw values
         spinnerNature.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (isLocked) return
-                val selectedType = natureOptions[position]
+                val selectedType = sessionTypeValues[position] // Use raw value, not label
                 if (currentSessionType != selectedType) {
+                    val oldSessionType = currentSessionType
                     currentSessionType = selectedType
                     lifecycleScope.launch {
+                        // Build old and new session IDs
+                        val format = java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                        val dateStr = format.format(selectedDate.time)
+                        val oldSessionId = "${classId}_${dateStr}_${oldSessionType}"
+                        val newSessionId = "${classId}_${dateStr}_${selectedType}"
+                        
+                        // Migrate attendance records from old session ID to new session ID
+                        attendanceViewModel.updateSessionId(oldSessionId, newSessionId)
+                        
+                        // Save the new session type
                         attendanceViewModel.saveSessionType(classId, selectedDate.timeInMillis, selectedType)
+                        
                         // Reload data for the new session type
                         summaryTextView?.let { refreshData(currentStudents, it) }
                     }
@@ -135,7 +194,7 @@ class AttendanceFragment : Fragment() {
 
         adapter = AttendanceAdapter { student, currentStatus ->
             if (isLocked) {
-                Toast.makeText(requireContext(), "Unlock to modify attendance", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.msg_unlock_to_modify), Toast.LENGTH_SHORT).show()
                 return@AttendanceAdapter
             }
             // Show bottom sheet dialog
@@ -184,26 +243,29 @@ class AttendanceFragment : Fragment() {
         studentViewModel.getStudentsForClass(classId).observe(viewLifecycleOwner) { students ->
             android.util.Log.d("AttendanceFragment", "Observer: Received ${students.size} students for classId $classId")
             currentStudents = students
-            refreshData(students, textSummary)
+            // Only refresh if session type is ready to avoid race condition
+            if (isSessionTypeReady) {
+                refreshData(students, textSummary)
+            }
         }
 
         btnBulkPresent.setOnClickListener {
             if (isLocked) return@setOnClickListener
-            showConfirmationDialog("Mark All Present", "Are you sure you want to mark all students as Present?") {
+            showConfirmationDialog(getString(R.string.title_mark_all_present), getString(R.string.msg_mark_all_present)) {
                 applyBulkStatus("P")
             }
         }
 
         btnBulkAbsent.setOnClickListener {
             if (isLocked) return@setOnClickListener
-            showConfirmationDialog("Mark All Absent", "Are you sure you want to mark all students as Absent?") {
+            showConfirmationDialog(getString(R.string.title_mark_all_absent), getString(R.string.msg_mark_all_absent)) {
                 applyBulkStatus("A")
             }
         }
 
         btnClearAll.setOnClickListener {
             if (isLocked) return@setOnClickListener
-            showConfirmationDialog("Clear Attendance", "Are you sure you want to clear all attendance records for this session? This cannot be undone.") {
+            showConfirmationDialog(getString(R.string.title_clear_attendance), getString(R.string.msg_clear_attendance)) {
                 clearAll()
             }
         }
@@ -216,6 +278,22 @@ class AttendanceFragment : Fragment() {
         btnChangeDate.setOnClickListener {
             showDatePicker(textDate)
         }
+
+        // Setup filter chips
+        val chipGroupFilter = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chipGroupFilter)
+        chipGroupFilter.setOnCheckedStateChangeListener { _, checkedIds ->
+            currentFilter = when {
+                checkedIds.contains(R.id.chipFilterPresent) -> "P"
+                checkedIds.contains(R.id.chipFilterAbsent) -> "A"
+                checkedIds.contains(R.id.chipFilterLate) -> "L"
+                checkedIds.contains(R.id.chipFilterExcused) -> "E"
+                else -> null // All
+            }
+            // Re-apply filter to current items
+            if (currentStudents.isNotEmpty()) {
+                summaryTextView?.let { refreshData(currentStudents, it) }
+            }
+        }
     }
 
     private fun updateDateDisplay(textView: TextView) {
@@ -224,6 +302,10 @@ class AttendanceFragment : Fragment() {
     }
 
     private fun getSessionId(calendar: Calendar): String {
+        // For legacy 2-part sessionIds, use the original format
+        originalSessionId?.let { return it }
+        
+        // New format: classId_date_type
         val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val dateStr = format.format(calendar.time)
         return "${classId}_${dateStr}_$currentSessionType"
@@ -236,13 +318,17 @@ class AttendanceFragment : Fragment() {
                 selectedDate.set(year, month, dayOfMonth)
                 shouldAutoFill = true // Reset auto-fill for new date
                 updateDateDisplay(textView)
-                // Trigger re-fetch (simplistic approach: re-observe happens automatically if we used a LiveData for date)
-                // Since we are manually observing inside the student observer, we might need to force refresh.
-                // A better way is to have a "currentSessionId" LiveData in ViewModel.
-                // For this MVP, let's just recreate the observer chain or notify change.
-                // Actually, the simplest way here is to just reload the fragment or use a proper ViewModel trigger.
-                // Let's create a method to refresh data.
-                summaryTextView?.let { refreshData(currentStudents, it) }
+                // Clear the passed sessionId since we're now on a different date
+                arguments?.remove("sessionId")
+                originalSessionId = null // Clear legacy sessionId
+                // Load session type from database for the new date, THEN refresh
+                lifecycleScope.launch {
+                    attendanceViewModel.loadSessionType(classId, selectedDate.timeInMillis)
+                    // Now that type is loaded, sync the local variable
+                    currentSessionType = attendanceViewModel.currentSessionType.value ?: "Cours"
+                    // Now refresh with correct session type
+                    summaryTextView?.let { refreshData(currentStudents, it) }
+                }
             },
             selectedDate.get(Calendar.YEAR),
             selectedDate.get(Calendar.MONTH),
@@ -299,11 +385,19 @@ class AttendanceFragment : Fragment() {
             // Use HashMap for O(1) lookup instead of O(n) find
             val recordMap = records.associateBy { it.studentId }
             
-            val items = students.map { student ->
+            val allItems = students.map { student ->
                 StudentAttendanceItem(student, recordMap[student.id])
             }
-            adapter.submitList(items)
-            updateSummary(items, summaryText)
+            
+            // Apply filter if set
+            val filteredItems = if (currentFilter != null) {
+                allItems.filter { it.attendance?.status == currentFilter }
+            } else {
+                allItems
+            }
+            
+            adapter.submitList(filteredItems)
+            updateSummary(allItems, summaryText) // Summary shows totals, not filtered
         }
     }
 
@@ -312,11 +406,9 @@ class AttendanceFragment : Fragment() {
         val present = counts["P"] ?: 0
         val absent = counts["A"] ?: 0
         val late = counts["L"] ?: 0
+        val excused = counts["E"] ?: 0
         
-        // Debug Log
-        android.util.Log.d("AttendanceSummary", "Counts: $counts")
-        
-        summaryText.text = "Present: $present | Absent: $absent | Late: $late"
+        summaryText.text = getString(R.string.attendance_summary, present, absent, late, excused)
     }
 
     private fun applyBulkStatus(code: String) {
@@ -383,8 +475,8 @@ class AttendanceFragment : Fragment() {
         androidx.appcompat.app.AlertDialog.Builder(requireContext())
             .setTitle(title)
             .setMessage(message)
-            .setPositiveButton("Confirm") { _, _ -> onConfirm() }
-            .setNegativeButton("Cancel", null)
+            .setPositiveButton(R.string.action_confirm) { _, _ -> onConfirm() }
+            .setNegativeButton(R.string.action_cancel, null)
             .show()
     }
 

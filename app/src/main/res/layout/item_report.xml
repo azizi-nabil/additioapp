@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
@@ -17,7 +18,7 @@
             android:id="@+id/textStudentName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Student Name"
+            tools:text="Student Name"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textStyle="bold" />
 
@@ -31,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Attendance:"
+                android:text="@string/label_attendance"
                 android:layout_marginEnd="8dp"
                 android:textSize="12sp"/>
 
@@ -65,7 +66,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Grade Avg:"
+                android:text="@string/label_grade_avg"
                 android:layout_marginEnd="8dp"
                 android:textSize="12sp"/>
 

@@ -64,8 +64,8 @@ class PlannerFragment : Fragment() {
     private var selectedScheduleDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) // 1=Sun, 2=Mon...
     private var searchQuery = ""
 
-    private val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
-    private val fullDayNames = listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
+    private lateinit var dayNames: List<String>
+    private lateinit var fullDayNames: List<String>
     private var dayButtons: List<Button> = emptyList()
 
     override fun onCreateView(
@@ -78,6 +78,19 @@ class PlannerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        dayNames = listOf(
+            getString(R.string.calendar_sun), getString(R.string.calendar_mon),
+            getString(R.string.calendar_tue), getString(R.string.calendar_wed),
+            getString(R.string.calendar_thu), getString(R.string.calendar_fri),
+            getString(R.string.calendar_sat)
+        )
+        fullDayNames = listOf(
+            getString(R.string.day_sunday_full), getString(R.string.day_monday_full),
+            getString(R.string.day_tuesday_full), getString(R.string.day_wednesday_full),
+            getString(R.string.day_thursday_full), getString(R.string.day_friday_full),
+            getString(R.string.day_saturday_full)
+        )
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
         val textCurrentMonth = view.findViewById<TextView>(R.id.textCurrentMonth)
@@ -96,8 +109,8 @@ class PlannerFragment : Fragment() {
         val textNoTasks = view.findViewById<TextView>(R.id.textNoTasks)
         val textNoSchedule = view.findViewById<TextView>(R.id.textNoSchedule)
         val textScheduleDay = view.findViewById<TextView>(R.id.textScheduleDay)
-        val dayButtonsContainer = view.findViewById<LinearLayout>(R.id.dayButtonsContainer)
-        val fabAddEvent = view.findViewById<FloatingActionButton>(R.id.fabAddEvent)
+        val chipGroupDays = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chipGroupDays)
+        val fabAddEvent = view.findViewById<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>(R.id.fabAddEvent)
         val btnToggleCalendar = view.findViewById<ImageButton>(R.id.btnToggleCalendar)
         val textStatCompleted = view.findViewById<TextView>(R.id.textStatCompleted)
         val textStatThisWeek = view.findViewById<TextView>(R.id.textStatThisWeek)
@@ -142,13 +155,35 @@ class PlannerFragment : Fragment() {
             updateCalendarVisibility()
         }
 
-        // Setup tabs
-        tabLayout.addTab(tabLayout.newTab().setText("📅 Events"))
-        tabLayout.addTab(tabLayout.newTab().setText("📝 Tasks"))
-        tabLayout.addTab(tabLayout.newTab().setText("🗓️ Schedule"))
+        val btnToggleFab = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnToggleFab)
+        val plannerPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
+        var isFabVisibleByUser = plannerPrefs.getBoolean("pref_fab_visible_planner", true)
+        
+        // Initial state
+        if (!isFabVisibleByUser) {
+            fabAddEvent.hide()
+            btnToggleFab.alpha = 0.5f
+        }
+        
+        btnToggleFab.setOnClickListener {
+            isFabVisibleByUser = !isFabVisibleByUser
+            plannerPrefs.edit().putBoolean("pref_fab_visible_planner", isFabVisibleByUser).apply()
+            if (isFabVisibleByUser) {
+                fabAddEvent.show()
+                btnToggleFab.alpha = 1.0f
+            } else {
+                fabAddEvent.hide()
+                btnToggleFab.alpha = 0.5f
+            }
+        }
 
-        // Setup day buttons for schedule
-        setupDayButtons(dayButtonsContainer, textScheduleDay, recyclerSchedule, textNoSchedule)
+        // Setup tabs
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_events)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_tasks)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_schedule)))
+
+        // Setup day chips for schedule (chipGroupDays is now used internally)
+        setupDayButtons(chipGroupDays, textScheduleDay, recyclerSchedule, textNoSchedule)
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -159,6 +194,8 @@ class PlannerFragment : Fragment() {
                         eventsView.visibility = View.VISIBLE
                         tasksView.visibility = View.GONE
                         scheduleView.visibility = View.GONE
+                        fabAddEvent.text = getString(R.string.action_add_event)
+                        fabAddEvent.setIconResource(R.drawable.ic_add)
                     }
                     1 -> {
                         calendarSection.visibility = View.VISIBLE
@@ -167,6 +204,8 @@ class PlannerFragment : Fragment() {
                         scheduleView.visibility = View.GONE
                         loadTasks(recyclerTasks, textNoTasks)
                         loadTaskStatistics()
+                        fabAddEvent.text = getString(R.string.action_add_task)
+                        fabAddEvent.setIconResource(R.drawable.ic_add)
                     }
                     2 -> {
                         calendarSection.visibility = View.GONE
@@ -174,6 +213,8 @@ class PlannerFragment : Fragment() {
                         tasksView.visibility = View.GONE
                         scheduleView.visibility = View.VISIBLE
                         loadScheduleForDay(recyclerSchedule, textNoSchedule, textScheduleDay)
+                        fabAddEvent.text = getString(R.string.action_add_schedule)
+                        fabAddEvent.setIconResource(R.drawable.ic_add)
                     }
                 }
             }
@@ -305,16 +346,16 @@ class PlannerFragment : Fragment() {
         // Clear completed tasks
         btnClearCompleted.setOnClickListener {
             AlertDialog.Builder(requireContext())
-                .setTitle("Clear Completed")
-                .setMessage("Delete all completed tasks?")
-                .setPositiveButton("Clear") { _, _ ->
+                .setTitle(getString(R.string.dialog_clear_completed))
+                .setMessage(getString(R.string.msg_clear_completed_confirm))
+                .setPositiveButton(getString(R.string.action_delete)) { _, _ ->
                     lifecycleScope.launch {
                         withContext(Dispatchers.IO) {
                             repository.clearCompletedTasks()
                         }
                     }
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(getString(R.string.action_cancel), null)
                 .show()
         }
 
@@ -401,42 +442,61 @@ class PlannerFragment : Fragment() {
         }
     }
 
-    private fun setupDayButtons(container: LinearLayout, textScheduleDay: TextView, recyclerSchedule: RecyclerView, textNoSchedule: TextView) {
-        val buttons = mutableListOf<Button>()
+    private fun setupDayButtons(chipGroup: com.google.android.material.chip.ChipGroup?, textScheduleDay: TextView, recyclerSchedule: RecyclerView, textNoSchedule: TextView) {
+        // Use the passed chipGroup or find it from view
+        val group = chipGroup ?: view?.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chipGroupDays) ?: return
+        group.removeAllViews()
+        
         for (i in 0..6) {
-            val btn = Button(requireContext()).apply {
+            val chip = com.google.android.material.chip.Chip(requireContext()).apply {
                 text = dayNames[i]
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    marginEnd = 8
-                }
-                setOnClickListener {
-                    selectedScheduleDay = i + 1 // 1=Sun, 2=Mon...
-                    updateDayButtonStyles(buttons)
-                    loadScheduleForDay(recyclerSchedule, textNoSchedule, textScheduleDay)
+                isCheckable = true
+                isCheckedIconVisible = false
+                chipBackgroundColor = android.content.res.ColorStateList(
+                    arrayOf(
+                        intArrayOf(android.R.attr.state_checked),
+                        intArrayOf()
+                    ),
+                    intArrayOf(
+                        ContextCompat.getColor(requireContext(), R.color.purple_500),
+                        ContextCompat.getColor(requireContext(), android.R.color.transparent)
+                    )
+                )
+                setTextColor(android.content.res.ColorStateList(
+                    arrayOf(
+                        intArrayOf(android.R.attr.state_checked),
+                        intArrayOf()
+                    ),
+                    intArrayOf(
+                        Color.WHITE,
+                        ContextCompat.getColor(requireContext(), R.color.purple_500)
+                    )
+                ))
+                chipStrokeWidth = 2f
+                chipStrokeColor = android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.purple_200)
+                )
+                chipCornerRadius = 50f
+                
+                setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        selectedScheduleDay = i + 1
+                        loadScheduleForDay(recyclerSchedule, textNoSchedule, textScheduleDay)
+                    }
                 }
             }
-            buttons.add(btn)
-            container.addView(btn)
+            group.addView(chip)
+            
+            // Select the current day
+            if (i + 1 == selectedScheduleDay) {
+                chip.isChecked = true
+            }
         }
-        dayButtons = buttons
-        updateDayButtonStyles(buttons)
     }
 
     private fun updateDayButtonStyles(buttons: List<Button>) {
-        buttons.forEachIndexed { index, btn ->
-            if (index + 1 == selectedScheduleDay) {
-                btn.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_500))
-                btn.setTextColor(Color.WHITE)
-                btn.setTypeface(null, Typeface.BOLD)
-            } else {
-                btn.setBackgroundColor(Color.TRANSPARENT)
-                btn.setTextColor(ContextCompat.getColor(requireContext(), R.color.purple_500))
-    btn.setTypeface(null, Typeface.NORMAL)
-            }
-        }
+        // This method is no longer needed with ChipGroup
+        // Keeping it for backward compatibility but it does nothing now
     }
 
     private fun loadScheduleItems() {
@@ -499,9 +559,9 @@ class PlannerFragment : Fragment() {
 
     private fun deleteScheduleItem(item: ScheduleItemEntity, recyclerSchedule: RecyclerView, textNoSchedule: TextView, textScheduleDay: TextView) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Delete Schedule")
-            .setMessage("Remove this class from the schedule?")
-            .setPositiveButton("Delete") { _, _ ->
+            .setTitle(getString(R.string.dialog_delete_schedule))
+            .setMessage(getString(R.string.msg_delete_schedule_confirm))
+            .setPositiveButton(getString(R.string.action_delete)) { _, _ ->
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         repository.deleteScheduleItem(item)
@@ -524,10 +584,10 @@ class PlannerFragment : Fragment() {
 
         val btnSelectClasses = dialogView.findViewById<TextView>(R.id.btnSelectClasses)
         val chipGroupClasses = dialogView.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chipGroupClasses)
-        val spinnerDay = dialogView.findViewById<Spinner>(R.id.spinnerDayOfWeek)
-        val textStartTime = dialogView.findViewById<TextView>(R.id.textScheduleStartTime)
-        val textEndTime = dialogView.findViewById<TextView>(R.id.textScheduleEndTime)
-        val spinnerSessionType = dialogView.findViewById<Spinner>(R.id.spinnerSessionType)
+        val inputDay = dialogView.findViewById<AutoCompleteTextView>(R.id.inputDayOfWeek)
+        val editStartTime = dialogView.findViewById<TextInputEditText>(R.id.inputScheduleStartTime)
+        val editEndTime = dialogView.findViewById<TextInputEditText>(R.id.inputScheduleEndTime)
+        val inputSessionType = dialogView.findViewById<AutoCompleteTextView>(R.id.inputSessionType)
         val editRoom = dialogView.findViewById<TextInputEditText>(R.id.editScheduleRoom)
         // val spinnerClasses = dialogView.findViewById<Spinner>(R.id.spinnerClasses) - Removed/Hidden
 
@@ -575,8 +635,8 @@ class PlannerFragment : Fragment() {
         // Initialize state if editing
         if (existingItem != null) {
             editRoom.setText(existingItem.room)
-            textStartTime.text = existingItem.startTime
-            textEndTime.text = existingItem.endTime
+            editStartTime.setText(existingItem.startTime)
+            editEndTime.setText(existingItem.endTime)
             
             // Load associated classes
             lifecycleScope.launch {
@@ -594,22 +654,44 @@ class PlannerFragment : Fragment() {
         }
 
         val days = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
-        spinnerDay.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, days)
+        inputDay.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, days))
+        
         if (existingItem != null) {
             val dayIndex = if (existingItem.dayOfWeek > 1) existingItem.dayOfWeek - 2 else 6
-            spinnerDay.setSelection(dayIndex.takeIf { it in 0..6 } ?: 0)
+            val safeIndex = dayIndex.takeIf { it in 0..6 } ?: 0
+            inputDay.setText(days[safeIndex], false)
+        } else {
+            // Pre-select currently viewed day
+            // selectedScheduleDay: 1=Sun, 2=Mon ... 7=Sat
+            // days list: 0=Mon ... 6=Sun
+            val defaultIndex = if (selectedScheduleDay == Calendar.SUNDAY) 6 else selectedScheduleDay - 2
+            val safeDefaultIndex = defaultIndex.takeIf { it in 0..6 } ?: 0
+            inputDay.setText(days[safeDefaultIndex], false)
         }
 
-        val sessionTypes = listOf("Cours", "TP", "TD", "Exam", "Other")
-        spinnerSessionType.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, sessionTypes)
+        val sessionTypes = repository.getSessionTypes()
+        inputSessionType.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, sessionTypes))
         if (existingItem != null) {
-            val typeIndex = sessionTypes.indexOf(existingItem.sessionType)
-            if (typeIndex >= 0) spinnerSessionType.setSelection(typeIndex)
+            inputSessionType.setText(existingItem.sessionType, false)
+        } else {
+            inputSessionType.setText(sessionTypes[0], false)
         }
 
         // Time pickers setup (reuse helper method or logic)
-        textStartTime.setOnClickListener { showTimePicker(textStartTime) }
-        textEndTime.setOnClickListener { showTimePicker(textEndTime) }
+        editStartTime.setOnClickListener { 
+            showTimePicker(editStartTime) { h, m ->
+                // Auto-set end time to start + 1h30
+                val cal = Calendar.getInstance()
+                cal.set(Calendar.HOUR_OF_DAY, h)
+                cal.set(Calendar.MINUTE, m)
+                cal.add(Calendar.MINUTE, 90)
+                
+                val endH = cal.get(Calendar.HOUR_OF_DAY)
+                val endM = cal.get(Calendar.MINUTE)
+                editEndTime.setText(String.format("%02d:%02d", endH, endM))
+            } 
+        }
+        editEndTime.setOnClickListener { showTimePicker(editEndTime) }
 
         // Dialog creation
         AlertDialog.Builder(requireContext())
@@ -621,21 +703,30 @@ class PlannerFragment : Fragment() {
                     return@setPositiveButton
                 }
 
-                val dayOfWeek = (spinnerDay.selectedItemPosition + 2).let { if (it > 8) 1 else it } // Mon=2...Sat=7,Sun=1 logic adjustment
-                // Or simplified: Mon(0)+2=2, index 1 -> Tue(3)... index 5 -> Sat(7), index 6 -> Sun(1)
-                val selectedDayIndex = spinnerDay.selectedItemPosition
+                if (selectedClassIds.isEmpty()) {
+                    Toast.makeText(requireContext(), "Please select at least one class", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
+                // Adjust day logic: UI list 0=Mon..6=Sun. Calendar: Sun=1, Mon=2...Sat=7
+                val selectedDayName = inputDay.text.toString()
+                val selectedDayIndex = days.indexOf(selectedDayName).coerceAtLeast(0)
+                
                 val calendarDay = if (selectedDayIndex == 6) Calendar.SUNDAY else selectedDayIndex + 2
                 
                 val primaryClassId = selectedClassIds.first()
+
+                val sessionType = inputSessionType.text.toString()
+                repository.addSessionType(sessionType) // Save if new
 
                 val item = ScheduleItemEntity(
                     id = existingItem?.id ?: 0,
                     classId = primaryClassId, // primary class link
                     dayOfWeek = calendarDay,
-                    startTime = textStartTime.text.toString(),
-                    endTime = textEndTime.text.toString(),
+                    startTime = editStartTime.text.toString(),
+                    endTime = editEndTime.text.toString(),
                     room = editRoom.text.toString().trim(),
-                    sessionType = spinnerSessionType.selectedItem.toString()
+                    sessionType = sessionType
                 )
 
                 lifecycleScope.launch {
@@ -975,21 +1066,25 @@ class PlannerFragment : Fragment() {
 
         val editTitle = dialogView.findViewById<TextInputEditText>(R.id.editEventTitle)
         val editDescription = dialogView.findViewById<TextInputEditText>(R.id.editEventDescription)
-        val textDate = dialogView.findViewById<TextView>(R.id.textEventDate)
-        val textStartTime = dialogView.findViewById<TextView>(R.id.textStartTime)
-        val textEndTime = dialogView.findViewById<TextView>(R.id.textEndTime)
-        val spinnerType = dialogView.findViewById<Spinner>(R.id.spinnerEventType)
-        val spinnerRecurrence = dialogView.findViewById<Spinner>(R.id.spinnerRecurrence)
+        val editDate = dialogView.findViewById<TextInputEditText>(R.id.inputEventDate)
+        val editStartTime = dialogView.findViewById<TextInputEditText>(R.id.inputStartTime)
+        val editEndTime = dialogView.findViewById<TextInputEditText>(R.id.inputEndTime)
+        val inputType = dialogView.findViewById<AutoCompleteTextView>(R.id.inputEventType)
+        val inputRecurrence = dialogView.findViewById<AutoCompleteTextView>(R.id.inputRecurrence)
         val checkAllDay = dialogView.findViewById<CheckBox>(R.id.checkAllDay)
         val btnSelectClasses = dialogView.findViewById<TextView>(R.id.btnSelectClasses)
         val chipGroupClasses = dialogView.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chipGroupClasses)
 
-        val eventTypes = listOf("OTHER", "EXAM", "MEETING", "DEADLINE")
-        spinnerType.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, eventTypes)
+        val eventTypes = repository.getEventTypes()
+        inputType.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, eventTypes))
         
-        val recurrenceOptions = listOf("None", "Daily", "Weekly", "Bi-weekly", "Monthly", "Yearly")
+        val recurrenceOptions = listOf(
+            getString(R.string.event_recurrence_none), getString(R.string.event_recurrence_daily),
+            getString(R.string.event_recurrence_weekly), getString(R.string.event_recurrence_biweekly),
+            getString(R.string.event_recurrence_monthly), getString(R.string.event_recurrence_yearly)
+        )
         val recurrenceValues = listOf("NONE", "DAILY", "WEEKLY", "BIWEEKLY", "MONTHLY", "YEARLY")
-        spinnerRecurrence.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, recurrenceOptions)
+        inputRecurrence.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, recurrenceOptions))
 
         // Multi-class selection state
         val selectedClassIds = mutableListOf<Long>()
@@ -1010,7 +1105,7 @@ class PlannerFragment : Fragment() {
                     chipGroupClasses.addView(chip)
                 }
             }
-            btnSelectClasses.text = if (selectedClassIds.isEmpty()) "Tap to select classes..." else "${selectedClassIds.size} class(es) selected"
+            btnSelectClasses.text = if (selectedClassIds.isEmpty()) getString(R.string.schedule_select_classes) else getString(R.string.msg_classes_selected_count, selectedClassIds.size)
         }
         
         btnSelectClasses.setOnClickListener {
@@ -1043,7 +1138,14 @@ class PlannerFragment : Fragment() {
             startTime = it.startTime ?: "09:00"
             endTime = it.endTime ?: "10:00"
             checkAllDay.isChecked = it.isAllDay
-            spinnerType.setSelection(eventTypes.indexOf(it.eventType).coerceAtLeast(0))
+            
+            // Set simple dropdown text instead of selection index
+            inputType.setText(it.eventType, false)
+            
+            // Initial recurrence text
+            val recIndex = recurrenceValues.indexOf(it.recurrenceType).coerceAtLeast(0)
+            inputRecurrence.setText(recurrenceOptions[recIndex], false)
+            
             // Load existing class associations
             lifecycleScope.launch {
                 val classIds = withContext(Dispatchers.IO) {
@@ -1057,53 +1159,80 @@ class PlannerFragment : Fragment() {
                 }
                 updateChips()
             }
+        } ?: run {
+             // Defaults for new event
+            inputType.setText(eventTypes[0], false)
+            inputRecurrence.setText(recurrenceOptions[0], false)
         }
 
         val dateFormat = SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault())
-        textDate.text = dateFormat.format(Date(eventDate))
-        textStartTime.text = startTime
-        textEndTime.text = endTime
+        editDate.setText(dateFormat.format(Date(eventDate)))
+        editStartTime.setText(startTime)
+        editEndTime.setText(endTime)
 
-        textDate.setOnClickListener {
+        editDate.setOnClickListener {
             val cal = Calendar.getInstance()
             cal.timeInMillis = eventDate
             DatePickerDialog(requireContext(), { _, year, month, day ->
                 cal.set(year, month, day, 0, 0, 0)
                 cal.set(Calendar.MILLISECOND, 0)
                 eventDate = cal.timeInMillis
-                textDate.text = dateFormat.format(cal.time)
+                editDate.setText(dateFormat.format(cal.time))
             }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
         }
 
-        textStartTime.setOnClickListener {
+        editStartTime.setOnClickListener {
             val parts = startTime.split(":")
-            TimePickerDialog(requireContext(), { _, hour, minute ->
-                startTime = String.format("%02d:%02d", hour, minute)
-                textStartTime.text = startTime
-            }, parts[0].toInt(), parts[1].toInt(), true).show()
+            val initialHour = parts.getOrNull(0)?.toIntOrNull() ?: 9
+            val initialMinute = parts.getOrNull(1)?.toIntOrNull() ?: 0
+            
+            showTimePicker(editStartTime) { h, m ->
+                startTime = String.format("%02d:%02d", h, m)
+                // editStartTime.setText(startTime) - handled by helper
+                
+                // Auto-set end time to start + 1h30
+                val cal = Calendar.getInstance()
+                cal.set(Calendar.HOUR_OF_DAY, h)
+                cal.set(Calendar.MINUTE, m)
+                cal.add(Calendar.MINUTE, 90)
+                
+                val endH = cal.get(Calendar.HOUR_OF_DAY)
+                val endM = cal.get(Calendar.MINUTE)
+                endTime = String.format("%02d:%02d", endH, endM)
+                editEndTime.setText(endTime)
+            }
         }
 
-        textEndTime.setOnClickListener {
-            val parts = endTime.split(":")
-            TimePickerDialog(requireContext(), { _, hour, minute ->
-                endTime = String.format("%02d:%02d", hour, minute)
-                textEndTime.text = endTime
-            }, parts[0].toInt(), parts[1].toInt(), true).show()
+        editEndTime.setOnClickListener {
+             val parts = endTime.split(":")
+             val initialHour = parts.getOrNull(0)?.toIntOrNull() ?: 10
+             val initialMinute = parts.getOrNull(1)?.toIntOrNull() ?: 0
+             
+            showTimePicker(editEndTime) { h, m ->
+                endTime = String.format("%02d:%02d", h, m)
+            }
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle(if (existingEvent == null) "Add Event" else "Edit Event")
+            .setTitle(if (existingEvent == null) getString(R.string.action_add_event) else getString(R.string.dialog_edit_event))
             .setView(dialogView)
-            .setPositiveButton("Save") { _, _ ->
+            .setPositiveButton(R.string.action_save) { _, _ ->
                 val title = editTitle.text.toString().trim()
                 if (title.isEmpty()) {
-                    Toast.makeText(requireContext(), "Title is required", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.msg_title_required), Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
 
                 // Keep first classId for backward compatibility, or null if none
                 val primaryClassId = selectedClassIds.firstOrNull()
-                val selectedRecurrence = recurrenceValues[spinnerRecurrence.selectedItemPosition]
+                
+                // Get selected recurrence value
+                val selectedRecurrenceText = inputRecurrence.text.toString()
+                val selectedRecIndex = recurrenceOptions.indexOf(selectedRecurrenceText)
+                val selectedRecurrence = if (selectedRecIndex >= 0) recurrenceValues[selectedRecIndex] else "NONE"
+
+                val eventType = inputType.text.toString()
+                repository.addEventType(eventType) // Save if new
 
                 val event = EventEntity(
                     id = existingEvent?.id ?: 0,
@@ -1113,7 +1242,7 @@ class PlannerFragment : Fragment() {
                     startTime = if (checkAllDay.isChecked) null else startTime,
                     endTime = if (checkAllDay.isChecked) null else endTime,
                     classId = primaryClassId,
-                    eventType = spinnerType.selectedItem.toString(),
+                    eventType = eventType,
                     isAllDay = checkAllDay.isChecked,
                     recurrenceType = selectedRecurrence,
                     parentEventId = existingEvent?.parentEventId
@@ -1122,9 +1251,9 @@ class PlannerFragment : Fragment() {
                 val isSeries = existingEvent != null && (existingEvent.recurrenceType != "NONE" || existingEvent.parentEventId != null)
 
                 if (isSeries) {
-                    val options = arrayOf("Update this event only", "Update all future events")
+                    val options = arrayOf(getString(R.string.option_update_event_only), getString(R.string.option_update_future_events))
                     AlertDialog.Builder(requireContext())
-                        .setTitle("Update Recursive Event")
+                        .setTitle(R.string.dialog_update_recurring)
                         .setItems(options) { _, which ->
                              lifecycleScope.launch {
                                 withContext(Dispatchers.IO) {
@@ -1176,7 +1305,7 @@ class PlannerFragment : Fragment() {
                     }
                 }
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.action_cancel, null)
             .show()
     }
 
@@ -1186,7 +1315,7 @@ class PlannerFragment : Fragment() {
 
         val editTitle = dialogView.findViewById<TextInputEditText>(R.id.editTaskTitle)
         val editDescription = dialogView.findViewById<TextInputEditText>(R.id.editTaskDescription)
-        val textDueDate = dialogView.findViewById<TextView>(R.id.textTaskDueDate)
+        val editDueDate = dialogView.findViewById<TextInputEditText>(R.id.inputTaskDueDate)
         val radioPriority = dialogView.findViewById<RadioGroup>(R.id.radioPriority)
         val btnSelectClasses = dialogView.findViewById<TextView>(R.id.btnSelectClasses)
         val chipGroupClasses = dialogView.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chipGroupClasses)
@@ -1213,7 +1342,7 @@ class PlannerFragment : Fragment() {
                     chipGroupClasses.addView(chip)
                 }
             }
-            btnSelectClasses.text = if (selectedClassIds.isEmpty()) "Tap to select classes..." else "${selectedClassIds.size} class(es) selected"
+            btnSelectClasses.text = if (selectedClassIds.isEmpty()) getString(R.string.schedule_select_classes) else getString(R.string.msg_classes_selected_count, selectedClassIds.size)
         }
         
         btnSelectClasses.setOnClickListener {
@@ -1221,7 +1350,7 @@ class PlannerFragment : Fragment() {
             val checkedItems = classes.map { selectedClassIds.contains(it.id) }.toBooleanArray()
             
             AlertDialog.Builder(requireContext())
-                .setTitle("Select Classes")
+                .setTitle(R.string.dialog_select_classes)
                 .setMultiChoiceItems(classNames, checkedItems) { _, which, isChecked ->
                     val classId = classes[which].id
                     if (isChecked) {
@@ -1231,7 +1360,7 @@ class PlannerFragment : Fragment() {
                     }
                 }
                 .setPositiveButton("OK") { _, _ -> updateChips() }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.action_cancel, null)
                 .show()
         }
 
@@ -1262,16 +1391,16 @@ class PlannerFragment : Fragment() {
         }
 
         val dateFormat = SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault())
-        textDueDate.text = if (dueDate != null) dateFormat.format(Date(dueDate!!)) else "No due date"
+        editDueDate.setText(if (dueDate != null) dateFormat.format(Date(dueDate!!)) else getString(R.string.label_no_due_date))
 
-        textDueDate.setOnClickListener {
+        editDueDate.setOnClickListener {
             val cal = Calendar.getInstance()
             if (dueDate != null) cal.timeInMillis = dueDate!!
             DatePickerDialog(requireContext(), { _, year, month, day ->
                 cal.set(year, month, day, 0, 0, 0)
                 cal.set(Calendar.MILLISECOND, 0)
                 dueDate = cal.timeInMillis
-                textDueDate.text = dateFormat.format(cal.time)
+                editDueDate.setText(dateFormat.format(cal.time))
             }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
         }
         
@@ -1283,7 +1412,7 @@ class PlannerFragment : Fragment() {
             cal.set(Calendar.SECOND, 0)
             cal.set(Calendar.MILLISECOND, 0)
             dueDate = cal.timeInMillis
-            textDueDate.text = dateFormat.format(cal.time)
+            editDueDate.setText(dateFormat.format(cal.time))
         }
         
         btnTomorrow.setOnClickListener {
@@ -1294,7 +1423,7 @@ class PlannerFragment : Fragment() {
             cal.set(Calendar.SECOND, 0)
             cal.set(Calendar.MILLISECOND, 0)
             dueDate = cal.timeInMillis
-            textDueDate.text = dateFormat.format(cal.time)
+            editDueDate.setText(dateFormat.format(cal.time))
         }
         
         btnNextWeek.setOnClickListener {
@@ -1305,15 +1434,15 @@ class PlannerFragment : Fragment() {
             cal.set(Calendar.SECOND, 0)
             cal.set(Calendar.MILLISECOND, 0)
             dueDate = cal.timeInMillis
-            textDueDate.text = dateFormat.format(cal.time)
+            editDueDate.setText(dateFormat.format(cal.time))
         }
         AlertDialog.Builder(requireContext())
-            .setTitle(if (existingTask == null) "Add Task" else "Edit Task")
+            .setTitle(if (existingTask == null) getString(R.string.action_add_task) else getString(R.string.dialog_edit_task))
             .setView(dialogView)
-            .setPositiveButton("Save") { _, _ ->
+            .setPositiveButton(R.string.action_save) { _, _ ->
                 val title = editTitle.text.toString().trim()
                 if (title.isEmpty()) {
-                    Toast.makeText(requireContext(), "Title is required", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.msg_title_required), Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
 
@@ -1349,15 +1478,15 @@ class PlannerFragment : Fragment() {
                     loadTaskStatistics()
                 }
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.action_cancel, null)
             .show()
     }
     
     private fun showDuplicateTaskDialog(task: TaskEntity) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Duplicate Task")
-            .setMessage("Create a copy of \"${task.title}\"?")
-            .setPositiveButton("Duplicate") { _, _ ->
+            .setTitle(R.string.dialog_duplicate_task)
+            .setMessage(getString(R.string.msg_duplicate_task_confirm, task.title))
+            .setPositiveButton(R.string.action_duplicate) { _, _ ->
                 lifecycleScope.launch {
                     // Get class IDs for the original task
                     val classIds = withContext(Dispatchers.IO) {
@@ -1367,7 +1496,7 @@ class PlannerFragment : Fragment() {
                     // Create a copy with "Copy of" prefix
                     val copy = task.copy(
                         id = 0,
-                        title = "Copy of ${task.title}",
+                        title = getString(R.string.prefix_copy_of, task.title),
                         isCompleted = false,
                         createdAt = System.currentTimeMillis()
                     )
@@ -1376,11 +1505,11 @@ class PlannerFragment : Fragment() {
                         repository.insertTaskWithClasses(copy, classIds)
                     }
                     
-                    Toast.makeText(requireContext(), "Task duplicated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.msg_task_duplicated), Toast.LENGTH_SHORT).show()
                     loadTaskStatistics()
                 }
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.action_cancel, null)
             .show()
     }
     
@@ -1425,13 +1554,13 @@ class PlannerFragment : Fragment() {
 
     private fun showDuplicateEventDialog(event: EventEntity) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Duplicate Event")
-            .setMessage("Create a copy of \"${event.title}\"?")
-            .setPositiveButton("Duplicate") { _, _ ->
+            .setTitle(R.string.dialog_duplicate_event)
+            .setMessage(getString(R.string.msg_duplicate_event_confirm, event.title))
+            .setPositiveButton(R.string.action_duplicate) { _, _ ->
                 lifecycleScope.launch {
                     val copy = event.copy(
                         id = 0,
-                        title = "Copy of ${event.title}",
+                        title = getString(R.string.prefix_copy_of, event.title),
                         parentEventId = null // Detach from recurrence series if copied
                     )
                     
@@ -1439,21 +1568,22 @@ class PlannerFragment : Fragment() {
                         repository.insertEvent(copy)
                     }
                     
-                    Toast.makeText(requireContext(), "Event duplicated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.msg_event_duplicated), Toast.LENGTH_SHORT).show()
                 }
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
-    private fun showTimePicker(textView: TextView) {
+    private fun showTimePicker(editText: TextInputEditText, onTimeSelected: ((Int, Int) -> Unit)? = null) {
         val currentContext = context ?: return
-        val parts = textView.text.toString().split(":")
+        val parts = editText.text.toString().split(":")
         val hour = if (parts.size == 2) parts[0].toIntOrNull() ?: 9 else 9
         val minute = if (parts.size == 2) parts[1].toIntOrNull() ?: 0 else 0
 
         android.app.TimePickerDialog(currentContext, { _, h, m ->
-            textView.text = String.format("%02d:%02d", h, m)
+            editText.setText(String.format("%02d:%02d", h, m))
+            onTimeSelected?.invoke(h, m)
         }, hour, minute, true).show()
     }
 }

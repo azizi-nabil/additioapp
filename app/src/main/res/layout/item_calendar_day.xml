@@ -10,7 +10,7 @@
         android:layout_height="48dp"
         android:orientation="vertical"
         android:gravity="center"
-        android:background="?attr/selectableItemBackground">
+        android:background="@drawable/bg_calendar_day">
 
         <TextView
             android:id="@+id/textDay"

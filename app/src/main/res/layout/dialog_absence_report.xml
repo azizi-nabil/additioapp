@@ -142,18 +142,18 @@
                             android:textColor="?attr/colorOnSurfaceVariant"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-                
-                 <!-- Cours Section -->
+
+                <!-- Cours Presence Section (Green) -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardCours"
+                    android:id="@+id/cardCoursPresence"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     app:cardCornerRadius="8dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="1dp"
-                    app:strokeColor="?attr/colorOutlineVariant"
-                    app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                    app:strokeColor="#81C784"
+                    app:cardBackgroundColor="@color/soft_green"
                     android:visibility="gone">
 
                     <LinearLayout
@@ -163,22 +163,22 @@
                         android:padding="12dp">
 
                         <TextView
-                            android:id="@+id/textHeaderCours"
+                            android:id="@+id/textHeaderCoursPresence"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/label_cours_absences"
+                            android:text="@string/label_cours_presence"
                             android:textAppearance="?attr/textAppearanceLabelLarge"
-                            android:textColor="?attr/colorError"
+                            android:textColor="#388E3C"
                             android:textStyle="bold"
                             android:layout_marginBottom="4dp"/>
 
                         <TextView
-                            android:id="@+id/textListCours"
+                            android:id="@+id/textListCoursPresence"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/label_none"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
-                            android:textColor="?attr/colorOnSurfaceVariant"/>
+                            android:textColor="#388E3C"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

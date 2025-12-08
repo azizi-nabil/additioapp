@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.additioapp"
         minSdk = 24
         targetSdk = 34
-        versionCode = 7
-        versionName = "2.3.0"
+        versionCode = 9
+        versionName = "3.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,6 +31,16 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+    }
+    
+    applicationVariants.all {
+        val variant = this
+        variant.outputs.all {
+            val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val versionName = variant.versionName
+            val buildType = variant.buildType.name
+            output.outputFileName = "TeacherHub-${versionName}-${buildType}.apk"
+        }
     }
 }
 
@@ -65,6 +75,9 @@ dependencies {
 
     // Preferences
     implementation("androidx.preference:preference-ktx:1.2.1")
+
+    // WorkManager for notifications
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 
     // Charts
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")

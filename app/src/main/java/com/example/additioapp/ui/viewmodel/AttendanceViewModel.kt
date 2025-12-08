@@ -18,6 +18,18 @@ class AttendanceViewModel(private val repository: AppRepository) : ViewModel() {
         return repository.getAbsencesForStudent(studentId)
     }
 
+    fun getCoursPresenceForStudent(studentId: Long, classId: Long): LiveData<List<com.example.additioapp.data.model.StudentAbsenceDetail>> {
+        return repository.getCoursPresenceForStudent(studentId, classId)
+    }
+
+    suspend fun getTotalCoursSessionCount(classId: Long): Int {
+        return repository.getTotalCoursSessionCount(classId)
+    }
+
+    suspend fun getTotalSessionCountByType(classId: Long, type: String): Int {
+        return repository.getTotalSessionCountByType(classId, type)
+    }
+
     fun getAttendanceForSession(sessionId: String): LiveData<List<AttendanceRecordEntity>> {
         return repository.getAttendanceForSession(sessionId)
     }
@@ -63,9 +75,17 @@ class AttendanceViewModel(private val repository: AppRepository) : ViewModel() {
         repository.deleteAttendance(studentId, sessionId)
     }
 
+    suspend fun updateSessionId(oldSessionId: String, newSessionId: String) {
+        repository.updateSessionId(oldSessionId, newSessionId)
+    }
+
     // Session Nature
     private val _currentSessionType = androidx.lifecycle.MutableLiveData<String>("Cours")
     val currentSessionType: LiveData<String> = _currentSessionType
+
+    fun setSessionType(type: String) {
+        _currentSessionType.postValue(type)
+    }
 
     suspend fun loadSessionType(classId: Long, date: Long) {
         val session = repository.getSessionByDate(classId, date)
@@ -93,5 +113,9 @@ class AttendanceViewModel(private val repository: AppRepository) : ViewModel() {
 
     suspend fun getAttendanceWithTypeForClassSync(classId: Long): List<com.example.additioapp.data.model.AttendanceRecordWithType> {
         return repository.getAttendanceWithTypeForClassSync(classId)
+    }
+    
+    suspend fun getSessionCountByType(classId: Long, type: String): Int {
+        return repository.getSessionCountByType(classId, type)
     }
 }

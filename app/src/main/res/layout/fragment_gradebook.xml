@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface">
@@ -46,7 +47,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Select Class"
+                        android:text="@string/gradebook_select_class"
                         android:textSize="12sp"
                         android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -73,7 +74,7 @@
                     android:layout_marginEnd="6dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="#E8F5E9">
+                    app:cardBackgroundColor="@color/soft_green">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -86,7 +87,7 @@
                             android:id="@+id/textGradeItemsCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            tools:text="0"
                             android:textSize="24sp"
                             android:maxLines="1"
                             app:autoSizeTextType="uniform"
@@ -98,7 +99,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tests"
+                            android:text="@string/gradebook_tests"
                             android:textSize="12sp"
                             android:maxLines="1"
                             android:textColor="#388E3C"/>
@@ -113,7 +114,7 @@
                     android:layout_marginHorizontal="6dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="#E3F2FD">
+                    app:cardBackgroundColor="@color/soft_blue">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -126,7 +127,7 @@
                             android:id="@+id/textClassAverage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="--"
+                            tools:text="--"
                             android:textSize="24sp"
                             android:maxLines="1"
                             app:autoSizeTextType="uniform"
@@ -138,7 +139,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Avg %"
+                            android:text="@string/gradebook_avg_percent"
                             android:textSize="12sp"
                             android:maxLines="1"
                             android:ellipsize="end"
@@ -154,7 +155,7 @@
                     android:layout_marginStart="6dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="#FFF3E0">
+                    app:cardBackgroundColor="@color/soft_orange">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -167,7 +168,7 @@
                             android:id="@+id/textStudentsGraded"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            tools:text="0"
                             android:textSize="24sp"
                             android:maxLines="1"
                             app:autoSizeTextType="uniform"
@@ -179,7 +180,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Count"
+                            android:text="@string/gradebook_count"
                             android:textSize="12sp"
                             android:maxLines="1"
                             android:ellipsize="end"
@@ -205,7 +206,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📈 Grade Distribution"
+                        android:text="@string/gradebook_distribution"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>
@@ -235,7 +236,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="👨‍🎓 Student Grades"
+                        android:text="@string/gradebook_student_grades"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>
@@ -272,7 +273,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="📝 Assessments"
+                            android:text="@string/gradebook_assessments"
                             android:textSize="16sp"
                             android:textStyle="bold"/>
 
@@ -280,7 +281,7 @@
                             android:id="@+id/btnAddGradeItem"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
-                            android:text="+ Add"
+                            android:text="@string/classes_add_btn"
                             android:textSize="12sp"
                             style="@style/Widget.MaterialComponents.Button.TextButton"/>
                     </LinearLayout>

@@ -27,7 +27,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search"
+            android:text="@string/action_search"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginStart="8dp" />
@@ -46,7 +46,7 @@
             android:id="@+id/searchInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search students, classes, events, tasks..."
+            android:hint="@string/hint_search_all"
             android:padding="16dp"
             android:background="@android:color/transparent"
             android:drawableStart="@android:drawable/ic_menu_search"
@@ -73,7 +73,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="No results found"
+        android:text="@string/label_no_results_found"
         android:textSize="16sp"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:visibility="gone" />

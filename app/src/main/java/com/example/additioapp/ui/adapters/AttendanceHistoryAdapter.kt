@@ -13,7 +13,7 @@ import java.util.Locale
 
 class AttendanceHistoryAdapter(
     private var items: List<AttendanceSessionSummary> = emptyList(),
-    private val onItemClick: (Long) -> Unit,
+    private val onItemClick: (sessionId: String, date: Long) -> Unit,
     private val onDeleteClick: (String) -> Unit
 ) : RecyclerView.Adapter<AttendanceHistoryAdapter.HistoryViewHolder>() {
 
@@ -42,6 +42,7 @@ class AttendanceHistoryAdapter(
         private val chipP: TextView = itemView.findViewById(R.id.chipPresent)
         private val chipA: TextView = itemView.findViewById(R.id.chipAbsent)
         private val chipL: TextView = itemView.findViewById(R.id.chipLate)
+        private val chipE: TextView = itemView.findViewById(R.id.chipExcused)
 
         private val textType: TextView = itemView.findViewById(R.id.textSessionType)
         private val textTotals: TextView = itemView.findViewById(R.id.textTotals)
@@ -50,7 +51,7 @@ class AttendanceHistoryAdapter(
         fun bind(
             item: AttendanceSessionSummary, 
             formatter: SimpleDateFormat,
-            onItemClick: (Long) -> Unit,
+            onItemClick: (sessionId: String, date: Long) -> Unit,
             onDeleteClick: (String) -> Unit
         ) {
             textDate.text = formatter.format(Date(item.date))
@@ -61,9 +62,10 @@ class AttendanceHistoryAdapter(
             chipP.text = "P:${item.presentCount}"
             chipA.text = "A:${item.absentCount}"
             chipL.text = "L:${item.lateCount}"
+            chipE.text = "E:${item.excusedCount}"
             textTotals.text = "${item.totalCount} Students"
 
-            itemView.setOnClickListener { onItemClick(item.date) }
+            itemView.setOnClickListener { onItemClick(item.sessionId, item.date) }
             btnDelete.setOnClickListener { onDeleteClick(item.sessionId) }
         }
     }

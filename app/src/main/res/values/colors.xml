@@ -32,4 +32,7 @@
     <color name="behavior_negative">#F44336</color>
     <color name="soft_green">#E8F5E9</color>
     <color name="soft_red">#FFEBEE</color>
+    <color name="soft_blue">#E3F2FD</color>
+    <color name="soft_orange">#FFF3E0</color>
+    <color name="soft_pink">#FCE4EC</color>
 </resources>

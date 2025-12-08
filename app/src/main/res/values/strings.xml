@@ -18,6 +18,12 @@
     <string name="action_import">Import</string>
     <string name="action_backup">Backup</string>
     <string name="action_restore">Restore</string>
+    <string name="action_add_event">Add Event</string>
+    <string name="action_add_task">Add Task</string>
+    <string name="action_add_schedule">Add Schedule</string>
+    <string name="tab_events">📅 Events</string>
+    <string name="tab_tasks">📝 Tasks</string>
+    <string name="tab_schedule">🗓️ Schedule</string>
     
     <!-- Navigation -->
     <string name="nav_home">Home</string>
@@ -88,10 +94,14 @@
     <string name="attendance_mark_all_present">All ✓</string>
     <string name="attendance_mark_all_absent">All ✗</string>
     <string name="attendance_clear">Clear</string>
-    <string name="attendance_summary">Present: %1$d | Absent: %2$d | Late: %3$d</string>
+    <string name="attendance_summary">Present: %1$d | Absent: %2$d | Late: %3$d | Excused: %4$d</string>
     <string name="attendance_today">Today</string>
     <string name="attendance_history">History</string>
     <string name="attendance_export">Export CSV</string>
+    <string name="attendance_total_sessions">Total Sessions</string>
+    <string name="attendance_avg_attendance">Avg. Attendance</string>
+    <string name="sort_newest">Newest</string>
+    <string name="action_share">Share</string>
     
     <!-- Session Types -->
     <string name="session_type_td">TD</string>
@@ -107,6 +117,58 @@
     <string name="grades_max_score">Max Score</string>
     <string name="grades_average">Average</string>
     <string name="grades_empty">No grades recorded</string>
+    <string name="gradebook_select_class">Select Class</string>
+    <string name="gradebook_tests">Tests</string>
+    <string name="gradebook_avg_percent">Avg %</string>
+    <string name="gradebook_count">Count</string>
+    <string name="gradebook_distribution">📈 Grade Distribution</string>
+    <string name="gradebook_student_grades">👨‍🎓 Student Grades</string>
+    <string name="gradebook_assessments">📝 Assessments</string>
+    <string name="grade_weight_format">Weight: %s</string>
+    <string name="grade_score_format">%1$s / %2$s</string>
+    <string name="grade_score_placeholder">-- / 20</string>
+    <string name="grade_separator">" / "</string>
+    <string name="grade_max_suffix">" / %s"</string>
+
+    <!-- Import Dialog -->
+    <string name="import_guide_title">📄 CSV Format Guide</string>
+    <string name="import_guide_btn">Got it!</string>
+    <string name="import_success_toast">Imported %d students</string>
+    <string name="import_status_found">✅ Found %d students\n\nPreview:\n</string>
+    <string name="import_status_empty">⚠️ No students found.\n\nCheck that your CSV has:\n• Matricule, Nom, Prénom columns\n• Data rows after the header</string>
+    <string name="import_status_error">❌ Error reading file:\n%s</string>
+    <string name="import_instructions">
+        📋 CSV Format Instructions\n\n
+        Your CSV file should have 3 columns:\n\n
+        Column 1: Matricule (Student ID)\n
+        Column 2: Nom (Last Name)\n
+        Column 3: Prénom (First Name)\n\n
+        ─────────────────────────\n\n
+        📝 Example (French only):\n
+        Matricule,Nom,Prénom\n
+        202034052475,ABDERREZAK,MAISSOUN\n
+        191934055534,ABIDI,YASSAMINE\n\n
+        ─────────────────────────\n\n
+        📝 Example (French + Arabic):\n
+        Matricule,Nom,Prénom\n
+        202034052475,ABDERREZAK/عبد الرزاق,MAISSOUN/ميسون\n\n
+        💡 Tips:\n
+        • Save Excel as CSV (File → Save As → CSV)\n
+        • Use comma (,) or semicolon (;) as separator\n
+        • First row can be headers (will be skipped)\n
+        • Arabic names are optional (use / to separate)
+    </string>
+    
+    <string name="absence_excused_suffix">" (Excused)"</string>
+    <string name="label_none">None</string>
+
+    <string name="behavior_positive_title">Positive Behaviors</string>
+    <string name="behavior_negative_title">Negative Behaviors</string>
+    <string name="student_id_format">ID: %s</string>
+    <string name="restore_error_file">Restore Failed: Could not read file or file was empty</string>
+    <string name="backup_success">Backup completed successfully</string>
+    <string name="restore_success">Restore completed successfully</string>
+    <string name="restore_error_generic">Restore Failed: %s</string>
     
     <!-- Grade Categories -->
     <string name="grade_category_exam">Exam</string>
@@ -185,7 +247,7 @@
     <string name="analytics_title">Analytics</string>
     <string name="analytics_attendance_rate">Attendance Rate</string>
     <string name="analytics_average_grade">Average Grade</string>
-    <string name="analytics_at_risk">At Risk Students</string>
+    <string name="analytics_at_risk_students">At Risk Students</string>
     <string name="analytics_export_pdf">Export PDF</string>
     <string name="analytics_export_excel">Export Excel</string>
     
@@ -218,6 +280,16 @@
     <!-- Dialogs -->
     <string name="dialog_delete_title">Delete</string>
     <string name="dialog_delete_message">Are you sure?</string>
+    <string name="label_assessments">Assessments</string>
+    <string name="label_status">Status</string>
+    <string name="status_present">Present</string>
+    <string name="status_absent">Absent</string>
+    <string name="status_late">Late</string>
+    <string name="status_excused">Excused</string>
+    <string name="label_grade_avg">Grade Avg:</string>
+    <string name="label_attendance">Attendance:</string>
+    <string name="student_name">Student Name</string>
+    <string name="dialog_import_title">Import Students</string>
     <string name="dialog_restore_title">Restore Data</string>
     <string name="dialog_restore_message">Importing data will overwrite existing records. Are you sure you want to proceed?</string>
     
@@ -232,16 +304,6 @@
     <string name="validation_required">Required field</string>
     <string name="validation_invalid_email">Invalid email</string>
     <string name="validation_invalid_phone">Invalid phone number</string>
-    
-    <!-- Import/Export -->
-    <string name="import_success">Imported %d students</string>
-    <string name="import_error">Import failed: %s</string>
-    <string name="export_success">Exported %d students</string>
-    <string name="export_error">Export failed: %s</string>
-    <string name="backup_success">Backup completed successfully</string>
-    <string name="backup_error">Backup failed: %s</string>
-    <string name="restore_success">Data restored successfully</string>
-    <string name="restore_error">Restore failed: %s</string>
     
     <!-- Schedule Dialog -->
     <string name="label_classes">Classes</string>
@@ -300,9 +362,12 @@
     <string name="dialog_grades_report">Grades Report</string>
     <string name="label_student_name">Student Name</string>
     <string name="label_td_absences">TD Absences (%d)</string>
+    <string name="label_td_absences_total">TD Absences (%1$d/%2$d)</string>
     <string name="label_tp_absences">TP Absences (%d)</string>
+    <string name="label_tp_absences_total">TP Absences (%1$d/%2$d)</string>
     <string name="label_cours_absences">Cours Absences (%d)</string>
-    <string name="label_none">None</string>
+    <string name="label_cours_presence">Cours Presence (%1$d/%2$d)</string>
+
     <string name="label_no_records_found">No records found.</string>
     <string name="label_no_grades_recorded">No grades recorded.</string>
     
@@ -331,8 +396,8 @@
     <string name="label_no_classes_scheduled">🗓️ No classes scheduled\n\nTap + to add a class</string>
     <string name="label_no_results_found">No results found</string>
     <string name="hint_search_all">Search students, classes, events, tasks...</string>
-    <string name="label_all_present">All ✓</string>
-    <string name="label_all_absent">All ✗</string>
+    <string name="label_all_present">All</string>
+    <string name="label_all_absent">All</string>
     <string name="action_clear">Clear</string>
     <string name="label_overview">Overview</string>
     <string name="label_from">From</string>
@@ -342,4 +407,240 @@
     <string name="hint_max">Max</string>
     <string name="label_students_count">%d Students</string>
     <string name="label_grade_item_name">Grade Item Name</string>
+    
+    <!-- Settings Fragment -->
+    <string name="settings_toolbar_title">⚙️ Settings</string>
+    <string name="settings_section_data">💾 Data Management</string>
+    <string name="settings_section_display">🌐 Display</string>
+    <string name="settings_section_customization">🎨 Customization</string>
+    <string name="settings_section_help">💡 Help &amp; Tips</string>
+    <string name="settings_section_about">ℹ️ About</string>
+    <string name="settings_backup_title">Backup Data</string>
+    <string name="settings_backup_desc">Export your data to a JSON file</string>
+    <string name="settings_restore_title">Restore Data</string>
+    <string name="settings_restore_desc">Import data from a backup file</string>
+    <string name="settings_name_display_title">Student Name Display</string>
+    <string name="settings_sort_order_title">Default Sort Order</string>
+    <string name="settings_list_size_title">Student List Size</string>
+    <string name="settings_show_search_title">Show Global Search</string>
+    <string name="settings_show_search_desc">Display search button on main screens</string>
+    <string name="settings_edit_positive">Edit Positive Behaviors</string>
+    <string name="settings_edit_negative">Edit Negative Behaviors</string>
+    <string name="settings_edit_categories">Edit Grade Categories</string>
+    <string name="settings_hidden_features">Hidden Features</string>
+    <string name="settings_tip_longpress_student">Long-press student card</string>
+    <string name="settings_tip_longpress_student_desc">Select multiple students for bulk deletion</string>
+    <string name="settings_tip_longpress_class">Long-press class card</string>
+    <string name="settings_tip_longpress_class_desc">Edit, duplicate, archive, or delete</string>
+    <string name="settings_tip_longpress_add">Long-press Add button</string>
+    <string name="settings_tip_longpress_add_desc">Import or export students as CSV</string>
+    <string name="settings_tip_dice">Tap dice button</string>
+    <string name="settings_tip_dice_desc">Randomly pick a student</string>
+    <string name="settings_tip_swipe">Swipe tabs</string>
+    <string name="settings_tip_swipe_desc">Quickly switch between Students, Attendance, Grades, and Behavior</string>
+    <string name="settings_tip_eye">Tap eye button 👁️</string>
+    <string name="settings_tip_eye_desc">Hide or show the Add button in Students and Planner screens</string>
+    <string name="settings_version">Version 3.1.1 - Multilingual</string>
+    <string name="settings_tagline">Your complete teaching companion</string>
+    
+    <!-- Home Fragment -->
+    <string name="home_greeting_morning">Good Morning 👋</string>
+    <string name="home_greeting_afternoon">Good Afternoon 👋</string>
+    <string name="home_greeting_evening">Good Evening 👋</string>
+    <string name="home_university">Abbes Laghrour University - Khenchela</string>
+    <string name="home_todays_classes">📅 Today\'s Classes</string>
+    <string name="home_upcoming_events_title">🎯 Upcoming Events</string>
+    <string name="home_view_all">View All</string>
+    <string name="home_reports">Reports</string>
+    
+    <!-- Classes Fragment -->
+    <string name="classes_toolbar_title">📚 My Classes</string>
+    <string name="classes_filter">Filter Classes</string>
+    <string name="classes_class_list">📋 Class List</string>
+    <string name="classes_add_btn">+ Add</string>
+    <string name="classes_archived">Archived</string>
+    <string name="classes_no_classes">No classes yet</string>
+    <string name="classes_create_first">Tap + Add to create your first class</string>
+    <string name="classes_quick_stats">📊 Quick Stats</string>
+    
+    <!-- Students Fragment -->
+    <string name="students_toolbar_title">👨‍🎓 Students</string>
+    <string name="students_selected">%d selected</string>
+    <string name="students_delete_btn">🗑️ Delete</string>
+    <string name="students_not_found">No students found</string>
+    
+    <!-- Analytics Fragment -->
+    <string name="analytics_attendance_overview">📊 Attendance Overview</string>
+    <string name="analytics_export_reports">📤 Export Reports</string>
+    <string name="analytics_at_risk">⚠️ At-Risk Students (%d)</string>
+    <string name="analytics_no_at_risk">✅ No at-risk students</string>
+    <string name="analytics_at_risk_desc">Students with 3 or more absences</string>
+    <string name="analytics_class_label">Class:</string>
+    <string name="analytics_sessions">Sessions</string>
+    <string name="analytics_pdf">📄 PDF</string>
+    <string name="analytics_excel">📊 Excel</string>
+    
+    <!-- Reports Fragment -->
+    <string name="reports_select_class">Select Class for Report</string>
+    <string name="reports_performance_summary">📊 Performance Summary</string>
+    <string name="reports_student_rankings">🏆 Student Rankings</string>
+    <string name="reports_needing_attention">⚠️ Students Needing Attention</string>
+    <string name="reports_avg_grade">Avg Grade</string>
+    
+    <!-- Dialog Titles -->
+    <string name="dialog_delete_class">Delete Class</string>
+    <string name="dialog_delete_student">Delete Student</string>
+    <string name="dialog_delete_students">Delete Students</string>
+    <string name="dialog_delete_event">Delete Event</string>
+    <string name="dialog_delete_recurring_event">Delete Recurring Event</string>
+    <string name="dialog_delete_task">Delete Task</string>
+    <string name="dialog_delete_schedule">Delete Schedule</string>
+    <string name="dialog_delete_session">Delete Session</string>
+    <string name="dialog_delete_grade_item">Delete Grade Item</string>
+    <string name="dialog_sort_students">Sort Students By</string>
+    <string name="dialog_sort_by">Sort By</string>
+    <string name="dialog_student_options">Student Options</string>
+    <string name="dialog_random_student">🎲 Random Student</string>
+    <string name="dialog_select_classes">Select Classes</string>
+    <string name="dialog_clear_completed">Clear Completed</string>
+    <string name="dialog_duplicate_task">Duplicate Task</string>
+    <string name="dialog_duplicate_event">Duplicate Event</string>
+    <string name="dialog_update_recurring">Update Recursive Event</string>
+    <string name="dialog_filter_behavior">Filter Students By Behavior</string>
+    <string name="dialog_restore_data">Restore Data</string>
+    
+    <!-- Language Settings -->
+    <string name="settings_section_language">Language</string>
+    <string name="settings_language">App Language</string>
+    <string name="settings_language_system">System Default</string>
+    <string name="dialog_select_language">Select Language</string>
+    
+    <!-- Notification Settings -->
+    <string name="settings_section_notifications">Notifications</string>
+    <string name="settings_notifications_enable">Event &amp; Task Reminders</string>
+    <string name="settings_notifications_enable_desc">Get notified about upcoming events and tasks</string>
+    <string name="settings_reminder_time">Reminder Time</string>
+    <string name="settings_reminder_time_default">1 hour before</string>
+    <string name="settings_reminder_30min">30 minutes before</string>
+    <string name="settings_reminder_1hour">1 hour before</string>
+    <string name="settings_reminder_2hours">2 hours before</string>
+    <string name="settings_reminder_1day">1 day before</string>
+    
+    <!-- Widget -->
+    <string name="widget_description">Shows today\'s events and pending tasks</string>
+    <string name="dialog_student_name_display">Student Name Display</string>
+    <string name="dialog_default_sort">Default Sort Order</string>
+    <string name="dialog_list_size">Student List Size</string>
+    
+    <!-- Dialog Messages -->
+    <string name="msg_delete_class_confirm">Are you sure you want to delete %s? This cannot be undone.</string>
+    <string name="msg_delete_student_confirm">Are you sure you want to delete %s?</string>
+    <string name="msg_delete_students_confirm">Are you sure you want to delete %d student(s)?\n\nThis will also delete their attendance, grades, and behavior records.</string>
+    <string name="msg_delete_event_confirm">Delete \"%s\"?</string>
+    <string name="msg_delete_task_confirm">Delete \"%s\"?</string>
+    <string name="msg_delete_schedule_confirm">Remove this class from the schedule?</string>
+    <string name="msg_delete_session_confirm">Are you sure you want to delete this attendance session? This cannot be undone.</string>
+    <string name="msg_delete_grade_confirm">Are you sure you want to delete \'%s\'? All student grades for this item will be lost.</string>
+    <string name="msg_clear_completed_confirm">Delete all completed tasks?</string>
+    <string name="msg_duplicate_task_confirm">Create a copy of \"%s\"?</string>
+    <string name="msg_duplicate_event_confirm">Create a copy of \"%s\"?</string>
+    <string name="msg_restore_data_confirm">Importing data will overwrite existing records. Are you sure you want to proceed?</string>
+    <!-- Planner Actions & Messages -->
+    <string name="action_duplicate">Duplicate</string>
+    <string name="dialog_edit_event">Edit Event</string>
+    <string name="dialog_edit_task">Edit Task</string>
+    <string name="msg_title_required">Title is required</string>
+    <string name="msg_classes_selected_count">%d class(es) selected</string>
+    <string name="option_update_event_only">Update this event only</string>
+    <string name="option_update_future_events">Update all future events</string>
+    
+    <!-- Full Day Names -->
+    <string name="day_sunday_full">Sunday</string>
+    <string name="day_monday_full">Monday</string>
+    <string name="day_tuesday_full">Tuesday</string>
+    <string name="day_wednesday_full">Wednesday</string>
+    <string name="day_thursday_full">Thursday</string>
+    <string name="day_friday_full">Friday</string>
+    <string name="day_saturday_full">Saturday</string>
+
+    <string name="hint_task_title_required">Task Title *</string>
+    <string name="prefix_copy_of">Copy of %s</string>
+    <string name="msg_task_duplicated">Task duplicated</string>
+    <string name="msg_event_duplicated">Event duplicated</string>
+    <!-- Students Fragment -->
+    <string name="toast_export_success">Exported %d students</string>
+    <string name="toast_export_failed">Export failed: %s</string>
+    <string name="toast_no_students">No students in this class</string>
+    <string name="msg_students_found">%d Students found</string>
+    <string name="msg_no_students_found">0 Students found</string>
+    <string name="msg_deleting">Deleting...</string>
+    <string name="action_confirm">Confirm</string>
+    
+    <!-- Attendance Fragment -->
+    <string name="title_mark_all_present">Mark All Present</string>
+    <string name="msg_mark_all_present">Are you sure you want to mark all students as Present?</string>
+    <string name="title_mark_all_absent">Mark All Absent</string>
+    <string name="msg_mark_all_absent">Are you sure you want to mark all students as Absent?</string>
+    <string name="title_clear_attendance">Clear Attendance</string>
+    <string name="msg_clear_attendance">Are you sure you want to clear all attendance records for this session? This cannot be undone.</string>
+    <string name="msg_unlock_to_modify">Unlock to modify attendance</string>
+    <string name="msg_students_deleted">%d students deleted</string>
+    <string name="sort_default">Sort</string>
+    <string name="sort_lastname_asc">Sort: Last Name (A-Z)</string>
+    <string name="sort_lastname_desc">Sort: Last Name (Z-A)</string>
+    <string name="sort_firstname_asc">Sort: First Name (A-Z)</string>
+    <string name="sort_firstname_desc">Sort: First Name (Z-A)</string>
+    <string name="sort_id_matricule">Sort: ID/Matricule</string>
+    
+    <string name="dialog_sort_students_by">Sort Students By</string>
+    <string name="sort_lastname_asc_option">Last Name (A-Z)</string>
+    <string name="sort_lastname_desc_option">Last Name (Z-A)</string>
+    <string name="sort_firstname_asc_option">First Name (A-Z)</string>
+    <string name="sort_firstname_desc_option">First Name (Z-A)</string>
+    <string name="sort_id_matricule_option">ID/Matricule</string>
+    
+    <string name="action_import_from_csv">Import from CSV</string>
+    <string name="action_export_to_csv">Export to CSV</string>
+    <string name="toast_no_students_to_export">No students to export</string>
+    
+    <string name="dialog_random_student_title">🎲 Random Student</string>
+    <string name="action_pick_again">Pick Again</string>
+    <string name="msg_student_count_simple">%d Students</string>
+    <string name="sort_name_asc">Sort by Name (A-Z)</string>
+    <string name="sort_name_desc">Sort by Name (Z-A)</string>
+    <string name="sort_id">Sort by ID</string>
+    <string name="sort_name_asc_option">Name (A-Z)</string>
+    <string name="sort_name_desc_option">Name (Z-A)</string>
+    <string name="sort_id_option">ID</string>
+    
+    <string name="filter_pos">Pos</string>
+    <string name="filter_neg">Neg</string>
+
+    <string name="dialog_filter_behavior_title">Filter Students By Behavior</string>
+    <string name="filter_all_students_option">All Students</string>
+    <string name="filter_pos_option">Positive Behavior (≠0)</string>
+    <string name="filter_neg_option">Negative Behavior (≠0)</string>
+    <string name="action_yes">Yes</string>
+    <string name="dialog_restore_data_title">Restore Data</string>
+    <string name="toast_notifications_enabled">Notifications enabled</string>
+    <string name="toast_notifications_disabled">Notifications disabled</string>
+    <string name="dialog_edit_positive_behaviors">Edit Positive Behaviors</string>
+    <string name="dialog_edit_negative_behaviors">Edit Negative Behaviors</string>
+    <string name="dialog_edit_grade_categories">Edit Grade Categories</string>
+    <string name="toast_backup_failed">Backup Failed: %s</string>
+    <string name="toast_restore_failed">Restore Failed: %s</string>
+    <string name="version_format">Version %s</string>
+    <string name="lang_french">French</string>
+    <string name="lang_arabic">العربية (Arabic)</string>
+    <string name="toast_name_display_updated">Name display updated</string>
+    <!-- Widget -->
+    <string name="widget_todays_classes">🗓️ Today\'s Classes</string>
+    <string name="widget_no_classes">No classes today ✓</string>
+    
+    <!-- Theme -->
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_theme_system">System Default</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
 </resources>
+

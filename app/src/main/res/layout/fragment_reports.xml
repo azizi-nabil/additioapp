@@ -46,7 +46,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Select Class for Report"
+                        android:text="@string/reports_select_class"
                         android:textSize="12sp"
                         android:textColor="?attr/colorOnSurfaceVariant"/>
 
@@ -73,7 +73,7 @@
                     android:layout_marginEnd="6dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="#E8F5E9">
+                    app:cardBackgroundColor="@color/soft_green">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -94,7 +94,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Attendance"
+                            android:text="@string/attendance_title"
                             android:textSize="11sp"
                             android:textColor="#388E3C"/>
                     </LinearLayout>
@@ -108,7 +108,7 @@
                     android:layout_marginHorizontal="6dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="#E3F2FD">
+                    app:cardBackgroundColor="@color/soft_blue">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -129,7 +129,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Avg Grade"
+                            android:text="@string/reports_avg_grade"
                             android:textSize="11sp"
                             android:textColor="#1976D2"/>
                     </LinearLayout>
@@ -143,7 +143,7 @@
                     android:layout_marginStart="6dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="2dp"
-                    app:cardBackgroundColor="#FFF3E0">
+                    app:cardBackgroundColor="@color/soft_orange">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -164,7 +164,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Students"
+                            android:text="@string/nav_students"
                             android:textSize="11sp"
                             android:textColor="#F57C00"/>
                     </LinearLayout>
@@ -188,7 +188,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊 Performance Summary"
+                        android:text="@string/reports_performance_summary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>
@@ -218,7 +218,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🏆 Student Rankings"
+                        android:text="@string/reports_student_rankings"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>
@@ -249,7 +249,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="⚠️ Students Needing Attention"
+                        android:text="@string/reports_needing_attention"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#D32F2F"

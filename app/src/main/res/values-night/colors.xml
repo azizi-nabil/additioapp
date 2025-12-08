@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Theme Brand Colors -->
+    <color name="primary">#90CAF9</color>
+    <color name="on_primary">#003258</color>
+    <color name="primary_container">#004880</color>
+    <color name="on_primary_container">#D1E4FF</color>
+
+    <color name="secondary">#80CBC4</color>
+    <color name="on_secondary">#003733</color>
+    <color name="secondary_container">#00504A</color>
+    <color name="on_secondary_container">#B2DFDB</color>
+
+    <color name="tertiary">#FFCC80</color>
+    <color name="on_tertiary">#452B00</color>
+    <color name="tertiary_container">#633F00</color>
+    <color name="on_tertiary_container">#FFE0B2</color>
+
+    <color name="background">#121212</color>
+    <color name="surface">#1E1E1E</color>
+    <color name="on_surface">#E0E0E0</color>
+    <color name="outline">#9E9E9E</color>
+    
+    <!-- Additional Dark Colors -->
+    <color name="behavior_positive">#81C784</color>
+    <color name="behavior_negative">#E57373</color>
+    <color name="soft_green">#1B5E20</color>
+    <color name="soft_red">#B71C1C</color>
+    <color name="soft_blue">#0D47A1</color>
+    <color name="soft_orange">#E65100</color>
+    <color name="soft_pink">#880E4F</color>
+</resources>

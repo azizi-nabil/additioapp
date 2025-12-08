@@ -1,91 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="4dp"
+    android:layout_marginVertical="8dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="?attr/colorOutlineVariant"
-    android:descendantFocusability="blocksDescendants">
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="?attr/colorSurface">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center_vertical"
-        android:clickable="false"
-        android:focusable="false">
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp">
 
+        <!-- Status Badge (Replaces Avatar) -->
         <TextView
             android:id="@+id/textStatusBadge"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:gravity="center"
-            android:text="P"
-            android:textSize="18sp"
+            tools:text="P"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:background="@drawable/bg_circle_primary_container"
-            android:layout_marginEnd="16dp"
-            android:clickable="false"
-            android:focusable="false" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <LinearLayout
+        <!-- Name -->
+        <TextView
+            android:id="@+id/textStudentName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:clickable="false"
-            android:focusable="false">
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            tools:text="Student Name"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintStart_toEndOf="@id/textStatusBadge"
+            app:layout_constraintTop_toTopOf="@id/textStatusBadge"
+            app:layout_constraintEnd_toStartOf="@id/iconCheck" />
 
-            <TextView
-                android:id="@+id/textStudentName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Student Name"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
-                android:textStyle="bold"
-                android:clickable="false"
-                android:focusable="false" />
+        <!-- ID -->
+        <TextView
+            android:id="@+id/textStudentId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            tools:text="ID: 123456"
+            android:textSize="14sp"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintStart_toEndOf="@id/textStatusBadge"
+            app:layout_constraintTop_toBottomOf="@id/textStudentName"
+            app:layout_constraintEnd_toStartOf="@id/iconCheck" />
 
-            <TextView
-                android:id="@+id/textStudentId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ID: 123"
-                android:textAppearance="?attr/textAppearanceCaption"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:clickable="false"
-                android:focusable="false"/>
+        <!-- Comment (New position) -->
+        <TextView
+            android:id="@+id/textComment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            tools:text="Excused absence"
+            android:textSize="12sp"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textStyle="italic"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/textStatusBadge"
+            app:layout_constraintTop_toBottomOf="@id/textStudentId"
+            app:layout_constraintEnd_toStartOf="@id/iconCheck" />
 
-            <TextView
-                android:id="@+id/textComment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Comment"
-                android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textStyle="italic"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:visibility="gone"
-                android:layout_marginTop="2dp"
-                android:clickable="false"
-                android:focusable="false"/>
-        </LinearLayout>
-
+        <!-- Check Icon -->
         <ImageView
+            android:id="@+id/iconCheck"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_check_24dp"
-            android:id="@+id/iconCheck"
             android:visibility="gone"
             app:tint="?attr/colorPrimary"
-            android:clickable="false"
-            android:focusable="false"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

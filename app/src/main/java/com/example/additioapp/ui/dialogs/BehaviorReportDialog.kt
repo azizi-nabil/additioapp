@@ -53,7 +53,7 @@ class BehaviorReportDialog : BottomSheetDialogFragment() {
         val btnClose = view.findViewById<Button>(R.id.btnClose)
 
         textName.text = studentName
-        textTitle.text = if (behaviorType == "POSITIVE") "Positive Behaviors" else "Negative Behaviors"
+        textTitle.text = if (behaviorType == "POSITIVE") getString(R.string.behavior_positive_title) else getString(R.string.behavior_negative_title)
         
         val titleColor = if (behaviorType == "POSITIVE") 
             android.graphics.Color.parseColor("#388E3C") 
@@ -69,7 +69,7 @@ class BehaviorReportDialog : BottomSheetDialogFragment() {
 
             if (filteredBehaviors.isNotEmpty()) {
                 textNoBehaviors.visibility = View.GONE
-                val fmt = SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault())
+                val fmt = java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM, Locale.getDefault())
                 
                 filteredBehaviors.forEach { record ->
                     val itemView = layoutInflater.inflate(R.layout.item_behavior_report, layoutList, false)

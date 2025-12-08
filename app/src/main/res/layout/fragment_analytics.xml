@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface">
@@ -47,7 +48,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Class:"
+                        android:text="@string/analytics_class_label"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginEnd="12dp"/>
@@ -87,15 +88,16 @@
                             android:id="@+id/textTotalSessions"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            tools:text="0"
                             android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="?attr/colorPrimary"/>
 
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Sessions"
+                            android:text="@string/analytics_sessions"
                             android:textSize="12sp"
                             android:textColor="?attr/colorOnSurfaceVariant"/>
                     </LinearLayout>
@@ -121,7 +123,7 @@
                             android:id="@+id/textTotalStudents"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            tools:text="0"
                             android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="?attr/colorPrimary"/>
@@ -129,7 +131,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Students"
+                            android:text="@string/nav_students"
                             android:textSize="12sp"
                             android:textColor="?attr/colorOnSurfaceVariant"/>
                     </LinearLayout>
@@ -153,7 +155,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊 Attendance Overview"
+                        android:text="@string/analytics_attendance_overview"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>
@@ -183,7 +185,8 @@
                         android:id="@+id/textAtRiskTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="⚠️ At-Risk Students (0)"
+                        tools:text="⚠️ At-Risk Students (0)"
+                        android:text="@string/analytics_at_risk"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/holo_red_dark"
@@ -193,7 +196,7 @@
                         android:id="@+id/textAtRiskInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Students with 3 or more absences"
+                        android:text="@string/analytics_at_risk_desc"
                         android:textSize="12sp"
                         android:textColor="?attr/colorOnSurfaceVariant"
                         android:layout_marginBottom="8dp"/>
@@ -208,7 +211,7 @@
                         android:id="@+id/textNoRisk"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="✅ No at-risk students"
+                        android:text="@string/analytics_no_at_risk"
                         android:textSize="14sp"
                         android:textColor="@android:color/holo_green_dark"
                         android:gravity="center"
@@ -233,7 +236,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📤 Export Reports"
+                        android:text="@string/analytics_export_reports"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="12dp"/>
@@ -250,7 +253,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginEnd="8dp"
-                            android:text="📄 PDF"
+                            android:text="@string/analytics_pdf"
                             app:icon="@drawable/ic_assignment"/>
 
                         <com.google.android.material.button.MaterialButton
@@ -260,7 +263,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="8dp"
-                            android:text="📊 Excel"
+                            android:text="@string/analytics_excel"
                             app:icon="@drawable/ic_grade"/>
                     </LinearLayout>
                 </LinearLayout>

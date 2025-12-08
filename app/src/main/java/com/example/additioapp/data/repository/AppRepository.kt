@@ -42,8 +42,43 @@ class AppRepository(
     private val unitDao: UnitDao,
     private val eventDao: EventDao,
     private val taskDao: TaskDao,
-    private val scheduleItemDao: ScheduleItemDao
+    private val scheduleItemDao: ScheduleItemDao,
+    private val sharedPreferences: android.content.SharedPreferences
 ) {
+    
+    // Custom Types Management
+    companion object {
+        private const val KEY_EVENT_TYPES = "custom_event_types"
+        private const val KEY_SESSION_TYPES = "custom_session_types"
+        private val DEFAULT_EVENT_TYPES = setOf("OTHER", "EXAM", "MEETING", "DEADLINE")
+        private val DEFAULT_SESSION_TYPES = setOf("Cours", "TP", "TD", "Exam", "Other")
+    }
+
+    fun getEventTypes(): List<String> {
+        val saved = sharedPreferences.getStringSet(KEY_EVENT_TYPES, emptySet()) ?: emptySet()
+        return (DEFAULT_EVENT_TYPES + saved).sorted()
+    }
+
+    fun addEventType(type: String) {
+        if (type.isBlank()) return
+        val current = sharedPreferences.getStringSet(KEY_EVENT_TYPES, emptySet()) ?: emptySet()
+        if (!current.contains(type) && !DEFAULT_EVENT_TYPES.contains(type)) {
+            sharedPreferences.edit().putStringSet(KEY_EVENT_TYPES, current + type).apply()
+        }
+    }
+
+    fun getSessionTypes(): List<String> {
+        val saved = sharedPreferences.getStringSet(KEY_SESSION_TYPES, emptySet()) ?: emptySet()
+        return (DEFAULT_SESSION_TYPES + saved).sorted()
+    }
+
+    fun addSessionType(type: String) {
+        if (type.isBlank()) return
+        val current = sharedPreferences.getStringSet(KEY_SESSION_TYPES, emptySet()) ?: emptySet()
+        if (!current.contains(type) && !DEFAULT_SESSION_TYPES.contains(type)) {
+            sharedPreferences.edit().putStringSet(KEY_SESSION_TYPES, current + type).apply()
+        }
+    }
     // Classes
     val allClasses: LiveData<List<ClassEntity>> = classDao.getAllClasses()
     val allClassesIncludingArchived: LiveData<List<ClassEntity>> = classDao.getAllClassesIncludingArchived()
@@ -80,6 +115,14 @@ class AppRepository(
     // Attendance
     fun getAttendanceForStudent(studentId: Long) = attendanceDao.getAttendanceForStudent(studentId)
     fun getAbsencesForStudent(studentId: Long) = attendanceDao.getAbsencesForStudent(studentId)
+    fun getCoursPresenceForStudent(studentId: Long, classId: Long) = attendanceDao.getCoursPresenceForStudent(studentId, classId)
+    suspend fun getTotalCoursSessionCount(classId: Long): Int {
+        return attendanceDao.getTotalCoursSessionCount(classId)
+    }
+
+    suspend fun getTotalSessionCountByType(classId: Long, type: String): Int {
+        return attendanceDao.getTotalSessionCountByType(classId, type)
+    }
     fun getAttendanceForSession(sessionId: String) = attendanceDao.getAttendanceForSession(sessionId)
     
     // One-time load without LiveData
@@ -117,6 +160,7 @@ class AppRepository(
     suspend fun insertAttendanceList(list: List<AttendanceRecordEntity>) = attendanceDao.insertAttendanceList(list)
     suspend fun deleteSession(sessionId: String) = attendanceDao.deleteSession(sessionId)
     suspend fun deleteAttendance(studentId: Long, sessionId: String) = attendanceDao.deleteAttendance(studentId, sessionId)
+    suspend fun updateSessionId(oldSessionId: String, newSessionId: String) = attendanceDao.updateSessionId(oldSessionId, newSessionId)
 
     // Grades
     fun getAllGradeItems() = gradeDao.getAllGradeItems()
@@ -167,6 +211,7 @@ class AppRepository(
     suspend fun insertSession(session: SessionEntity) = sessionDao.insertSession(session)
     suspend fun deleteSession(session: SessionEntity) = sessionDao.deleteSession(session)
     suspend fun getOldestSessionDate(classId: Long): Long? = sessionDao.getOldestSessionDate(classId)
+    suspend fun getSessionCountByType(classId: Long, type: String): Int = sessionDao.getSessionCountByType(classId, type)
 
     // Units
     fun getUnitsForClass(classId: Long): LiveData<List<UnitEntity>> = unitDao.getUnitsForClass(classId)

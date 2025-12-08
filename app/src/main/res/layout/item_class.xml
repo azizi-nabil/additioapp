@@ -118,7 +118,7 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:background="@drawable/bg_rounded_gray"
-                    android:backgroundTint="#E8F5E9"
+                    android:backgroundTint="@color/soft_green"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="3dp">
 

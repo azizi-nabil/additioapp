@@ -49,6 +49,9 @@ interface AttendanceDao {
     @Query("DELETE FROM attendance_records WHERE sessionId = :sessionId")
     suspend fun deleteSession(sessionId: String)
 
+    @Query("UPDATE attendance_records SET sessionId = :newSessionId WHERE sessionId = :oldSessionId")
+    suspend fun updateSessionId(oldSessionId: String, newSessionId: String)
+
     @Query("DELETE FROM attendance_records WHERE studentId = :studentId AND sessionId = :sessionId")
     suspend fun deleteAttendance(studentId: Long, sessionId: String)
     
@@ -62,7 +65,7 @@ interface AttendanceDao {
             SUM(CASE WHEN ar.status = 'P' THEN 1 ELSE 0 END) AS presentCount,
             SUM(CASE WHEN ar.status = 'A' THEN 1 ELSE 0 END) AS absentCount,
             SUM(CASE WHEN ar.status = 'L' THEN 1 ELSE 0 END) AS lateCount,
-            SUM(CASE WHEN ar.status NOT IN ('P','A','L') THEN 1 ELSE 0 END) AS otherCount,
+            SUM(CASE WHEN ar.status = 'E' THEN 1 ELSE 0 END) AS excusedCount,
             COUNT(*) AS totalCount,
             COALESCE(ses.type, 'Cours') AS type
         FROM attendance_records ar
@@ -106,7 +109,11 @@ interface AttendanceDao {
     @Query("""
         SELECT 
             ar.date,
-            COALESCE(ses.type, 'Cours') AS type,
+            COALESCE(ses.type, CASE 
+                WHEN ar.sessionId LIKE '%_TD' THEN 'TD'
+                WHEN ar.sessionId LIKE '%_TP' THEN 'TP'
+                ELSE 'Cours' 
+            END) AS type,
             ar.status
         FROM attendance_records ar
         INNER JOIN students s ON ar.studentId = s.id
@@ -117,10 +124,55 @@ interface AttendanceDao {
     fun getAbsencesForStudent(studentId: Long): LiveData<List<com.example.additioapp.data.model.StudentAbsenceDetail>>
 
     @Query("""
+        SELECT 
+            ar.date,
+            COALESCE(ses.type, 'Cours') AS type,
+            ar.status
+        FROM attendance_records ar
+        INNER JOIN students s ON ar.studentId = s.id
+        LEFT JOIN sessions ses ON ses.classId = s.classId AND ses.date = ar.date
+        WHERE ar.studentId = :studentId AND s.classId = :classId AND ar.status = 'P' 
+        AND (
+            (ses.type = 'Cours' OR ses.type IS NULL)
+            AND ar.sessionId NOT LIKE '%_TD'
+            AND ar.sessionId NOT LIKE '%_TP'
+        )
+        ORDER BY ar.date DESC
+    """)
+    fun getCoursPresenceForStudent(studentId: Long, classId: Long): LiveData<List<com.example.additioapp.data.model.StudentAbsenceDetail>>
+
+    @Query("""
         SELECT ar.* 
         FROM attendance_records ar
         INNER JOIN students s ON ar.studentId = s.id
         WHERE s.classId = :classId
     """)
     suspend fun getAllAttendanceForClassSync(classId: Long): List<AttendanceRecordEntity>
+
+    @Query("""
+        SELECT COUNT(DISTINCT ar.date)
+        FROM attendance_records ar
+        INNER JOIN students s ON ar.studentId = s.id
+        LEFT JOIN sessions ses ON ses.classId = s.classId AND ses.date = ar.date
+        WHERE s.classId = :classId 
+        AND (
+            (ses.type = 'Cours' OR ses.type IS NULL) 
+            AND ar.sessionId NOT LIKE '%_TD' 
+            AND ar.sessionId NOT LIKE '%_TP'
+        )
+    """)
+    suspend fun getTotalCoursSessionCount(classId: Long): Int
+
+    @Query("""
+        SELECT COUNT(DISTINCT ar.date)
+        FROM attendance_records ar
+        INNER JOIN students s ON ar.studentId = s.id
+        LEFT JOIN sessions ses ON ses.classId = s.classId AND ses.date = ar.date
+        WHERE s.classId = :classId 
+        AND (
+            ses.type = :type 
+            OR (ses.type IS NULL AND ar.sessionId LIKE '%_' || :type)
+        )
+    """)
+    suspend fun getTotalSessionCountByType(classId: Long, type: String): Int
 }

@@ -90,28 +90,28 @@ class BehaviorFragment : Fragment() {
             }
 
             adapter.submitList(sortedItems)
-            textTotalStudents.text = "${sortedItems.size} Students"
+            textTotalStudents.text = getString(R.string.msg_student_count_simple, sortedItems.size)
 
             val sortText = when (sortMode) {
-                "NAME_ASC" -> "Sort by Name (A-Z)"
-                "NAME_DESC" -> "Sort by Name (Z-A)"
-                "ID_ASC" -> "Sort by ID"
-                else -> "Sort"
+                "NAME_ASC" -> getString(R.string.sort_name_asc)
+                "NAME_DESC" -> getString(R.string.sort_name_desc)
+                "ID_ASC" -> getString(R.string.sort_id)
+                else -> getString(R.string.sort_default)
             }
             btnSort.text = sortText
 
             val filterText = when (filterMode) {
-                "POSITIVE" -> "Pos"
-                "NEGATIVE" -> "Neg"
-                else -> "All"
+                "POSITIVE" -> getString(R.string.filter_pos)
+                "NEGATIVE" -> getString(R.string.filter_neg)
+                else -> getString(R.string.filter_all)
             }
             btnFilter.text = filterText
         }
 
         btnSort.setOnClickListener {
-            val options = arrayOf("Name (A-Z)", "Name (Z-A)", "ID")
+            val options = arrayOf(getString(R.string.sort_name_asc_option), getString(R.string.sort_name_desc_option), getString(R.string.sort_id_option))
             androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Sort Students By")
+                .setTitle(getString(R.string.dialog_sort_students_by))
                 .setItems(options) { _, which ->
                     sortMode = when (which) {
                         0 -> "NAME_ASC"
@@ -125,9 +125,9 @@ class BehaviorFragment : Fragment() {
         }
 
         btnFilter.setOnClickListener {
-            val options = arrayOf("All Students", "Positive Behavior (≠0)", "Negative Behavior (≠0)")
+            val options = arrayOf(getString(R.string.filter_all_students_option), getString(R.string.filter_pos_option), getString(R.string.filter_neg_option))
             androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Filter Students By Behavior")
+                .setTitle(getString(R.string.dialog_filter_behavior_title))
                 .setItems(options) { _, which ->
                     filterMode = when (which) {
                         0 -> "ALL"

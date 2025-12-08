@@ -33,4 +33,7 @@ interface SessionDao {
 
     @Query("SELECT MIN(date) FROM sessions WHERE classId = :classId")
     suspend fun getOldestSessionDate(classId: Long): Long?
+    
+    @Query("SELECT COUNT(*) FROM sessions WHERE classId = :classId AND type = :type")
+    suspend fun getSessionCountByType(classId: Long, type: String): Int
 }

@@ -38,7 +38,7 @@ class AttendanceBottomSheetDialog(
         val btnSave = view.findViewById<Button>(R.id.btnSave)
 
         textName.text = student.name
-        textId.text = "ID: ${student.studentId}"
+        textId.text = getString(R.string.student_id_format, student.studentId)
         inputComment.setText(currentRecord?.comment)
 
         // Pre-select status

@@ -409,7 +409,7 @@ class ReportsFragment : Fragment() {
 
                 // Click to show absence report
                 row.setOnClickListener {
-                    val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(info.student.id, info.student.name)
+                    val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(info.student.id, info.student.name, classId)
                     dialog.show(parentFragmentManager, "AbsenceReportDialog")
                 }
 
@@ -457,7 +457,7 @@ class ReportsFragment : Fragment() {
 
                         // Click to show absence report
                         row.setOnClickListener {
-                            val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(info.student.id, info.student.name)
+                            val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(info.student.id, info.student.name, classId)
                             dialog.show(parentFragmentManager, "AbsenceReportDialog")
                         }
 

@@ -23,6 +23,8 @@ import androidx.navigation.fragment.findNavController
 class ClassDetailFragment : Fragment() {
 
     private var classId: Long = -1
+    private var studentId: Long = -1L
+    private var studentName: String? = null
     private var currentClass: ClassEntity? = null
     
     private val viewModel: ClassViewModel by viewModels {
@@ -33,6 +35,8 @@ class ClassDetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             classId = it.getLong("classId")
+            studentId = it.getLong("studentId", -1L)
+            studentName = it.getString("studentName")
         }
     }
 
@@ -58,7 +62,7 @@ class ClassDetailFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        val adapter = ClassDetailPagerAdapter(this, classId)
+        val adapter = ClassDetailPagerAdapter(this, classId, studentId)
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -76,10 +80,10 @@ class ClassDetailFragment : Fragment() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 textTabName.text = when (tab?.position) {
-                    0 -> "Students"
-                    1 -> "Attendance"
-                    2 -> "Grades"
-                    3 -> "Behavior"
+                    0 -> getString(R.string.students_title)
+                    1 -> getString(R.string.attendance_title)
+                    2 -> getString(R.string.grades_title)
+                    3 -> getString(R.string.behavior_title)
                     else -> ""
                 }
             }
@@ -88,7 +92,7 @@ class ClassDetailFragment : Fragment() {
         })
         
         // Set initial text
-        textTabName.text = "Students"
+        textTabName.text = getString(R.string.students_title)
 
         // Fetch class details
         lifecycleScope.launch {
@@ -104,12 +108,16 @@ class ClassDetailFragment : Fragment() {
 
     // Removed onCreateOptionsMenu and onOptionsItemSelected as we use Toolbar directly
 
-    class ClassDetailPagerAdapter(fragment: Fragment, private val classId: Long) : FragmentStateAdapter(fragment) {
+    class ClassDetailPagerAdapter(
+        fragment: Fragment, 
+        private val classId: Long,
+        private val studentId: Long = -1L
+    ) : FragmentStateAdapter(fragment) {
         override fun getItemCount(): Int = 4
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> StudentsFragment.newInstance(classId)
+                0 -> StudentsFragment.newInstance(classId, studentId)
                 1 -> AttendanceHistoryFragment.newInstance(classId)
                 2 -> GradesFragment.newInstance(classId)
                 3 -> BehaviorFragment.newInstance(classId)

@@ -6,7 +6,7 @@ data class AttendanceSessionSummary(
     val presentCount: Int,
     val absentCount: Int,
     val lateCount: Int,
-    val otherCount: Int,
+    val excusedCount: Int,
     val totalCount: Int,
     val type: String = "Cours"
 )

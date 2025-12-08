@@ -16,6 +16,12 @@
     <string name="action_import">Importer</string>
     <string name="action_backup">Sauvegarder</string>
     <string name="action_restore">Restaurer</string>
+    <string name="action_add_event">Ajouter Événement</string>
+    <string name="action_add_task">Ajouter Tâche</string>
+    <string name="action_add_schedule">Ajouter Horaire</string>
+    <string name="tab_events">📅 Événements</string>
+    <string name="tab_tasks">📝 Tâches</string>
+    <string name="tab_schedule">🗓️ Horaire</string>
     
     <!-- Navigation -->
     <string name="nav_home">Accueil</string>
@@ -60,17 +66,17 @@
     <string name="student_id_hint">Matricule</string>
     <string name="student_email">Email</string>
     <string name="student_phone">Téléphone</string>
-    <string name="student_delete_confirm">Supprimer cet élève?</string>
+    <string name="student_delete_confirm">Supprimer cet étudiant?</string>
     
     <!-- Student Dialog Labels -->
-    <string name="dialog_student_details">Détails de l\'élève</string>
+    <string name="dialog_student_details">Détails de l\'étudiant</string>
     <string name="label_matricule">Matricule</string>
     <string name="label_french_name">Nom français</string>
     <string name="label_first_name">Prénom</string>
     <string name="label_last_name">Nom</string>
     <string name="label_arabic_name_optional">Nom arabe (Optionnel)</string>
     <string name="label_private_notes_optional">📝 Notes privées (Optionnel)</string>
-    <string name="hint_student_notes">Notes sur cet élève...</string>
+    <string name="hint_student_notes">Notes sur cet étudiant...</string>
     
     <!-- Attendance -->
     <string name="attendance_title">Présence</string>
@@ -86,10 +92,14 @@
     <string name="attendance_mark_all_present">Tous ✓</string>
     <string name="attendance_mark_all_absent">Tous ✗</string>
     <string name="attendance_clear">Effacer</string>
-    <string name="attendance_summary">Présents: %1$d | Absents: %2$d | En retard: %3$d</string>
+    <string name="attendance_summary">Présents: %1$d | Absents: %2$d | En retard: %3$d | Excusé: %4$d</string>
     <string name="attendance_today">Aujourd\'hui</string>
     <string name="attendance_history">Historique</string>
     <string name="attendance_export">Exporter CSV</string>
+    <string name="attendance_total_sessions">Séances totales</string>
+    <string name="attendance_avg_attendance">Moy. Présence</string>
+    <string name="sort_newest">Plus récents</string>
+    <string name="action_share">Partager</string>
     
     <!-- Session Types -->
     <string name="session_type_td">TD</string>
@@ -105,6 +115,52 @@
     <string name="grades_max_score">Note maximale</string>
     <string name="grades_average">Moyenne</string>
     <string name="grades_empty">Aucune note enregistrée</string>
+    <string name="gradebook_select_class">Sélectionner une classe</string>
+    <string name="gradebook_tests">Tests</string>
+    <string name="gradebook_avg_percent">Moy %</string>
+    <string name="gradebook_count">Nombre</string>
+    <string name="gradebook_distribution">📈 Distribution des notes</string>
+    <string name="gradebook_student_grades">👨‍🎓 Notes des étudiants</string>
+    <string name="gradebook_assessments">📝 Évaluations</string>
+    <string name="grade_weight_format">Coeff: %s</string>
+    <string name="grade_score_format">%1$s / %2$s</string>
+    <string name="grade_score_placeholder">-- / 20</string>
+    <string name="grade_separator">" / "</string>
+    <string name="grade_max_suffix">" / %s"</string>
+
+    <!-- Import Dialog -->
+    <string name="import_guide_title">📄 Guide CSV</string>
+    <string name="import_guide_btn">Compris!</string>
+    <string name="import_success_toast">%d étudiants importés</string>
+    <string name="import_status_found">✅ %d étudiants trouvés\n\nAperçu:\n</string>
+    <string name="import_status_empty">⚠️ Aucun étudiant trouvé.\n\nVérifiez que votre CSV contient:\n• Colonnes Matricule, Nom, Prénom\n• Des données après l\'en-tête</string>
+    <string name="import_status_error">❌ Erreur de lecture:\n%s</string>
+    <string name="import_instructions">
+        📋 Instructions Format CSV\n\n
+        Votre fichier CSV doit avoir 3 colonnes:\n\n
+        Colonne 1: Matricule\n
+        Colonne 2: Nom\n
+        Colonne 3: Prénom\n\n
+        ─────────────────────────\n\n
+        📝 Exemple:\n
+        Matricule,Nom,Prénom\n
+        202034052475,ABDERREZAK,MAISSOUN\n\n
+        💡 Conseils:\n
+        • Enregistrez Excel sous CSV (Fichier → Enregistrer sous → CSV)\n
+        • Utilisez virgule (,) ou point-virgule (;) comme séparateur\n
+        • La première ligne peut être l\'en-tête (sera ignorée)
+    </string>
+    
+    <string name="absence_excused_suffix">" (Excusé)"</string>
+    <string name="label_none">Aucune</string>
+
+    <string name="behavior_positive_title">Comportements Positifs</string>
+    <string name="behavior_negative_title">Comportements Négatifs</string>
+    <string name="student_id_format">Matricule: %s</string>
+    <string name="backup_success">Sauvegarde réussie</string>
+    <string name="restore_success">Restauration réussie</string>
+    <string name="restore_error_generic">Échec de restauration: %s</string>
+    <string name="restore_error_file">Échec: Impossible de lire le fichier ou fichier vide</string>
     
     <!-- Grade Categories -->
     <string name="grade_category_exam">Examen</string>
@@ -183,7 +239,7 @@
     <string name="analytics_title">Analyses</string>
     <string name="analytics_attendance_rate">Taux de présence</string>
     <string name="analytics_average_grade">Moyenne générale</string>
-    <string name="analytics_at_risk">Étudiants à risque</string>
+    <string name="analytics_at_risk_students">Étudiants à risque</string>
     <string name="analytics_export_pdf">Exporter PDF</string>
     <string name="analytics_export_excel">Exporter Excel</string>
     
@@ -236,9 +292,7 @@
     <string name="import_error">Échec de l\'importation : %s</string>
     <string name="export_success">%d étudiants exportés</string>
     <string name="export_error">Échec de l\'exportation : %s</string>
-    <string name="backup_success">Sauvegarde terminée avec succès</string>
     <string name="backup_error">Échec de la sauvegarde : %s</string>
-    <string name="restore_success">Données restaurées avec succès</string>
     <string name="restore_error">Échec de la restauration : %s</string>
     
     <!-- Schedule Dialog -->
@@ -296,16 +350,19 @@
     <string name="dialog_absence_report">Rapport d\'absences</string>
     <string name="dialog_behavior_report">Rapport de comportement</string>
     <string name="dialog_grades_report">Rapport de notes</string>
-    <string name="label_student_name">Nom de l\'élève</string>
+    <string name="label_student_name">Nom de l\'étudiant</string>
     <string name="label_td_absences">Absences TD (%d)</string>
+    <string name="label_td_absences_total">Absences TD (%1$d/%2$d)</string>
     <string name="label_tp_absences">Absences TP (%d)</string>
+    <string name="label_tp_absences_total">Absences TP (%1$d/%2$d)</string>
     <string name="label_cours_absences">Absences Cours (%d)</string>
-    <string name="label_none">Aucune</string>
+    <string name="label_cours_presence">Présences Cours (%1$d/%2$d)</string>
+
     <string name="label_no_records_found">Aucun enregistrement trouvé.</string>
     <string name="label_no_grades_recorded">Aucune note enregistrée.</string>
     
     <!-- Import Students Dialog -->
-    <string name="dialog_import_students">📥 Importer des élèves depuis CSV</string>
+    <string name="dialog_import_students">📥 Importer des étudiants depuis CSV</string>
     <string name="label_expected_csv_format">📋 Format CSV attendu</string>
     <string name="label_csv_header">Matricule, Nom, Prénom</string>
     <string name="label_csv_example">202034052475, ABDERREZAK, MAISSOUN</string>
@@ -318,7 +375,7 @@
     
     <!-- Fragment Common Strings -->
     <string name="hint_search">Rechercher...</string>
-    <string name="hint_search_students">Rechercher des élèves...</string>
+    <string name="hint_search_students">Rechercher des étudiants...</string>
     <string name="label_completed">Terminé</string>
     <string name="label_this_week">Cette semaine</string>
     <string name="label_rate">Taux</string>
@@ -328,9 +385,9 @@
     <string name="action_clear_completed">Effacer les terminées</string>
     <string name="label_no_classes_scheduled">🗓️ Aucun cours prévu\n\nAppuyez sur + pour ajouter un cours</string>
     <string name="label_no_results_found">Aucun résultat trouvé</string>
-    <string name="hint_search_all">Rechercher élèves, classes, événements, tâches...</string>
-    <string name="label_all_present">Tous ✓</string>
-    <string name="label_all_absent">Tous ✗</string>
+    <string name="hint_search_all">Rechercher étudiants, classes, événements, tâches...</string>
+    <string name="label_all_present">Tout</string>
+    <string name="label_all_absent">Tout</string>
     <string name="action_clear">Effacer</string>
     <string name="label_overview">Aperçu</string>
     <string name="label_from">De</string>
@@ -338,6 +395,238 @@
     <string name="action_take_attendance_today">Prendre les présences (Aujourd\'hui)</string>
     <string name="hint_min">Min</string>
     <string name="hint_max">Max</string>
-    <string name="label_students_count">%d Élèves</string>
+    <string name="label_students_count">%d Étudiants</string>
     <string name="label_grade_item_name">Nom de l\'élément de notation</string>
+    
+    <!-- Settings Fragment -->
+    <string name="settings_toolbar_title">⚙️ Paramètres</string>
+    <string name="settings_section_data">💾 Gestion des données</string>
+    <string name="settings_section_display">🌐 Affichage</string>
+    <string name="settings_section_customization">🎨 Personnalisation</string>
+    <string name="settings_section_help">💡 Aide et astuces</string>
+    <string name="settings_section_about">ℹ️ À propos</string>
+    <string name="settings_backup_title">Sauvegarder les données</string>
+    <string name="settings_backup_desc">Exporter vos données vers un fichier JSON</string>
+    <string name="settings_restore_title">Restaurer les données</string>
+    <string name="settings_restore_desc">Importer les données depuis un fichier de sauvegarde</string>
+    <string name="settings_name_display_title">Affichage des noms d\'étudiants</string>
+    <string name="settings_sort_order_title">Ordre de tri par défaut</string>
+    <string name="settings_list_size_title">Taille de la liste d\'étudiants</string>
+    <string name="settings_show_search_title">Afficher la recherche globale</string>
+    <string name="settings_show_search_desc">Afficher le bouton de recherche sur les écrans principaux</string>
+    <string name="settings_edit_positive">Modifier les comportements positifs</string>
+    <string name="settings_edit_negative">Modifier les comportements négatifs</string>
+    <string name="settings_edit_categories">Modifier les catégories de notes</string>
+    <string name="settings_hidden_features">Fonctionnalités cachées</string>
+    <string name="settings_tip_longpress_student">Appui long sur la carte étudiant</string>
+    <string name="settings_tip_longpress_student_desc">Sélectionner plusieurs étudiants pour suppression groupée</string>
+    <string name="settings_tip_longpress_class">Appui long sur la carte classe</string>
+    <string name="settings_tip_longpress_class_desc">Modifier, dupliquer, archiver ou supprimer</string>
+    <string name="settings_tip_longpress_add">Appui long sur le bouton Ajouter</string>
+    <string name="settings_tip_longpress_add_desc">Importer ou exporter les étudiants en CSV</string>
+    <string name="settings_tip_dice">Appuyer sur le bouton dé</string>
+    <string name="settings_tip_dice_desc">Choisir un étudiant au hasard</string>
+    <string name="settings_tip_swipe">Glisser les onglets</string>
+    <string name="settings_tip_swipe_desc">Basculer rapidement entre Étudiants, Présence, Notes et Comportement</string>
+    <string name="settings_tip_eye">Appuyer sur l\'œil 👁️</string>
+    <string name="settings_tip_eye_desc">Masquer ou afficher le bouton Ajouter dans les écrans Étudiants et Planificateur</string>
+    <string name="settings_version">Version 3.1.1 - Multilingue</string>
+    <string name="settings_tagline">Votre compagnon d\'enseignement complet</string>
+    
+    <!-- Home Fragment -->
+    <string name="home_greeting_morning">Bonjour 👋</string>
+    <string name="home_greeting_afternoon">Bon après-midi 👋</string>
+    <string name="home_greeting_evening">Bonsoir 👋</string>
+    <string name="home_university">Université Abbes Laghrour - Khenchela</string>
+    <string name="home_todays_classes">📅 Cours du jour</string>
+    <string name="home_upcoming_events_title">🎯 Événements à venir</string>
+    <string name="home_view_all">Tout voir</string>
+    <string name="home_reports">Rapports</string>
+    
+    <!-- Classes Fragment -->
+    <string name="classes_toolbar_title">📚 Mes classes</string>
+    <string name="classes_filter">Filtrer les classes</string>
+    <string name="classes_class_list">📋 Liste des classes</string>
+    <string name="classes_add_btn">+ Ajouter</string>
+    <string name="classes_archived">Archivées</string>
+    <string name="classes_no_classes">Aucune classe</string>
+    <string name="classes_create_first">Appuyez sur + Ajouter pour créer votre première classe</string>
+    <string name="classes_quick_stats">📊 Statistiques rapides</string>
+    
+    <!-- Students Fragment -->
+    <string name="students_toolbar_title">👨‍🎓 Étudiants</string>
+    <string name="students_selected">%d sélectionné(s)</string>
+    <string name="students_delete_btn">🗑️ Supprimer</string>
+    <string name="students_not_found">Aucun étudiant trouvé</string>
+    
+    <!-- Analytics Fragment -->
+    <string name="analytics_attendance_overview">📊 Aperçu des présences</string>
+    <string name="analytics_export_reports">📤 Exporter les rapports</string>
+    <string name="analytics_at_risk">⚠️ Étudiants à risque (%d)</string>
+    <string name="analytics_no_at_risk">✅ Aucun étudiant à risque</string>
+    <string name="analytics_at_risk_desc">Étudiants avec 3 absences ou plus</string>
+    <string name="analytics_class_label">Classe :</string>
+    <string name="analytics_sessions">Séances</string>
+    <string name="analytics_pdf">📄 PDF</string>
+    <string name="analytics_excel">📊 Excel</string>
+    
+    <!-- Reports Fragment -->
+    <string name="reports_select_class">Sélectionner une classe pour le rapport</string>
+    <string name="reports_performance_summary">📊 Résumé des performances</string>
+    <string name="reports_student_rankings">🏆 Classement des étudiants</string>
+    <string name="reports_needing_attention">⚠️ Étudiants nécessitant une attention</string>
+    <string name="reports_avg_grade">Moyenne</string>
+    
+    <!-- Dialog Titles -->
+    <string name="dialog_delete_class">Supprimer la classe</string>
+    <string name="dialog_delete_student">Supprimer l\'étudiant</string>
+    <string name="dialog_delete_students">Supprimer les étudiants</string>
+    <string name="dialog_delete_event">Supprimer l\'événement</string>
+    <string name="dialog_delete_recurring_event">Supprimer événement récurrent</string>
+    <string name="dialog_delete_task">Supprimer la tâche</string>
+    <string name="dialog_delete_schedule">Supprimer l\'horaire</string>
+    <string name="dialog_delete_session">Supprimer la séance</string>
+    <string name="dialog_delete_grade_item">Supprimer l\'élément de note</string>
+    <string name="dialog_sort_students">Trier les étudiants par</string>
+    <string name="dialog_sort_by">Trier par</string>
+    <string name="dialog_student_options">Options étudiant</string>
+    <string name="dialog_random_student">🎲 Étudiant aléatoire</string>
+    <string name="dialog_select_classes">Sélectionner les classes</string>
+    <string name="dialog_clear_completed">Effacer terminées</string>
+    <string name="dialog_duplicate_task">Dupliquer la tâche</string>
+    <string name="dialog_duplicate_event">Dupliquer l\'événement</string>
+    <string name="dialog_update_recurring">Mettre à jour événement récurrent</string>
+    <string name="dialog_filter_behavior">Filtrer par comportement</string>
+    <string name="dialog_restore_data">Restaurer les données</string>
+    
+    <!-- Language Settings -->
+    <string name="settings_section_language">Langue</string>
+    <string name="settings_language">Langue de l\'application</string>
+    <string name="settings_language_system">Par défaut du système</string>
+    <string name="dialog_select_language">Sélectionner la langue</string>
+    
+    <!-- Notification Settings -->
+    <string name="settings_section_notifications">Notifications</string>
+    <string name="settings_notifications_enable">Rappels d\'événements et tâches</string>
+    <string name="settings_notifications_enable_desc">Recevoir des notifications pour les événements et tâches à venir</string>
+    <string name="settings_reminder_time">Heure du rappel</string>
+    <string name="settings_reminder_time_default">1 heure avant</string>
+    <string name="settings_reminder_30min">30 minutes avant</string>
+    <string name="settings_reminder_1hour">1 heure avant</string>
+    <string name="settings_reminder_2hours">2 heures avant</string>
+    <string name="settings_reminder_1day">1 jour avant</string>
+    <string name="dialog_student_name_display">Affichage du nom</string>
+    <string name="dialog_default_sort">Ordre de tri par défaut</string>
+    <string name="dialog_list_size">Taille de la liste</string>
+    
+    <!-- Dialog Messages -->
+    <string name="msg_delete_class_confirm">Êtes-vous sûr de vouloir supprimer %s ? Cette action est irréversible.</string>
+    <string name="msg_delete_student_confirm">Êtes-vous sûr de vouloir supprimer %s ?</string>
+    <string name="msg_delete_students_confirm">Êtes-vous sûr de vouloir supprimer %d étudiant(s) ?\n\nCela supprimera également leurs présences, notes et comportements.</string>
+    <string name="msg_delete_event_confirm">Supprimer \"%s\" ?</string>
+    <string name="msg_delete_task_confirm">Supprimer \"%s\" ?</string>
+    <string name="msg_delete_schedule_confirm">Retirer cette classe de l\'horaire ?</string>
+    <string name="msg_delete_session_confirm">Êtes-vous sûr de vouloir supprimer cette séance ? Cette action est irréversible.</string>
+    <string name="msg_delete_grade_confirm">Êtes-vous sûr de vouloir supprimer \'%s\' ? Toutes les notes des étudiants seront perdues.</string>
+    <string name="msg_clear_completed_confirm">Supprimer toutes les tâches terminées ?</string>
+    <string name="msg_duplicate_task_confirm">Créer une copie de \"%s\" ?</string>
+    <string name="msg_duplicate_event_confirm">Créer une copie de \"%s\" ?</string>
+    <string name="msg_restore_data_confirm">L\'importation remplacera les données existantes. Voulez-vous continuer ?</string>
+    <!-- Planner Actions & Messages -->
+    <string name="action_duplicate">Dupliquer</string>
+    <string name="dialog_edit_event">Modifier l\'événement</string>
+    <string name="dialog_edit_task">Modifier la tâche</string>
+    <string name="msg_title_required">Le titre est requis</string>
+    <string name="msg_classes_selected_count">%d classe(s) sélectionnée(s)</string>
+    <string name="option_update_event_only">Modifier cet événement uniquement</string>
+    <string name="option_update_future_events">Modifier tous les événements futurs</string>
+    
+    <!-- Full Day Names -->
+    <string name="day_sunday_full">Dimanche</string>
+    <string name="day_monday_full">Lundi</string>
+    <string name="day_tuesday_full">Mardi</string>
+    <string name="day_wednesday_full">Mercredi</string>
+    <string name="day_thursday_full">Jeudi</string>
+    <string name="day_friday_full">Vendredi</string>
+    <string name="day_saturday_full">Samedi</string>
+
+    <string name="hint_task_title_required">Titre de la tâche *</string>
+    <string name="prefix_copy_of">Copie de %s</string>
+    <string name="msg_task_duplicated">Tâche dupliquée</string>
+    <string name="msg_event_duplicated">Événement dupliqué</string>
+    <!-- Students Fragment -->
+    <string name="toast_export_success">%d étudiants exportés</string>
+    <string name="toast_export_failed">Échec de l\'exportation : %s</string>
+    <string name="toast_no_students">Aucun étudiant dans cette classe</string>
+    <string name="msg_students_found">%d Étudiants trouvés</string>
+    <string name="msg_no_students_found">0 Étudiants trouvés</string>
+    <string name="msg_deleting">Suppression...</string>
+    <string name="action_confirm">Confirmer</string>
+    
+    <!-- Attendance Fragment -->
+    <string name="title_mark_all_present">Tout marquer présent</string>
+    <string name="msg_mark_all_present">Êtes-vous sûr de vouloir marquer tous les étudiants comme présents ?</string>
+    <string name="title_mark_all_absent">Tout marquer absent</string>
+    <string name="msg_mark_all_absent">Êtes-vous sûr de vouloir marquer tous les étudiants comme absents ?</string>
+    <string name="title_clear_attendance">Effacer les présences</string>
+    <string name="msg_clear_attendance">Êtes-vous sûr de vouloir effacer tous les enregistrements de présence pour cette session ? Cette action est irréversible.</string>
+    <string name="msg_unlock_to_modify">Déverrouiller pour modifier la présence</string>
+    <string name="msg_students_deleted">%d étudiants supprimés</string>
+    <string name="sort_default">Trier</string>
+    <string name="sort_lastname_asc">Tri: Nom (A-Z)</string>
+    <string name="sort_lastname_desc">Tri: Nom (Z-A)</string>
+    <string name="sort_firstname_asc">Tri: Prénom (A-Z)</string>
+    <string name="sort_firstname_desc">Tri: Prénom (Z-A)</string>
+    <string name="sort_id_matricule">Tri: ID/Matricule</string>
+    
+    <string name="dialog_sort_students_by">Trier les étudiants par</string>
+    <string name="sort_lastname_asc_option">Nom (A-Z)</string>
+    <string name="sort_lastname_desc_option">Nom (Z-A)</string>
+    <string name="sort_firstname_asc_option">Prénom (A-Z)</string>
+    <string name="sort_firstname_desc_option">Prénom (Z-A)</string>
+    <string name="sort_id_matricule_option">ID/Matricule</string>
+    
+    <string name="action_import_from_csv">Importer depuis CSV</string>
+    <string name="action_export_to_csv">Exporter vers CSV</string>
+    <string name="toast_no_students_to_export">Aucun étudiant à exporter</string>
+    
+    <string name="dialog_random_student_title">🎲 Étudiant aléatoire</string>
+    <string name="action_pick_again">Choisir à nouveau</string>
+    <string name="msg_student_count_simple">%d Étudiants</string>
+    <string name="sort_name_asc">Trier par Nom (A-Z)</string>
+    <string name="sort_name_desc">Trier par Nom (Z-A)</string>
+    <string name="sort_id">Trier par ID</string>
+    <string name="sort_name_asc_option">Nom (A-Z)</string>
+    <string name="sort_name_desc_option">Nom (Z-A)</string>
+    <string name="sort_id_option">ID</string>
+    
+    <string name="filter_pos">Pos</string>
+    <string name="filter_neg">Nég</string>
+
+    <string name="dialog_filter_behavior_title">Filtrer les étudiants par comportement</string>
+    <string name="filter_all_students_option">Tous les étudiants</string>
+    <string name="filter_pos_option">Comportement positif (≠0)</string>
+    <string name="filter_neg_option">Comportement négatif (≠0)</string>
+    <string name="action_yes">Oui</string>
+    <string name="dialog_restore_data_title">Restaurer les données</string>
+    <string name="toast_notifications_enabled">Notifications activées</string>
+    <string name="toast_notifications_disabled">Notifications désactivées</string>
+    <string name="dialog_edit_positive_behaviors">Modifier comportements positifs</string>
+    <string name="dialog_edit_negative_behaviors">Modifier comportements négatifs</string>
+    <string name="dialog_edit_grade_categories">Modifier catégories de notes</string>
+    <string name="toast_backup_failed">Échec de la sauvegarde : %s</string>
+    <string name="toast_restore_failed">Échec de la restauration : %s</string>
+    <string name="version_format">Version %s</string>
+    <string name="lang_french">Français</string>
+    <string name="lang_arabic">العربية (Arabe)</string>
+    <string name="toast_name_display_updated">Affichage du nom mis à jour</string>
+    <!-- Widget -->
+    <string name="widget_todays_classes">🗓️ Cours du jour</string>
+    <string name="widget_no_classes">Pas de cours aujourd\'hui ✓</string>
+    
+    <!-- Theme -->
+    <string name="settings_theme_title">Thème</string>
+    <string name="settings_theme_system">Système</string>
+    <string name="settings_theme_light">Clair</string>
+    <string name="settings_theme_dark">Sombre</string>
 </resources>

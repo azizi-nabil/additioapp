@@ -18,13 +18,13 @@ class SettingsFragment : Fragment() {
 
     private val backupLauncher = registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.CreateDocument("application/json")) { uri ->
         uri?.let {
-            viewModel.backupData(it, requireContext().contentResolver)
+            viewModel.backupData(it, requireContext())
         }
     }
 
     private val restoreLauncher = registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.OpenDocument()) { uri ->
         uri?.let {
-            viewModel.restoreData(it, requireContext().contentResolver)
+            viewModel.restoreData(it, requireContext())
         }
     }
 
@@ -51,31 +51,152 @@ class SettingsFragment : Fragment() {
         val btnRestore = view.findViewById<android.widget.LinearLayout>(R.id.btnRestoreData)
         btnRestore.setOnClickListener {
             androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Restore Data")
-                .setMessage("Importing data will overwrite existing records. Are you sure you want to proceed?")
-                .setPositiveButton("Yes") { _, _ ->
+                .setTitle(getString(R.string.dialog_restore_data_title))
+                .setMessage(getString(R.string.msg_restore_data_confirm))
+                .setPositiveButton(getString(R.string.action_yes)) { _, _ ->
                     restoreLauncher.launch(arrayOf("application/json"))
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(getString(R.string.action_cancel), null)
+                .show()
+        }
+
+        // Language selector
+        val btnLanguage = view.findViewById<android.widget.LinearLayout>(R.id.btnLanguage)
+        val textCurrentLanguage = view.findViewById<android.widget.TextView>(R.id.textCurrentLanguage)
+        
+        // Update current language display
+        val currentLang = com.example.additioapp.util.LocaleHelper.getLanguage(requireContext())
+        textCurrentLanguage.text = com.example.additioapp.util.LocaleHelper.getLanguageDisplayName(currentLang)
+        
+        btnLanguage.setOnClickListener {
+            val languages = com.example.additioapp.util.LocaleHelper.getSupportedLanguages()
+            val languageNames = com.example.additioapp.util.LocaleHelper.getSupportedLanguageNames()
+            val currentIndex = languages.indexOf(currentLang).coerceAtLeast(0)
+            
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.dialog_select_language))
+                .setSingleChoiceItems(languageNames, currentIndex) { dialog, which ->
+                    val selectedLang = languages[which]
+                    com.example.additioapp.util.LocaleHelper.setLocale(requireContext(), selectedLang)
+                    dialog.dismiss()
+                    
+                    // Restart activity to apply language change
+                    requireActivity().recreate()
+                }
+                .setNegativeButton(getString(R.string.action_cancel), null)
+                .show()
+        }
+
+        // Version Display
+        val textAppVersion = view.findViewById<android.widget.TextView>(R.id.textAppVersion)
+        try {
+            val packageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
+            textAppVersion.text = getString(R.string.version_format, packageInfo.versionName)
+        } catch (e: Exception) {
+            textAppVersion.text = getString(R.string.settings_version)
+        }
+        
+        // Theme Selector
+        val btnTheme = view.findViewById<android.widget.LinearLayout>(R.id.btnTheme)
+        val textCurrentTheme = view.findViewById<android.widget.TextView>(R.id.textCurrentTheme)
+        val themePrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val currentThemeMode = themePrefs.getInt("pref_theme", androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        
+        textCurrentTheme.text = when (currentThemeMode) {
+            androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO -> getString(R.string.settings_theme_light)
+            androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES -> getString(R.string.settings_theme_dark)
+            else -> getString(R.string.settings_theme_system)
+        }
+        
+        btnTheme.setOnClickListener {
+            val options = arrayOf(
+                getString(R.string.settings_theme_system),
+                getString(R.string.settings_theme_light),
+                getString(R.string.settings_theme_dark)
+            )
+            val modes = arrayOf(
+                androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+                androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO,
+                androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+            )
+            val currentIndex = modes.indexOf(currentThemeMode).coerceAtLeast(0)
+            
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.settings_theme_title))
+                .setSingleChoiceItems(options, currentIndex) { dialog, which ->
+                    val selectedMode = modes[which]
+                    themePrefs.edit().putInt("pref_theme", selectedMode).apply()
+                    // Also save to additio_prefs for Application startup
+                    requireContext().getSharedPreferences("additio_prefs", android.content.Context.MODE_PRIVATE)
+                        .edit().putInt("pref_theme", selectedMode).apply()
+                    androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(selectedMode)
+                    dialog.dismiss()
+                }
+                .setNegativeButton(getString(R.string.action_cancel), null)
+                .show()
+        }
+        
+        // Notification Settings
+        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val switchNotifications = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.switchNotifications)
+        val btnReminderTime = view.findViewById<android.widget.LinearLayout>(R.id.btnReminderTime)
+        val textReminderTime = view.findViewById<android.widget.TextView>(R.id.textReminderTime)
+        
+        // Load notification preferences
+        switchNotifications.isChecked = prefs.getBoolean("pref_notifications_enabled", true)
+        val reminderMinutes = prefs.getInt("pref_reminder_minutes", 60)
+        textReminderTime.text = when (reminderMinutes) {
+            30 -> getString(R.string.settings_reminder_30min)
+            60 -> getString(R.string.settings_reminder_1hour)
+            120 -> getString(R.string.settings_reminder_2hours)
+            1440 -> getString(R.string.settings_reminder_1day)
+            else -> getString(R.string.settings_reminder_1hour)
+        }
+        
+        switchNotifications.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("pref_notifications_enabled", isChecked).apply()
+            Toast.makeText(requireContext(), 
+                if (isChecked) getString(R.string.toast_notifications_enabled) else getString(R.string.toast_notifications_disabled), 
+                Toast.LENGTH_SHORT).show()
+        }
+        
+        btnReminderTime.setOnClickListener {
+            val options = arrayOf(
+                getString(R.string.settings_reminder_30min),
+                getString(R.string.settings_reminder_1hour),
+                getString(R.string.settings_reminder_2hours),
+                getString(R.string.settings_reminder_1day)
+            )
+            val values = arrayOf(30, 60, 120, 1440)
+            val currentIndex = values.indexOf(prefs.getInt("pref_reminder_minutes", 60)).coerceAtLeast(0)
+            
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.settings_reminder_time))
+                .setSingleChoiceItems(options, currentIndex) { dialog, which ->
+                    prefs.edit().putInt("pref_reminder_minutes", values[which]).apply()
+                    textReminderTime.text = options[which]
+                    dialog.dismiss()
+                }
+                .setNegativeButton(getString(R.string.action_cancel), null)
                 .show()
         }
 
         // Customization
         val btnEditPositive = view.findViewById<android.widget.LinearLayout>(R.id.btnEditPositiveBehaviors)
         btnEditPositive.setOnClickListener {
-            showEditListDialog("Edit Positive Behaviors", "pref_positive_behaviors", 
+            showEditListDialog(getString(R.string.dialog_edit_positive_behaviors), "pref_positive_behaviors", 
                 listOf("Active Participation", "Helping Others", "Homework Completed", "Respectful Behavior", "Prepared for Class", "Leadership / Takes Initiative", "Other"))
         }
 
         val btnEditNegative = view.findViewById<android.widget.LinearLayout>(R.id.btnEditNegativeBehaviors)
         btnEditNegative.setOnClickListener {
-            showEditListDialog("Edit Negative Behaviors", "pref_negative_behaviors", 
+            showEditListDialog(getString(R.string.dialog_edit_negative_behaviors), "pref_negative_behaviors", 
                 listOf("Disturbance / Disrupting Class", "No Homework", "Late Arrival", "Disrespect (teacher/peers)", "Off-Task", "Using Phone", "Other"))
         }
 
         val btnEditCategories = view.findViewById<android.widget.LinearLayout>(R.id.btnEditGradeCategories)
         btnEditCategories.setOnClickListener {
-            showEditListDialog("Edit Grade Categories", "pref_grade_categories", 
+            showEditListDialog(getString(R.string.dialog_edit_grade_categories), "pref_grade_categories", 
                 listOf("Exam", "CC", "Test", "Homework", "Project", "Other"))
         }
 
@@ -83,7 +204,7 @@ class SettingsFragment : Fragment() {
             result.onSuccess {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }.onFailure {
-                Toast.makeText(requireContext(), "Backup Failed: ${it.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), getString(R.string.toast_backup_failed, it.message), Toast.LENGTH_LONG).show()
             }
         }
 
@@ -92,30 +213,29 @@ class SettingsFragment : Fragment() {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
                 // Ideally, restart app or refresh data. For now, a toast is fine.
             }.onFailure {
-                Toast.makeText(requireContext(), "Restore Failed: ${it.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), getString(R.string.toast_restore_failed, it.message), Toast.LENGTH_LONG).show()
             }
         }
 
         // Name Language Setting
-        val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
         val btnNameLanguage = view.findViewById<android.widget.LinearLayout>(R.id.btnNameLanguage)
         val textNameLanguage = view.findViewById<android.widget.TextView>(R.id.textNameLanguage)
         
         // Load current setting
-        val currentLang = prefs.getString("pref_name_language", "french") ?: "french"
-        textNameLanguage.text = if (currentLang == "arabic") "العربية (Arabic)" else "French"
+        val currentNameLang = prefs.getString("pref_name_language", "french") ?: "french"
+        textNameLanguage.text = if (currentNameLang == "arabic") getString(R.string.lang_arabic) else getString(R.string.lang_french)
 
         btnNameLanguage.setOnClickListener {
-            val options = arrayOf("French", "العربية (Arabic)")
+            val options = arrayOf(getString(R.string.lang_french), getString(R.string.lang_arabic))
             val currentIndex = if (prefs.getString("pref_name_language", "french") == "arabic") 1 else 0
             
             androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Student Name Display")
+                .setTitle(getString(R.string.dialog_student_name_display))
                 .setSingleChoiceItems(options, currentIndex) { dialog, which ->
                     val newLang = if (which == 1) "arabic" else "french"
                     prefs.edit().putString("pref_name_language", newLang).apply()
                     textNameLanguage.text = options[which]
-                    Toast.makeText(requireContext(), "Name display updated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_name_display_updated), Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
                 }
                 .setNegativeButton("Cancel", null)
