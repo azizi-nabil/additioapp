@@ -1929,6 +1929,24 @@ class PlannerFragment : Fragment() {
             }
         }
         
+        // Long-press to clear replacement date
+        editReplacementDate.setOnLongClickListener {
+            if (selectedReplacementDate != null) {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.action_clear)
+                    .setMessage(R.string.msg_clear_replacement_date)
+                    .setPositiveButton(R.string.action_clear) { _, _ ->
+                        selectedReplacementDate = null
+                        editReplacementDate.setText("")
+                        layoutReplacementRoom.visibility = View.GONE
+                        editReplacementRoom.setText("")
+                    }
+                    .setNegativeButton(R.string.action_cancel, null)
+                    .show()
+            }
+            true
+        }
+        
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle(if (existingAbsence == null) R.string.absence_record_title else R.string.action_edit)
             .setView(dialogView)

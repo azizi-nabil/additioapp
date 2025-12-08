@@ -20,36 +20,19 @@
             app:navigationIcon="@drawable/ic_arrow_back_24dp"
             app:navigationIconTint="@android:color/white">
 
-            <!-- Tab name chip on right -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="#33FFFFFF">
-
-                <TextView
-                    android:id="@+id/textTabName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:paddingHorizontal="14dp"
-                    android:text="@string/nav_students"
-                    android:textSize="13sp"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"/>
-            </com.google.android.material.card.MaterialCardView>
+            <!-- Tab name chip removed as labels are now on tabs -->
         </com.google.android.material.appbar.MaterialToolbar>
 
         <!-- Modern Tab Layout -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             app:tabIconTint="@color/tab_icon_color"
+            app:tabTextColor="@android:color/white"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextAppearance="@style/SmallTabTextAppearance"
             app:tabIndicatorColor="@android:color/white"
             app:tabIndicatorHeight="3dp"
             app:tabIndicatorFullWidth="false"

@@ -411,6 +411,7 @@
     <string name="label_all_present">All</string>
     <string name="label_all_absent">All</string>
     <string name="action_clear">Clear</string>
+    <string name="msg_clear_replacement_date">Clear the replacement date? This will set the status back to Pending.</string>
     <string name="label_overview">Overview</string>
     <string name="label_from">From</string>
     <string name="label_to">To</string>
@@ -474,6 +475,8 @@
     <string name="settings_tip_swipe_desc">Quickly switch between Students, Attendance, Grades, and Behavior</string>
     <string name="settings_tip_eye">Tap eye button 👁️</string>
     <string name="settings_tip_eye_desc">Hide or show the Add button in Students and Planner screens</string>
+    <string name="settings_tip_replacement">Long-press Replacement Date</string>
+    <string name="settings_tip_replacement_desc">Clear the replacement date to set a replacement back to Pending status</string>
     <string name="settings_version">Version 3.1.1 - Multilingual</string>
     <string name="settings_tagline">Your complete teaching companion</string>
     

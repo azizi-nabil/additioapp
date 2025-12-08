@@ -55,7 +55,7 @@ class ClassDetailFragment : Fragment() {
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
 
-        val textTabName = view.findViewById<android.widget.TextView>(R.id.textTabName)
+
 
         // Setup Toolbar
         toolbar.setNavigationOnClickListener {
@@ -66,33 +66,28 @@ class ClassDetailFragment : Fragment() {
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            // Set icons instead of text
-            tab.icon = when (position) {
-                0 -> androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_school_24dp)
-                1 -> androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_calendar_today_24dp)
-                2 -> androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_grade)
-                3 -> androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_thumb_up_24dp)
-                else -> null
+            // Set icons and text
+            when (position) {
+                0 -> {
+                    tab.icon = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_school_24dp)
+                    tab.text = getString(R.string.students_title)
+                }
+                1 -> {
+                    tab.icon = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_calendar_today_24dp)
+                    tab.text = getString(R.string.attendance_title)
+                }
+                2 -> {
+                    tab.icon = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_grade)
+                    tab.text = getString(R.string.grades_title)
+                }
+                3 -> {
+                    tab.icon = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_thumb_up_24dp)
+                    tab.text = getString(R.string.behavior_title)
+                }
             }
         }.attach()
 
-        // Update header text on tab selection
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                textTabName.text = when (tab?.position) {
-                    0 -> getString(R.string.students_title)
-                    1 -> getString(R.string.attendance_title)
-                    2 -> getString(R.string.grades_title)
-                    3 -> getString(R.string.behavior_title)
-                    else -> ""
-                }
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
-        
-        // Set initial text
-        textTabName.text = getString(R.string.students_title)
+
 
         // Fetch class details
         lifecycleScope.launch {
