@@ -119,7 +119,7 @@ class AttendanceHistoryFragment : Fragment() {
                     .setPositiveButton("Delete") { _, _ ->
                         lifecycleScope.launch {
                             attendanceViewModel.deleteSession(sessionId)
-                            Toast.makeText(requireContext(), "Session deleted", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), getString(R.string.toast_session_deleted), Toast.LENGTH_SHORT).show()
                             loadSummaries()
                         }
                     }
@@ -236,7 +236,7 @@ class AttendanceHistoryFragment : Fragment() {
 
     private fun exportCsv() {
         if (filteredSummaries.isEmpty()) {
-            Toast.makeText(requireContext(), "No attendance to export", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.toast_no_attendance_to_export), Toast.LENGTH_SHORT).show()
             return
         }
         val fmt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -262,9 +262,9 @@ class AttendanceHistoryFragment : Fragment() {
                     )
                 }
             }
-            Toast.makeText(requireContext(), "Exported to ${file.absolutePath}", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), getString(R.string.toast_exported_to, file.absolutePath), Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.toast_export_failed, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -273,7 +273,7 @@ class AttendanceHistoryFragment : Fragment() {
         val fileName = "attendance_${fmt.format(startDate.time)}_${fmt.format(endDate.time)}_share.csv"
         val file = File(requireContext().cacheDir, fileName)
         if (filteredSummaries.isEmpty()) {
-            Toast.makeText(requireContext(), "No attendance to share", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.toast_no_attendance_to_share), Toast.LENGTH_SHORT).show()
             return
         }
         try {
@@ -308,7 +308,7 @@ class AttendanceHistoryFragment : Fragment() {
             }
             startActivity(Intent.createChooser(intent, "Share attendance CSV"))
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Share failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.toast_share_failed, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 

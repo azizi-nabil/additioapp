@@ -262,7 +262,7 @@ class SettingsFragment : Fragment() {
                 .setSingleChoiceItems(sortOptions, selectedIndex) { dialog, which ->
                     prefs.edit().putString("pref_sort_order", sortValues[which]).apply()
                     textSortOrder.text = sortOptions[which]
-                    Toast.makeText(requireContext(), "Sort order updated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_sort_order_updated), Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
                 }
                 .setNegativeButton("Cancel", null)
@@ -289,7 +289,7 @@ class SettingsFragment : Fragment() {
                 .setSingleChoiceItems(sizeOptions, selectedIndex) { dialog, which ->
                     prefs.edit().putString("pref_list_size", sizeValues[which]).apply()
                     textListSize.text = sizeOptions[which]
-                    Toast.makeText(requireContext(), "List size updated", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_list_size_updated), Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
                 }
                 .setNegativeButton("Cancel", null)
@@ -301,7 +301,7 @@ class SettingsFragment : Fragment() {
         switchShowGlobalSearch.isChecked = prefs.getBoolean("pref_show_global_search", true)
         switchShowGlobalSearch.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean("pref_show_global_search", isChecked).apply()
-            Toast.makeText(requireContext(), if (isChecked) "Global search enabled" else "Global search hidden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), if (isChecked) getString(R.string.toast_global_search_enabled) else getString(R.string.toast_global_search_hidden), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -327,7 +327,7 @@ class SettingsFragment : Fragment() {
                 val newText = input.text.toString()
                 val newList = newText.split("\n").map { it.trim() }.filter { it.isNotEmpty() }.toSet()
                 prefs.edit().putStringSet(prefKey, newList).apply()
-                Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.toast_saved), Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel", null)
             .show()

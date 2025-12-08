@@ -294,9 +294,9 @@ class AnalyticsFragment : Fragment() {
                 }
                 startActivity(Intent.createChooser(intent, "Share Report"))
 
-                Toast.makeText(requireContext(), "Report exported: $fileName", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.toast_report_exported, fileName), Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.toast_export_failed, e.message ?: ""), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -346,10 +346,10 @@ class AnalyticsFragment : Fragment() {
                 }
                 startActivity(Intent.createChooser(intent, "Share Excel Report"))
 
-                Toast.makeText(requireContext(), "Excel exported: $fileName", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.toast_excel_exported, fileName), Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(requireContext(), "Export failed: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), getString(R.string.toast_export_failed, e.message ?: ""), Toast.LENGTH_LONG).show()
             }
         }
     }

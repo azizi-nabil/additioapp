@@ -578,7 +578,7 @@ class PlannerFragment : Fragment() {
         
         // Removed validation to ensure classes list is populated. Assuming classes isn't filtered here for brevity or checked inside
         if (classes.isEmpty()) {
-            Toast.makeText(requireContext(), "Create a class first", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), getString(R.string.toast_create_class_first), Toast.LENGTH_LONG).show()
             return
         }
 
@@ -699,7 +699,7 @@ class PlannerFragment : Fragment() {
             .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
                 if (selectedClassIds.isEmpty()) {
-                    Toast.makeText(requireContext(), "Please select at least one class", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.toast_select_at_least_one_class), Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
 
