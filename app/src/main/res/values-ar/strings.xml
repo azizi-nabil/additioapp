@@ -578,8 +578,7 @@
     <string name="msg_task_duplicated">تم نسخ المهمة</string>
     <string name="msg_event_duplicated">تم نسخ الحدث</string>
     <!-- Students Fragment -->
-    <string name="toast_export_success">تم تصدير %d طالب</string>
-    <string name="toast_export_failed">فشل التصدير: %s</string>
+    <string name="export_backup_success">تم تصدير النسخة الاحتياطية: %s</string>
     <string name="toast_no_students">لا يوجد طلاب في هذا الفصل</string>
     <string name="msg_students_found">تم العثور على %d طالب</string>
     <string name="msg_no_students_found">0 طالب</string>

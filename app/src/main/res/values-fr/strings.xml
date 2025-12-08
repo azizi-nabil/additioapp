@@ -578,8 +578,7 @@
     <string name="msg_task_duplicated">Tâche dupliquée</string>
     <string name="msg_event_duplicated">Événement dupliqué</string>
     <!-- Students Fragment -->
-    <string name="toast_export_success">%d étudiants exportés</string>
-    <string name="toast_export_failed">Échec de l\'exportation : %s</string>
+    <string name="export_backup_success">Sauvegarde exportée : %s</string>
     <string name="toast_no_students">Aucun étudiant dans cette classe</string>
     <string name="msg_students_found">%d Étudiants trouvés</string>
     <string name="msg_no_students_found">0 Étudiants trouvés</string>
