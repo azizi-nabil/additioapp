@@ -1659,6 +1659,72 @@ class PlannerFragment : Fragment() {
                     recyclerView.adapter = absenceAdapter
                     recyclerView.layoutManager = LinearLayoutManager(requireContext())
                     
+                    // Swipe gestures for pending/scheduled absences
+                    val pendingSwipeCallback = object : androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback(
+                        0, androidx.recyclerview.widget.ItemTouchHelper.LEFT or androidx.recyclerview.widget.ItemTouchHelper.RIGHT
+                    ) {
+                        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder) = false
+                        
+                        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                            val position = viewHolder.adapterPosition
+                            if (position >= 0 && position < absenceAdapter.currentList.size) {
+                                val absence = absenceAdapter.currentList[position]
+                                when (direction) {
+                                    androidx.recyclerview.widget.ItemTouchHelper.LEFT -> {
+                                        deleteAbsence(absence, recyclerView, textNoAbsences, textPendingCount)
+                                    }
+                                    androidx.recyclerview.widget.ItemTouchHelper.RIGHT -> {
+                                        // Complete if scheduled, schedule if pending
+                                        if (absence.status == TeacherAbsenceEntity.STATUS_SCHEDULED) {
+                                            markAbsenceCompleted(absence, recyclerView, textNoAbsences, textPendingCount)
+                                        } else {
+                                            showScheduleReplacementDialog(absence, recyclerView, textNoAbsences, textPendingCount)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        override fun onChildDraw(c: android.graphics.Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                                                 dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+                            val itemView = viewHolder.itemView
+                            val paint = android.graphics.Paint()
+                            val iconMargin = 32
+                            
+                            if (dX > 0) {
+                                // Swipe right - Complete/Schedule (green)
+                                paint.color = Color.parseColor("#4CAF50")
+                                c.drawRect(itemView.left.toFloat(), itemView.top.toFloat(), dX, itemView.bottom.toFloat(), paint)
+                                val icon = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_circle)
+                                if (icon != null) {
+                                    icon.setTint(Color.WHITE)
+                                    val iconTop = itemView.top + (itemView.height - icon.intrinsicHeight) / 2
+                                    val iconBottom = iconTop + icon.intrinsicHeight
+                                    val iconLeft = itemView.left + iconMargin
+                                    val iconRight = iconLeft + icon.intrinsicWidth
+                                    icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                                    icon.draw(c)
+                                }
+                            } else if (dX < 0) {
+                                // Swipe left - Delete (red)
+                                paint.color = Color.parseColor("#F44336")
+                                c.drawRect(itemView.right.toFloat() + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat(), paint)
+                                val icon = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete)
+                                if (icon != null) {
+                                    icon.setTint(Color.WHITE)
+                                    val iconTop = itemView.top + (itemView.height - icon.intrinsicHeight) / 2
+                                    val iconBottom = iconTop + icon.intrinsicHeight
+                                    val iconLeft = itemView.right - iconMargin - icon.intrinsicWidth
+                                    val iconRight = itemView.right - iconMargin
+                                    icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                                    icon.draw(c)
+                                }
+                            }
+                            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        }
+                    }
+                    androidx.recyclerview.widget.ItemTouchHelper(pendingSwipeCallback).attachToRecyclerView(recyclerView)
+                    
                     // Completed adapter
                     val completedAdapter = AbsenceAdapter(
                         classMap = classMap,
@@ -1669,6 +1735,68 @@ class PlannerFragment : Fragment() {
                     )
                     recyclerCompleted.adapter = completedAdapter
                     recyclerCompleted.layoutManager = LinearLayoutManager(requireContext())
+                    
+                    // Swipe gestures for completed absences (swipe left to delete, right to revert to scheduled)
+                    val completedSwipeCallback = object : androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback(
+                        0, androidx.recyclerview.widget.ItemTouchHelper.LEFT or androidx.recyclerview.widget.ItemTouchHelper.RIGHT
+                    ) {
+                        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder) = false
+                        
+                        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                            val position = viewHolder.adapterPosition
+                            if (position >= 0 && position < completedAdapter.currentList.size) {
+                                val absence = completedAdapter.currentList[position]
+                                when (direction) {
+                                    androidx.recyclerview.widget.ItemTouchHelper.LEFT -> {
+                                        deleteAbsence(absence, recyclerView, textNoAbsences, textPendingCount)
+                                    }
+                                    androidx.recyclerview.widget.ItemTouchHelper.RIGHT -> {
+                                        // Revert to scheduled
+                                        showScheduleReplacementDialog(absence, recyclerView, textNoAbsences, textPendingCount)
+                                    }
+                                }
+                            }
+                        }
+                        
+                        override fun onChildDraw(c: android.graphics.Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                                                 dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+                            val itemView = viewHolder.itemView
+                            val paint = android.graphics.Paint()
+                            val iconMargin = 32
+                            
+                            if (dX > 0) {
+                                // Swipe right - Revert to scheduled (orange)
+                                paint.color = Color.parseColor("#FF9800")
+                                c.drawRect(itemView.left.toFloat(), itemView.top.toFloat(), dX, itemView.bottom.toFloat(), paint)
+                                val icon = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_swap_horiz)
+                                if (icon != null) {
+                                    icon.setTint(Color.WHITE)
+                                    val iconTop = itemView.top + (itemView.height - icon.intrinsicHeight) / 2
+                                    val iconBottom = iconTop + icon.intrinsicHeight
+                                    val iconLeft = itemView.left + iconMargin
+                                    val iconRight = iconLeft + icon.intrinsicWidth
+                                    icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                                    icon.draw(c)
+                                }
+                            } else if (dX < 0) {
+                                // Swipe left - Delete (red)
+                                paint.color = Color.parseColor("#F44336")
+                                c.drawRect(itemView.right.toFloat() + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat(), paint)
+                                val icon = androidx.core.content.ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete)
+                                if (icon != null) {
+                                    icon.setTint(Color.WHITE)
+                                    val iconTop = itemView.top + (itemView.height - icon.intrinsicHeight) / 2
+                                    val iconBottom = iconTop + icon.intrinsicHeight
+                                    val iconLeft = itemView.right - iconMargin - icon.intrinsicWidth
+                                    val iconRight = itemView.right - iconMargin
+                                    icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                                    icon.draw(c)
+                                }
+                            }
+                            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        }
+                    }
+                    androidx.recyclerview.widget.ItemTouchHelper(completedSwipeCallback).attachToRecyclerView(recyclerCompleted)
                 }
             }
             
