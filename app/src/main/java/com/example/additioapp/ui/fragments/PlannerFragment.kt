@@ -191,11 +191,11 @@ class PlannerFragment : Fragment() {
             updateToggleFabIcon()
         }
 
-        // Setup tabs
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_events)))
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_tasks)))
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_schedule)))
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_replacements)))
+        // Setup tabs with icons
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_calendar_today_24dp).setText("Events"))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_check_circle).setText("Tasks"))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_schedule_24dp).setText("Schedule"))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_swap_horiz).setText("Replace"))
 
         // Setup day chips for schedule (chipGroupDays is now used internally)
         setupDayButtons(chipGroupDays, textScheduleDay, recyclerSchedule, textNoSchedule)
