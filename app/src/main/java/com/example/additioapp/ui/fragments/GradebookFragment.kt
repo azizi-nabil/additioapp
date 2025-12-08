@@ -73,7 +73,7 @@ class GradebookFragment : Fragment() {
             selectedClass?.let {
                 // Navigate to class detail for adding grade item
                 findNavController().navigate(R.id.classesFragment)
-            } ?: Toast.makeText(requireContext(), "Select a class first", Toast.LENGTH_SHORT).show()
+            } ?: Toast.makeText(requireContext(), getString(R.string.toast_select_class_first), Toast.LENGTH_SHORT).show()
         }
 
         classViewModel.allClasses.observe(viewLifecycleOwner) { classList ->
