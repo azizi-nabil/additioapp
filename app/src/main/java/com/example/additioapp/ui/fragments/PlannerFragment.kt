@@ -196,6 +196,9 @@ class PlannerFragment : Fragment() {
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_check_circle).setText("Tasks"))
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_schedule_24dp).setText("Schedule"))
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_swap_horiz).setText("Replace"))
+        
+        // Set icon tint to match text color (colored when selected, gray when not)
+        tabLayout.setTabIconTintResource(R.color.tab_icon_selector)
 
         // Setup day chips for schedule (chipGroupDays is now used internally)
         setupDayButtons(chipGroupDays, textScheduleDay, recyclerSchedule, textNoSchedule)
