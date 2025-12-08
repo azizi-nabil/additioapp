@@ -651,5 +651,31 @@
     <string name="settings_theme_system">النظام</string>
     <string name="settings_theme_light">فاتح</string>
     <string name="settings_theme_dark">داكن</string>
+    
+    <!-- Teacher Absence Feature -->
+    <string name="absence_record_title">تسجيل غياب</string>
+    <string name="absence_session_type">نوع الحصة</string>
+    <string name="absence_type_td">TD</string>
+    <string name="absence_type_tp">TP</string>
+    <string name="absence_type_course">محاضرة</string>
+    <string name="absence_date">تاريخ الغياب</string>
+    <string name="absence_replacement_date">تاريخ التعويض (اختياري)</string>
+    <string name="absence_reason">السبب (اختياري)</string>
+    <string name="notes">ملاحظات (اختياري)</string>
+    <string name="absence_status_pending">قيد الانتظار</string>
+    <string name="absence_status_scheduled">مجدولة</string>
+    <string name="absence_status_completed">مكتملة</string>
+    <string name="absence_absent_on">غائب: %s</string>
+    <string name="absence_replacement_on">التعويض: %s</string>
+    <string name="schedule_replacement">جدولة التعويض</string>
+    <string name="mark_completed">وضع علامة مكتمل</string>
+    <string name="absence_pending_count">%d تعويض(ات) قيد الانتظار</string>
+    <string name="absence_no_pending">لا توجد تعويضات معلقة</string>
+    <string name="toast_absence_added">تم تسجيل الغياب</string>
+    <string name="toast_absence_updated">تم تحديث الغياب</string>
+    <string name="toast_absence_deleted">تم حذف الغياب</string>
+    <string name="toast_replacement_scheduled">تم جدولة التعويض</string>
+    <string name="toast_marked_completed">تم وضع علامة مكتمل</string>
+    <string name="absence_section_title">📋 غيابات المعلم</string>
 </resources>
 

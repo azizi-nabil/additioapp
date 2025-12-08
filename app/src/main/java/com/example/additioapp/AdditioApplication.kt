@@ -31,6 +31,7 @@ class AdditioApplication : Application() {
             database.eventDao(),
             database.taskDao(),
             database.scheduleItemDao(),
+            database.teacherAbsenceDao(),
             getSharedPreferences("additio_prefs", MODE_PRIVATE)
         ) 
     }

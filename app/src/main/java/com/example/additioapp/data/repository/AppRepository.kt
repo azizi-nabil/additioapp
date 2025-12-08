@@ -13,6 +13,7 @@ import com.example.additioapp.data.dao.ScheduleItemDao
 import com.example.additioapp.data.dao.SessionDao
 import com.example.additioapp.data.dao.StudentDao
 import com.example.additioapp.data.dao.TaskDao
+import com.example.additioapp.data.dao.TeacherAbsenceDao
 import com.example.additioapp.data.dao.UnitDao
 import com.example.additioapp.data.model.AttendanceRecordEntity
 import com.example.additioapp.data.model.AttendanceStatusEntity
@@ -27,7 +28,9 @@ import com.example.additioapp.data.model.ScheduleItemEntity
 import com.example.additioapp.data.model.SessionEntity
 import com.example.additioapp.data.model.StudentEntity
 import com.example.additioapp.data.model.TaskEntity
+import com.example.additioapp.data.model.TeacherAbsenceEntity
 import com.example.additioapp.data.model.UnitEntity
+import kotlinx.coroutines.flow.Flow
 
 class AppRepository(
     private val classDao: ClassDao,
@@ -43,6 +46,7 @@ class AppRepository(
     private val eventDao: EventDao,
     private val taskDao: TaskDao,
     private val scheduleItemDao: ScheduleItemDao,
+    private val teacherAbsenceDao: TeacherAbsenceDao,
     private val sharedPreferences: android.content.SharedPreferences
 ) {
     
@@ -530,4 +534,50 @@ class AppRepository(
         return null
     }
     */
+    
+    // ===== Teacher Absences =====
+    val allAbsences: Flow<List<TeacherAbsenceEntity>> = teacherAbsenceDao.getAllAbsences()
+    val pendingAbsences: Flow<List<TeacherAbsenceEntity>> = teacherAbsenceDao.getPendingAbsences()
+    val scheduledAbsences: Flow<List<TeacherAbsenceEntity>> = teacherAbsenceDao.getScheduledAbsences()
+    val pendingCount: Flow<Int> = teacherAbsenceDao.getPendingCount()
+    
+    fun getAbsencesForClass(classId: Long): Flow<List<TeacherAbsenceEntity>> = 
+        teacherAbsenceDao.getAbsencesForClass(classId)
+    
+    fun getAbsencesByStatus(status: String): Flow<List<TeacherAbsenceEntity>> = 
+        teacherAbsenceDao.getAbsencesByStatus(status)
+    
+    suspend fun insertAbsence(absence: TeacherAbsenceEntity): Long = 
+        teacherAbsenceDao.insert(absence)
+    
+    suspend fun updateAbsence(absence: TeacherAbsenceEntity) = 
+        teacherAbsenceDao.update(absence)
+    
+    suspend fun deleteAbsence(absence: TeacherAbsenceEntity) = 
+        teacherAbsenceDao.delete(absence)
+    
+    suspend fun deleteAbsenceById(id: Long) = 
+        teacherAbsenceDao.deleteById(id)
+    
+    suspend fun getAbsenceById(id: Long): TeacherAbsenceEntity? = 
+        teacherAbsenceDao.getAbsenceById(id)
+    
+    suspend fun scheduleReplacement(id: Long, replacementDate: Long) = 
+        teacherAbsenceDao.scheduleReplacement(id, replacementDate)
+    
+    suspend fun markAbsenceCompleted(id: Long) = 
+        teacherAbsenceDao.markCompleted(id)
+    
+    suspend fun updateAbsenceStatus(id: Long, status: String) = 
+        teacherAbsenceDao.updateStatus(id, status)
+    
+    // For backup/restore
+    suspend fun getAllAbsencesSync(): List<TeacherAbsenceEntity> = 
+        teacherAbsenceDao.getAllAbsencesSync()
+    
+    suspend fun insertAllAbsences(absences: List<TeacherAbsenceEntity>) = 
+        teacherAbsenceDao.insertAll(absences)
+    
+    suspend fun deleteAllAbsences() = 
+        teacherAbsenceDao.deleteAll()
 }

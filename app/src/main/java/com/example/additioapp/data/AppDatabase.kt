@@ -19,6 +19,7 @@ import com.example.additioapp.data.dao.ScheduleItemDao
 import com.example.additioapp.data.dao.SessionDao
 import com.example.additioapp.data.dao.StudentDao
 import com.example.additioapp.data.dao.TaskDao
+import com.example.additioapp.data.dao.TeacherAbsenceDao
 import com.example.additioapp.data.dao.UnitDao
 import com.example.additioapp.data.model.AttendanceRecordEntity
 import com.example.additioapp.data.model.AttendanceStatusEntity
@@ -36,6 +37,7 @@ import com.example.additioapp.data.model.TaskEntity
 import com.example.additioapp.data.model.TaskClassCrossRef
 import com.example.additioapp.data.model.EventClassCrossRef
 import com.example.additioapp.data.model.ScheduleItemClassCrossRef
+import com.example.additioapp.data.model.TeacherAbsenceEntity
 import com.example.additioapp.data.model.UnitEntity
 
 @Database(
@@ -56,9 +58,10 @@ import com.example.additioapp.data.model.UnitEntity
         TaskClassCrossRef::class,
         EventClassCrossRef::class,
         ScheduleItemEntity::class,
-        ScheduleItemClassCrossRef::class
+        ScheduleItemClassCrossRef::class,
+        TeacherAbsenceEntity::class
     ],
-    version = 17,
+    version = 18,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -75,6 +78,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
     abstract fun taskDao(): TaskDao
     abstract fun scheduleItemDao(): ScheduleItemDao
+    abstract fun teacherAbsenceDao(): TeacherAbsenceDao
 
     companion object {
         @Volatile

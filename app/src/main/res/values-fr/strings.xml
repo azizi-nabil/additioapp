@@ -651,4 +651,30 @@
     <string name="settings_theme_system">Système</string>
     <string name="settings_theme_light">Clair</string>
     <string name="settings_theme_dark">Sombre</string>
+    
+    <!-- Teacher Absence Feature -->
+    <string name="absence_record_title">Enregistrer une Absence</string>
+    <string name="absence_session_type">Type de Séance</string>
+    <string name="absence_type_td">TD</string>
+    <string name="absence_type_tp">TP</string>
+    <string name="absence_type_course">Cours</string>
+    <string name="absence_date">Date d\'Absence</string>
+    <string name="absence_replacement_date">Date de Remplacement (Optionnel)</string>
+    <string name="absence_reason">Raison (Optionnel)</string>
+    <string name="notes">Notes (Optionnel)</string>
+    <string name="absence_status_pending">EN ATTENTE</string>
+    <string name="absence_status_scheduled">PROGRAMMÉ</string>
+    <string name="absence_status_completed">TERMINÉ</string>
+    <string name="absence_absent_on">Absent : %s</string>
+    <string name="absence_replacement_on">Remplacement : %s</string>
+    <string name="schedule_replacement">Programmer le Remplacement</string>
+    <string name="mark_completed">Marquer comme Terminé</string>
+    <string name="absence_pending_count">%d remplacement(s) en attente</string>
+    <string name="absence_no_pending">Aucun remplacement en attente</string>
+    <string name="toast_absence_added">Absence enregistrée</string>
+    <string name="toast_absence_updated">Absence mise à jour</string>
+    <string name="toast_absence_deleted">Absence supprimée</string>
+    <string name="toast_replacement_scheduled">Remplacement programmé</string>
+    <string name="toast_marked_completed">Marqué comme terminé</string>
+    <string name="absence_section_title">📋 Absences Enseignant</string>
 </resources>
