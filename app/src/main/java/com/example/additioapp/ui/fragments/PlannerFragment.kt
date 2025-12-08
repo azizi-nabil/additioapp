@@ -23,12 +23,14 @@ import com.example.additioapp.data.model.ClassEntity
 import com.example.additioapp.data.model.EventEntity
 import com.example.additioapp.data.model.ScheduleItemEntity
 import com.example.additioapp.data.model.TaskEntity
+import com.example.additioapp.data.model.TeacherAbsenceEntity
 import com.example.additioapp.ui.AdditioViewModelFactory
 import com.example.additioapp.ui.adapters.CalendarAdapter
 import com.example.additioapp.ui.adapters.CalendarDay
 import com.example.additioapp.ui.adapters.EventAdapter
 import com.example.additioapp.ui.adapters.ScheduleAdapter
 import com.example.additioapp.ui.adapters.TaskAdapter
+import com.example.additioapp.ui.adapters.AbsenceAdapter
 import com.example.additioapp.ui.viewmodel.ClassViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -56,11 +58,13 @@ class PlannerFragment : Fragment() {
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var completedTaskAdapter: TaskAdapter
     private lateinit var scheduleAdapter: ScheduleAdapter
+    private lateinit var absenceAdapter: AbsenceAdapter
+    private var classMap: Map<Long, ClassEntity> = emptyMap()
 
     private var currentMonth = Calendar.getInstance()
     private var selectedDate = Calendar.getInstance()
     private var classes: List<ClassEntity> = emptyList()
-    private var currentTab = 0 // 0 = Events, 1 = Tasks, 2 = Schedule
+    private var currentTab = 0 // 0 = Events, 1 = Tasks, 2 = Schedule, 3 = Absences
     private var selectedScheduleDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) // 1=Sun, 2=Mon...
     private var searchQuery = ""
 
@@ -181,9 +185,16 @@ class PlannerFragment : Fragment() {
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_events)))
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_tasks)))
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_schedule)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_absences)))
 
         // Setup day chips for schedule (chipGroupDays is now used internally)
         setupDayButtons(chipGroupDays, textScheduleDay, recyclerSchedule, textNoSchedule)
+        
+        // Find absences view elements
+        val absencesView = view.findViewById<LinearLayout>(R.id.absencesView)
+        val recyclerAbsences = view.findViewById<RecyclerView>(R.id.recyclerAbsences)
+        val textNoAbsences = view.findViewById<TextView>(R.id.textNoAbsences)
+        val textPendingCount = view.findViewById<TextView>(R.id.textPendingCount)
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -194,6 +205,7 @@ class PlannerFragment : Fragment() {
                         eventsView.visibility = View.VISIBLE
                         tasksView.visibility = View.GONE
                         scheduleView.visibility = View.GONE
+                        absencesView.visibility = View.GONE
                         fabAddEvent.text = getString(R.string.action_add_event)
                         fabAddEvent.setIconResource(R.drawable.ic_add)
                     }
@@ -202,6 +214,7 @@ class PlannerFragment : Fragment() {
                         eventsView.visibility = View.GONE
                         tasksView.visibility = View.VISIBLE
                         scheduleView.visibility = View.GONE
+                        absencesView.visibility = View.GONE
                         loadTasks(recyclerTasks, textNoTasks)
                         loadTaskStatistics()
                         fabAddEvent.text = getString(R.string.action_add_task)
@@ -212,8 +225,19 @@ class PlannerFragment : Fragment() {
                         eventsView.visibility = View.GONE
                         tasksView.visibility = View.GONE
                         scheduleView.visibility = View.VISIBLE
+                        absencesView.visibility = View.GONE
                         loadScheduleForDay(recyclerSchedule, textNoSchedule, textScheduleDay)
                         fabAddEvent.text = getString(R.string.action_add_schedule)
+                        fabAddEvent.setIconResource(R.drawable.ic_add)
+                    }
+                    3 -> {
+                        calendarSection.visibility = View.GONE
+                        eventsView.visibility = View.GONE
+                        tasksView.visibility = View.GONE
+                        scheduleView.visibility = View.GONE
+                        absencesView.visibility = View.VISIBLE
+                        loadAbsences(recyclerAbsences, textNoAbsences, textPendingCount)
+                        fabAddEvent.text = getString(R.string.action_add_absence)
                         fabAddEvent.setIconResource(R.drawable.ic_add)
                     }
                 }
@@ -383,6 +407,7 @@ class PlannerFragment : Fragment() {
                 0 -> showAddEventDialog(null)
                 1 -> showAddTaskDialog(null)
                 2 -> showAddScheduleDialog(null)
+                3 -> showAddAbsenceDialog(null, recyclerAbsences, textNoAbsences, textPendingCount)
             }
         }
         
@@ -1585,5 +1610,258 @@ class PlannerFragment : Fragment() {
             editText.setText(String.format("%02d:%02d", h, m))
             onTimeSelected?.invoke(h, m)
         }, hour, minute, true).show()
+    }
+    
+    // ===== TEACHER ABSENCE FUNCTIONS =====
+    
+    private fun loadAbsences(recyclerView: RecyclerView, textNoAbsences: TextView, textPendingCount: TextView) {
+        lifecycleScope.launch {
+            // Update class map for display
+            classViewModel.allClasses.observe(viewLifecycleOwner) { classList ->
+                classes = classList
+                classMap = classList.associateBy { it.id }
+                
+                // Initialize adapter if needed
+                if (!::absenceAdapter.isInitialized) {
+                    absenceAdapter = AbsenceAdapter(
+                        classMap = classMap,
+                        onScheduleClick = { absence -> showScheduleReplacementDialog(absence, recyclerView, textNoAbsences, textPendingCount) },
+                        onCompleteClick = { absence -> markAbsenceCompleted(absence, recyclerView, textNoAbsences, textPendingCount) },
+                        onDeleteClick = { absence -> deleteAbsence(absence, recyclerView, textNoAbsences, textPendingCount) },
+                        onItemClick = { absence -> showAddAbsenceDialog(absence, recyclerView, textNoAbsences, textPendingCount) }
+                    )
+                    recyclerView.adapter = absenceAdapter
+                    recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                }
+            }
+            
+            // Observe absences
+            repository.allAbsences.collect { absences ->
+                if (absences.isEmpty()) {
+                    recyclerView.visibility = View.GONE
+                    textNoAbsences.visibility = View.VISIBLE
+                } else {
+                    recyclerView.visibility = View.VISIBLE
+                    textNoAbsences.visibility = View.GONE
+                }
+                absenceAdapter.submitList(absences)
+                
+                // Update pending count
+                val pendingCount = absences.count { it.status == TeacherAbsenceEntity.STATUS_PENDING }
+                textPendingCount.text = if (pendingCount > 0) {
+                    getString(R.string.absence_pending_count, pendingCount)
+                } else {
+                    getString(R.string.absence_no_pending)
+                }
+            }
+        }
+    }
+    
+    private fun showAddAbsenceDialog(
+        existingAbsence: TeacherAbsenceEntity?,
+        recyclerView: RecyclerView,
+        textNoAbsences: TextView,
+        textPendingCount: TextView
+    ) {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_add_absence, null)
+        
+        val spinnerClass = dialogView.findViewById<AutoCompleteTextView>(R.id.spinnerAbsenceClass)
+        val radioGroup = dialogView.findViewById<RadioGroup>(R.id.radioGroupSessionType)
+        val radioTD = dialogView.findViewById<RadioButton>(R.id.radioTD)
+        val radioTP = dialogView.findViewById<RadioButton>(R.id.radioTP)
+        val radioCourse = dialogView.findViewById<RadioButton>(R.id.radioCourse)
+        val editAbsenceDate = dialogView.findViewById<TextInputEditText>(R.id.editAbsenceDate)
+        val editReplacementDate = dialogView.findViewById<TextInputEditText>(R.id.editReplacementDate)
+        val editReason = dialogView.findViewById<TextInputEditText>(R.id.editReason)
+        val editNotes = dialogView.findViewById<TextInputEditText>(R.id.editNotes)
+        
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        var selectedAbsenceDate: Long? = existingAbsence?.absenceDate
+        var selectedReplacementDate: Long? = existingAbsence?.replacementDate
+        var selectedClassId: Long? = existingAbsence?.classId
+        
+        // Setup class spinner
+        val classNames = classes.map { "${it.name} (${it.year})" }
+        val classAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, classNames)
+        spinnerClass.setAdapter(classAdapter)
+        
+        // Set existing values
+        existingAbsence?.let { absence ->
+            // Set class
+            val classIndex = classes.indexOfFirst { it.id == absence.classId }
+            if (classIndex >= 0) {
+                spinnerClass.setText(classNames[classIndex], false)
+            }
+            
+            // Set session type
+            when (absence.sessionType) {
+                TeacherAbsenceEntity.TYPE_TD -> radioTD.isChecked = true
+                TeacherAbsenceEntity.TYPE_TP -> radioTP.isChecked = true
+                else -> radioCourse.isChecked = true
+            }
+            
+            // Set dates
+            editAbsenceDate.setText(dateFormat.format(Date(absence.absenceDate)))
+            absence.replacementDate?.let {
+                editReplacementDate.setText(dateFormat.format(Date(it)))
+            }
+            editReason.setText(absence.reason ?: "")
+            editNotes.setText(absence.notes ?: "")
+        }
+        
+        // Class selection
+        spinnerClass.setOnItemClickListener { _, _, position, _ ->
+            selectedClassId = classes[position].id
+        }
+        
+        // Date pickers
+        editAbsenceDate.setOnClickListener {
+            showDatePickerForAbsence { date ->
+                selectedAbsenceDate = date
+                editAbsenceDate.setText(dateFormat.format(Date(date)))
+            }
+        }
+        
+        editReplacementDate.setOnClickListener {
+            showDatePickerForAbsence { date ->
+                selectedReplacementDate = date
+                editReplacementDate.setText(dateFormat.format(Date(date)))
+            }
+        }
+        
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(if (existingAbsence == null) R.string.absence_record_title else R.string.action_edit)
+            .setView(dialogView)
+            .setPositiveButton(R.string.action_save, null)
+            .setNegativeButton(R.string.action_cancel, null)
+            .create()
+        
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val classId = selectedClassId ?: run {
+                    Toast.makeText(requireContext(), getString(R.string.toast_select_class_first), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                
+                val absenceDate = selectedAbsenceDate ?: run {
+                    Toast.makeText(requireContext(), getString(R.string.absence_date), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                
+                val sessionType = when (radioGroup.checkedRadioButtonId) {
+                    R.id.radioTD -> TeacherAbsenceEntity.TYPE_TD
+                    R.id.radioTP -> TeacherAbsenceEntity.TYPE_TP
+                    else -> TeacherAbsenceEntity.TYPE_COURSE
+                }
+                
+                val status = when {
+                    selectedReplacementDate != null && existingAbsence?.status == TeacherAbsenceEntity.STATUS_COMPLETED -> TeacherAbsenceEntity.STATUS_COMPLETED
+                    selectedReplacementDate != null -> TeacherAbsenceEntity.STATUS_SCHEDULED
+                    else -> TeacherAbsenceEntity.STATUS_PENDING
+                }
+                
+                val absence = TeacherAbsenceEntity(
+                    id = existingAbsence?.id ?: 0,
+                    classId = classId,
+                    sessionType = sessionType,
+                    absenceDate = absenceDate,
+                    reason = editReason.text.toString().takeIf { it.isNotBlank() },
+                    replacementDate = selectedReplacementDate,
+                    status = status,
+                    notes = editNotes.text.toString().takeIf { it.isNotBlank() },
+                    createdAt = existingAbsence?.createdAt ?: System.currentTimeMillis()
+                )
+                
+                lifecycleScope.launch {
+                    if (existingAbsence == null) {
+                        repository.insertAbsence(absence)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(requireContext(), getString(R.string.toast_absence_added), Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        repository.updateAbsence(absence)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(requireContext(), getString(R.string.toast_absence_updated), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+                
+                dialog.dismiss()
+            }
+        }
+        
+        dialog.show()
+    }
+    
+    private fun showScheduleReplacementDialog(
+        absence: TeacherAbsenceEntity,
+        recyclerView: RecyclerView,
+        textNoAbsences: TextView,
+        textPendingCount: TextView
+    ) {
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        var selectedDate: Long? = null
+        
+        showDatePickerForAbsence { date ->
+            selectedDate = date
+            
+            lifecycleScope.launch {
+                repository.scheduleReplacement(absence.id, date)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), getString(R.string.toast_replacement_scheduled), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+    
+    private fun markAbsenceCompleted(
+        absence: TeacherAbsenceEntity,
+        recyclerView: RecyclerView,
+        textNoAbsences: TextView,
+        textPendingCount: TextView
+    ) {
+        lifecycleScope.launch {
+            repository.markAbsenceCompleted(absence.id)
+            withContext(Dispatchers.Main) {
+                Toast.makeText(requireContext(), getString(R.string.toast_marked_completed), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    
+    private fun deleteAbsence(
+        absence: TeacherAbsenceEntity,
+        recyclerView: RecyclerView,
+        textNoAbsences: TextView,
+        textPendingCount: TextView
+    ) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.action_delete)
+            .setMessage(getString(R.string.toast_absence_deleted) + "?")
+            .setPositiveButton(R.string.action_delete) { dialog, which ->
+                lifecycleScope.launch {
+                    repository.deleteAbsence(absence)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), getString(R.string.toast_absence_deleted), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            .setNegativeButton(R.string.action_cancel, null)
+            .show()
+    }
+    
+    private fun showDatePickerForAbsence(onDateSelected: (Long) -> Unit) {
+        val calendar = Calendar.getInstance()
+        DatePickerDialog(
+            requireContext(),
+            { _, year, month, day ->
+                calendar.set(year, month, day, 0, 0, 0)
+                calendar.set(Calendar.MILLISECOND, 0)
+                onDateSelected(calendar.timeInMillis)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 }

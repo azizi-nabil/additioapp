@@ -22,6 +22,8 @@
     <string name="tab_events">📅 الأحداث</string>
     <string name="tab_tasks">📝 المهام</string>
     <string name="tab_schedule">🗓️ الجدول</string>
+    <string name="tab_absences">📋 الغيابات</string>
+    <string name="action_add_absence">إضافة غياب</string>
     
     <!-- Navigation -->
     <string name="nav_home">الرئيسية</string>

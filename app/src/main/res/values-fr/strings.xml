@@ -22,6 +22,8 @@
     <string name="tab_events">📅 Événements</string>
     <string name="tab_tasks">📝 Tâches</string>
     <string name="tab_schedule">🗓️ Horaire</string>
+    <string name="tab_absences">📋 Absences</string>
+    <string name="action_add_absence">Ajouter Absence</string>
     
     <!-- Navigation -->
     <string name="nav_home">Accueil</string>
