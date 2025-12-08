@@ -270,6 +270,8 @@
     <string name="filter_all">Tous</string>
     <string name="filter_positive">Positifs</string>
     <string name="filter_negative">Négatifs</string>
+    <string name="filter_graded">Notés</string>
+    <string name="filter_not_graded">Non notés</string>
     
     <!-- Dialogs -->
     <string name="dialog_delete_title">Supprimer</string>
@@ -680,4 +682,5 @@
     <string name="toast_marked_completed">Marqué comme terminé</string>
     <string name="absence_section_title">📋 Absences Enseignant</string>
     <string name="absence_completed_count">✅ Terminés (%d)</string>
+    <string name="action_quick_grade">Note Rapide</string>
 </resources>

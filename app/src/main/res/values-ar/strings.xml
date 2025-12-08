@@ -271,6 +271,8 @@
     <string name="filter_all">الكل</string>
     <string name="filter_positive">إيجابي</string>
     <string name="filter_negative">سلبي</string>
+    <string name="filter_graded">مقيّم</string>
+    <string name="filter_not_graded">غير مقيّم</string>
     
     <!-- Dialogs -->
     <string name="dialog_delete_title">حذف</string>
@@ -680,5 +682,6 @@
     <string name="toast_marked_completed">تم وضع علامة مكتمل</string>
     <string name="absence_section_title">📋 غيابات المعلم</string>
     <string name="absence_completed_count">✅ المكتملة (%d)</string>
+    <string name="action_quick_grade">تقييم سريع</string>
 </resources>
 

@@ -278,6 +278,8 @@
     <string name="filter_all">All</string>
     <string name="filter_positive">Positive</string>
     <string name="filter_negative">Negative</string>
+    <string name="filter_graded">Graded</string>
+    <string name="filter_not_graded">Not Graded</string>
     
     <!-- Dialogs -->
     <string name="dialog_delete_title">Delete</string>
@@ -693,5 +695,6 @@
     <string name="toast_marked_completed">Marked as completed</string>
     <string name="absence_section_title">📋 Teacher Absences</string>
     <string name="absence_completed_count">✅ Completed (%d)</string>
+    <string name="action_quick_grade">Quick Grade</string>
 </resources>
 
