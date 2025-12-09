@@ -35,6 +35,9 @@ class GradeItemAdapter(
         private val maxScoreTextView: TextView = itemView.findViewById(R.id.textGradeItemMaxScore)
         private val dateTextView: TextView = itemView.findViewById(R.id.textGradeItemDate)
         private val moreButton: android.widget.ImageView = itemView.findViewById(R.id.btnMoreOptions)
+        private val calculatedIndicator: TextView = itemView.findViewById(R.id.textCalculatedIndicator)
+        private val gradeIcon: android.widget.ImageView = itemView.findViewById(R.id.imgGradeIcon)
+        private val cardView: com.google.android.material.card.MaterialCardView = itemView as com.google.android.material.card.MaterialCardView
 
         fun bind(item: GradeItemEntity) {
             nameTextView.text = item.name
@@ -43,6 +46,26 @@ class GradeItemAdapter(
             
             val dateFormat = java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.getDefault())
             dateTextView.text = dateFormat.format(java.util.Date(item.date))
+            
+            // Show calculated indicator, swap icon and change card color if formula is not null
+            val isCalculated = !item.formula.isNullOrEmpty()
+            if (isCalculated) {
+                calculatedIndicator.visibility = View.VISIBLE
+                calculatedIndicator.text = "Calculated"
+                calculatedIndicator.setTypeface(null, android.graphics.Typeface.BOLD)
+                gradeIcon.setImageResource(R.drawable.ic_sigma_orange)
+                gradeIcon.imageTintList = null // Remove tint for PNG
+                gradeIcon.background = null // Remove circle background
+                cardView.setCardBackgroundColor(android.graphics.Color.parseColor("#E8F5E9")) // Soft green
+            } else {
+                calculatedIndicator.visibility = View.GONE
+                gradeIcon.setImageResource(R.drawable.ic_assignment)
+                gradeIcon.imageTintList = android.content.res.ColorStateList.valueOf(
+                    androidx.core.content.ContextCompat.getColor(itemView.context, R.color.primary)
+                )
+                gradeIcon.setBackgroundResource(R.drawable.bg_circle_primary_container)
+                cardView.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(itemView.context, android.R.color.white))
+            }
             
             itemView.setOnClickListener { onItemClick(item) }
             moreButton.setOnClickListener { onMoreClick(item, it) }

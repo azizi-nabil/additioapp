@@ -107,6 +107,15 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
         val calculatedItems = items.filter { !it.formula.isNullOrEmpty() }
         if (calculatedItems.isEmpty()) return@launch
 
+        // Fetch attendance data for the class
+        val attendanceRecords = repository.getAttendanceWithTypeForClassSync(classId)
+        val attendanceByStudent = attendanceRecords.groupBy { it.studentId }
+        
+        // Get total session counts
+        val totalTD = repository.getTotalSessionCountByType(classId, "TD")
+        val totalTP = repository.getTotalSessionCountByType(classId, "TP")
+        val totalCours = repository.getTotalCoursSessionCount(classId)
+
         // Group records by student
         val recordsByStudent = records.groupBy { it.studentId }
         
@@ -116,6 +125,12 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
         
         recordsByStudent.forEach { (studentId, studentRecords) ->
             val studentRecordsMap = studentRecords.associateBy { it.gradeItemId }
+            
+            // Calculate attendance stats for this student
+            val studentAttendance = attendanceByStudent[studentId] ?: emptyList()
+            val absTD = studentAttendance.count { it.type == "TD" && it.status in listOf("A", "E") }
+            val absTP = studentAttendance.count { it.type == "TP" && it.status in listOf("A", "E") }
+            val presCours = studentAttendance.count { (it.type == "Cours" || it.type.isEmpty()) && it.status == "P" }
             
             calculatedItems.forEach { calcItem ->
                 val formula = calcItem.formula
@@ -128,6 +143,14 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
                         val value = record?.score ?: 0f
                         variables[item.name] = value
                     }
+                    
+                    // Add attendance variables
+                    variables["abs-td"] = absTD.toFloat()
+                    variables["abs-tp"] = absTP.toFloat()
+                    variables["pres-cours"] = presCours.toFloat()
+                    variables["tot-td"] = totalTD.toFloat()
+                    variables["tot-tp"] = totalTP.toFloat()
+                    variables["tot-c"] = totalCours.toFloat()
                     
                     val result = com.example.additioapp.util.FormulaEvaluator.evaluate(formula, variables)
                     android.util.Log.d("GradeViewModel", "Calculated grade for student $studentId item ${calcItem.name}: $result")

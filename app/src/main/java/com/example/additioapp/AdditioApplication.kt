@@ -10,6 +10,9 @@ import com.example.additioapp.data.AppDatabase
 import com.example.additioapp.data.repository.AppRepository
 import com.example.additioapp.util.NotificationHelper
 import com.example.additioapp.worker.ReminderWorker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class AdditioApplication : Application() {
@@ -57,5 +60,13 @@ class AdditioApplication : Application() {
             ExistingPeriodicWorkPolicy.KEEP,
             reminderWork
         )
+        
+        // One-time cleanup of duplicate attendance sessions
+        GlobalScope.launch(Dispatchers.IO) {
+            val removed = repository.deduplicateAttendanceSessions()
+            if (removed > 0) {
+                android.util.Log.i("AdditioApplication", "Cleaned up $removed duplicate attendance records")
+            }
+        }
     }
 }

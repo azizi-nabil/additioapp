@@ -26,8 +26,9 @@ class AddGradeItemDialog(
         val editDate = view.findViewById<EditText>(R.id.editGradeItemDate)
 
         val switchCalculated = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.switchCalculated)
-        val layoutFormula = view.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.layoutFormula)
+        val layoutFormulaContainer = view.findViewById<android.widget.LinearLayout>(R.id.layoutFormulaContainer)
         val editFormula = view.findViewById<EditText>(R.id.editFormula)
+        val btnFormulaHelp = view.findViewById<android.widget.ImageButton>(R.id.btnFormulaHelp)
 
         // Setup Category Dropdown
         val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
@@ -48,13 +49,47 @@ class AddGradeItemDialog(
             editWeight.setText(item.weight.toString())
             if (!item.formula.isNullOrEmpty()) {
                 switchCalculated.isChecked = true
-                layoutFormula.visibility = android.view.View.VISIBLE
+                layoutFormulaContainer.visibility = android.view.View.VISIBLE
                 editFormula.setText(item.formula)
             }
         }
 
         switchCalculated.setOnCheckedChangeListener { _, isChecked ->
-            layoutFormula.visibility = if (isChecked) android.view.View.VISIBLE else android.view.View.GONE
+            layoutFormulaContainer.visibility = if (isChecked) android.view.View.VISIBLE else android.view.View.GONE
+        }
+
+        // Formula Help Button
+        btnFormulaHelp.setOnClickListener {
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                .setTitle("📐 Formula Help")
+                .setMessage("""
+                    |Use grade item names as variables (spaces are removed).
+                    |
+                    |📊 Functions:
+                    |• avg(a, b, ...) - Average
+                    |• max(a, b, ...) - Maximum
+                    |• min(a, b, ...) - Minimum
+                    |
+                    |➕ Operators:
+                    |• + - * / ( )
+                    |
+                    |📋 Attendance Variables:
+                    |• abs-td - TD absences count
+                    |• abs-tp - TP absences count
+                    |• pres-cours - Course presences
+                    |• tot-td - Total TD sessions
+                    |• tot-tp - Total TP sessions
+                    |• tot-c - Total Course sessions
+                    |
+                    |📝 Examples:
+                    |• avg(Test1, Test2, Exam)
+                    |• max(Quiz1, Quiz2)
+                    |• CC * 0.4 + Exam * 0.6
+                    |• 20 - abs-td * 2
+                    |• pres-cours / tot-c * 20
+                """.trimMargin())
+                .setPositiveButton("OK", null)
+                .show()
         }
 
         editDate.setOnClickListener {

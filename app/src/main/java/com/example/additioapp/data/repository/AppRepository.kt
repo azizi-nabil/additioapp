@@ -134,12 +134,49 @@ class AppRepository(
         return attendanceDao.getAttendanceForSessionOnce(sessionId)
     }
     
+    suspend fun countRecordsBySessionIdPattern(pattern: String): Int {
+        return attendanceDao.countRecordsBySessionIdPattern(pattern)
+    }
+    
     suspend fun getStudentsForClassOnce(classId: Long): List<StudentEntity> {
         return studentDao.getStudentsForClassSync(classId)
     }
 
     suspend fun getAllAttendanceForClassOnce(classId: Long): List<AttendanceRecordEntity> {
         return attendanceDao.getAllAttendanceForClassSync(classId)
+    }
+    
+    /**
+     * Deduplicate attendance records by keeping only one record per (studentId, sessionId).
+     * For duplicates, keeps the record with the highest ID (most recent).
+     * Returns the number of duplicates removed.
+     */
+    suspend fun deduplicateAttendanceSessions(): Int {
+        val allRecords = attendanceDao.getAllAttendanceSync()
+        
+        // Group by (studentId, sessionId) - only one record allowed per student per session
+        // This allows different session types (Cours, TD, TP) on the same date
+        val grouped = allRecords.groupBy { Pair(it.studentId, it.sessionId) }
+        
+        var removed = 0
+        for ((_, records) in grouped) {
+            if (records.size > 1) {
+                // Keep the one with highest ID (most recent), delete others
+                val sorted = records.sortedByDescending { it.id }
+                val toKeep = sorted.first()
+                val toDelete = sorted.drop(1)
+                
+                for (record in toDelete) {
+                    attendanceDao.deleteById(record.id)
+                    removed++
+                }
+                
+                android.util.Log.d("AppRepository", "Deduped: kept record ${toKeep.id} for student ${toKeep.studentId} on ${toKeep.date}, removed ${toDelete.size}")
+            }
+        }
+        
+        android.util.Log.d("AppRepository", "Deduplication complete: removed $removed duplicate records")
+        return removed
     }
     
     fun getAttendanceForClass(classId: Long) = attendanceDao.getAttendanceForClass(classId)

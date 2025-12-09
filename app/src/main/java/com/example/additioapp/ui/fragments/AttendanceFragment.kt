@@ -56,6 +56,7 @@ class AttendanceFragment : Fragment() {
     private var isSessionTypeReady = false
     private var originalSessionId: String? = null // For legacy 2-part sessionIds
     private var currentFilter: String? = null // null means "All", otherwise P/A/L/E
+    private var dateHasOtherRecords = false // True if records exist for different type on same date
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -166,7 +167,7 @@ class AttendanceFragment : Fragment() {
         // Handle Spinner Selection - use raw values
         spinnerNature.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (isLocked) return
+                if (isLocked && !isNewSession) return
                 val selectedType = sessionTypeValues[position] // Use raw value, not label
                 if (currentSessionType != selectedType) {
                     val oldSessionType = currentSessionType
@@ -178,8 +179,25 @@ class AttendanceFragment : Fragment() {
                         val oldSessionId = "${classId}_${dateStr}_${oldSessionType}"
                         val newSessionId = "${classId}_${dateStr}_${selectedType}"
                         
-                        // Migrate attendance records from old session ID to new session ID
-                        attendanceViewModel.updateSessionId(oldSessionId, newSessionId)
+                        // Check if new session type already has records
+                        val newTypeRecords = withContext(Dispatchers.IO) {
+                            attendanceViewModel.getAttendanceForSessionOnce(newSessionId)
+                        }
+                        
+                        // Clear originalSessionId to use the new type's sessionId
+                        originalSessionId = null
+                        
+                        if (newTypeRecords.isEmpty()) {
+                            // New type has no records - enable auto-fill for new session
+                            android.util.Log.d("AttendanceFragment", "Spinner: switching to NEW type $selectedType (no records)")
+                            shouldAutoFill = true
+                            unsavedRecords.clear()
+                            // Don't migrate - keep old records under old sessionId
+                        } else {
+                            // New type has records - load those (don't migrate from old type)
+                            android.util.Log.d("AttendanceFragment", "Spinner: switching to EXISTING type $selectedType (${newTypeRecords.size} records)")
+                            shouldAutoFill = false
+                        }
                         
                         // Save the new session type
                         attendanceViewModel.saveSessionType(classId, selectedDate.timeInMillis, selectedType)
@@ -193,17 +211,22 @@ class AttendanceFragment : Fragment() {
         }
 
         adapter = AttendanceAdapter { student, currentStatus ->
-            if (isLocked) {
+            if (isLocked && !isNewSession) {
                 Toast.makeText(requireContext(), getString(R.string.msg_unlock_to_modify), Toast.LENGTH_SHORT).show()
                 return@AttendanceAdapter
             }
             // Show bottom sheet dialog
             lifecycleScope.launch {
                 val sessionId = getSessionId(selectedDate)
-                val records = withContext(Dispatchers.IO) {
-                    attendanceViewModel.getAttendanceForSessionOnce(sessionId)
+                
+                // Get current record (either from DB or unsavedRecords)
+                val currentRecord = if (isNewSession) {
+                    unsavedRecords[student.id]
+                } else {
+                    withContext(Dispatchers.IO) {
+                        attendanceViewModel.getAttendanceForSessionOnce(sessionId)
+                    }.find { it.studentId == student.id }
                 }
-                val currentRecord = records.find { it.studentId == student.id }
                 
                 val dialog = com.example.additioapp.ui.dialogs.AttendanceBottomSheetDialog(
                     student = student,
@@ -216,14 +239,23 @@ class AttendanceFragment : Fragment() {
                             status = status,
                             comment = comment
                         )
-                        lifecycleScope.launch {
-                            attendanceViewModel.setAttendance(record)
-                            // Also ensure session type is saved (idempotent)
-                            val currentType = attendanceViewModel.currentSessionType.value ?: "Cours"
-                            attendanceViewModel.saveSessionType(classId, selectedDate.timeInMillis, currentType)
-                            
-                            // Manually refresh to show update immediately (since we disabled observer)
+                        
+                        if (isNewSession) {
+                            // Update local state ONLY
+                            unsavedRecords[student.id] = record
+                            hasChanges = true
                             summaryTextView?.let { refreshData(currentStudents, it) }
+                        } else {
+                            // Live Update
+                            lifecycleScope.launch {
+                                attendanceViewModel.setAttendance(record)
+                                // Also ensure session type is saved (idempotent)
+                                val currentType = attendanceViewModel.currentSessionType.value ?: "Cours"
+                                attendanceViewModel.saveSessionType(classId, selectedDate.timeInMillis, currentType)
+                                
+                                // Manually refresh to show update immediately (since we disabled observer)
+                                summaryTextView?.let { refreshData(currentStudents, it) }
+                            }
                         }
                     }
                 )
@@ -231,13 +263,76 @@ class AttendanceFragment : Fragment() {
             }
         }
 
+        // Handle Back Navigation
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (isNewSession) {
+                    val dateFormat = java.text.SimpleDateFormat("EEE, MMM d, yyyy", java.util.Locale.getDefault())
+                    val dateStr = dateFormat.format(selectedDate.time)
+                    
+                    androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                        .setTitle("Save Attendance?")
+                        .setMessage("Save attendance for $dateStr?")
+                        .setPositiveButton("Save") { _, _ ->
+                            // Enforce current date and sessionID (Defense against stale unsavedRecords)
+                            val finalSessionId = getSessionId(selectedDate)
+                            val finalDate = selectedDate.timeInMillis
+                            val recordsToSave = unsavedRecords.values.map { 
+                                it.copy(sessionId = finalSessionId, date = finalDate) 
+                            }
+                            
+                            // Save all unsaved records
+                            lifecycleScope.launch {
+                                // Check if session with EXACT sessionId already exists (same date + type)
+                                android.util.Log.d("AttendanceFragment", "SAVE CHECK: finalSessionId=$finalSessionId")
+                                val existingRecords = withContext(Dispatchers.IO) {
+                                    attendanceViewModel.getAttendanceForSessionOnce(finalSessionId)
+                                }
+                                android.util.Log.d("AttendanceFragment", "SAVE CHECK: existingRecords.size=${existingRecords.size}")
+                                
+                                if (existingRecords.isNotEmpty()) {
+                                    // Exact same session already exists - block save
+                                    android.util.Log.w("AttendanceFragment", "SAVE BLOCKED: Session $finalSessionId has ${existingRecords.size} records")
+                                    android.widget.Toast.makeText(requireContext(), 
+                                        "A $currentSessionType session already exists for this date!",
+                                        android.widget.Toast.LENGTH_LONG).show()
+                                    return@launch
+                                }
+                                
+                                // Save session type first, then batch insert records (on IO thread, awaited)
+                                withContext(Dispatchers.IO) {
+                                    attendanceViewModel.saveSessionType(classId, finalDate, currentSessionType)
+                                    attendanceViewModel.insertAttendanceListSync(recordsToSave)
+                                }
+                                
+                                android.widget.Toast.makeText(requireContext(), "Attendance Saved", android.widget.Toast.LENGTH_SHORT).show()
+                                
+                                // Disable interception and navigate back
+                                isEnabled = false
+                                requireActivity().onBackPressedDispatcher.onBackPressed()
+                            }
+                        }
+                        .setNegativeButton("Discard") { _, _ ->
+                            // Discard changes and exit
+                            isEnabled = false
+                            requireActivity().onBackPressedDispatcher.onBackPressed()
+                        }
+                        .setNeutralButton("Cancel", null)
+                        .show()
+                } else {
+                    // No new changes or existing session -> proceed normally
+                    isEnabled = false
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        })
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         statusViewModel.statuses.observe(viewLifecycleOwner) { statuses ->
             cachedStatuses = statuses
             adapter.setStatuses(statuses)
-            // renderStatusButtons(containerStatusButtons, statuses) // Removed to clean up UI
         }
 
         studentViewModel.getStudentsForClass(classId).observe(viewLifecycleOwner) { students ->
@@ -250,21 +345,21 @@ class AttendanceFragment : Fragment() {
         }
 
         btnBulkPresent.setOnClickListener {
-            if (isLocked) return@setOnClickListener
+            if (isLocked && !isNewSession) return@setOnClickListener
             showConfirmationDialog(getString(R.string.title_mark_all_present), getString(R.string.msg_mark_all_present)) {
                 applyBulkStatus("P")
             }
         }
 
         btnBulkAbsent.setOnClickListener {
-            if (isLocked) return@setOnClickListener
+            if (isLocked && !isNewSession) return@setOnClickListener
             showConfirmationDialog(getString(R.string.title_mark_all_absent), getString(R.string.msg_mark_all_absent)) {
                 applyBulkStatus("A")
             }
         }
 
         btnClearAll.setOnClickListener {
-            if (isLocked) return@setOnClickListener
+            if (isLocked && !isNewSession) return@setOnClickListener
             showConfirmationDialog(getString(R.string.title_clear_attendance), getString(R.string.msg_clear_attendance)) {
                 clearAll()
             }
@@ -276,7 +371,52 @@ class AttendanceFragment : Fragment() {
         }
 
         btnChangeDate.setOnClickListener {
-            showDatePicker(textDate)
+            if (isNewSession && hasChanges) {
+                val dateFormat = java.text.SimpleDateFormat("EEE, MMM d, yyyy", java.util.Locale.getDefault())
+                val dateStr = dateFormat.format(selectedDate.time)
+                
+                androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Unsaved Changes")
+                    .setMessage("Save attendance for $dateStr before switching?")
+                    .setPositiveButton("Save") { _, _ ->
+                         // Enforce current date and sessionID
+                         val finalSessionId = getSessionId(selectedDate)
+                         val finalDate = selectedDate.timeInMillis
+                         val recordsToSave = unsavedRecords.values.map { 
+                             it.copy(sessionId = finalSessionId, date = finalDate) 
+                         }
+
+                         lifecycleScope.launch {
+                            // Check if session with EXACT sessionId already exists (same date + type)
+                            val existingRecords = withContext(Dispatchers.IO) {
+                                attendanceViewModel.getAttendanceForSessionOnce(finalSessionId)
+                            }
+                            
+                            if (existingRecords.isNotEmpty()) {
+                                // Exact same session already exists - block save
+                                android.widget.Toast.makeText(requireContext(), 
+                                    "A $currentSessionType session already exists for this date!", 
+                                    android.widget.Toast.LENGTH_LONG).show()
+                                return@launch
+                            }
+                            
+                            // Save on IO thread, awaited
+                            withContext(Dispatchers.IO) {
+                                attendanceViewModel.saveSessionType(classId, finalDate, currentSessionType)
+                                attendanceViewModel.insertAttendanceListSync(recordsToSave)
+                            }
+                            android.widget.Toast.makeText(requireContext(), "Saved", android.widget.Toast.LENGTH_SHORT).show()
+                            showDatePicker(textDate)
+                        }
+                    }
+                    .setNegativeButton("Discard") { _, _ ->
+                        showDatePicker(textDate)
+                    }
+                    .setNeutralButton("Cancel", null)
+                    .show()
+            } else {
+                showDatePicker(textDate)
+            }
         }
 
         // Setup filter chips
@@ -319,8 +459,15 @@ class AttendanceFragment : Fragment() {
                 shouldAutoFill = true // Reset auto-fill for new date
                 updateDateDisplay(textView)
                 // Clear the passed sessionId since we're now on a different date
+                // Clear the passed sessionId since we're now on a different date
                 arguments?.remove("sessionId")
                 originalSessionId = null // Clear legacy sessionId
+                
+                // Clear local unsaved state to prevent carry-over from previous date
+                unsavedRecords.clear()
+                hasChanges = false
+                isNewSession = false // Reset new session flag until refreshData determines strictly
+
                 // Load session type from database for the new date, THEN refresh
                 lifecycleScope.launch {
                     attendanceViewModel.loadSessionType(classId, selectedDate.timeInMillis)
@@ -339,8 +486,12 @@ class AttendanceFragment : Fragment() {
 
 
     private var refreshJob: kotlinx.coroutines.Job? = null
-
     private var shouldAutoFill = true
+    
+    // New Session State
+    private var isNewSession = false
+    private val unsavedRecords = mutableMapOf<Long, AttendanceRecordEntity>()
+    private var hasChanges = false
 
     private fun refreshData(students: List<com.example.additioapp.data.model.StudentEntity>, summaryText: TextView) {
         currentStudents = students
@@ -349,37 +500,59 @@ class AttendanceFragment : Fragment() {
         // Cancel previous job to prevent race conditions
         refreshJob?.cancel()
         
-        // Load attendance records ONCE - don't observe for changes
         refreshJob = lifecycleScope.launch {
+            // If we are already in new session mode, use local data unless force refresh is needed?
+            // Actually, we should check DB first to see if session really exists.
+            
             var records = withContext(Dispatchers.IO) {
                 attendanceViewModel.getAttendanceForSessionOnce(sessionId)
             }
             
             android.util.Log.d("AttendanceFragment", "Loaded ${records.size} records from DB for session $sessionId")
             
-            if (students.isEmpty()) {
-                 android.util.Log.w("AttendanceFragment", "Warning: Student list is empty for classId $classId")
+            // Also check if ANY records exist for this date (any type) to prevent false "new session"
+            val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+            val dateStr = dateFormat.format(selectedDate.time)
+            val anyRecordsForDate = withContext(Dispatchers.IO) {
+                attendanceViewModel.countRecordsByDatePattern(classId, dateStr)
             }
-
-            // Auto-fill "Present" if records are empty and we should auto-fill
+            android.util.Log.d("AttendanceFragment", "Total records for date $dateStr: $anyRecordsForDate")
+            
             if (records.isEmpty() && shouldAutoFill && students.isNotEmpty()) {
-                android.util.Log.d("AttendanceFragment", "Auto-filling Present for new session")
-                // Apply "P" to all students
-                records = students.map { student ->
-                    AttendanceRecordEntity(
-                        studentId = student.id,
-                        sessionId = sessionId,
-                        date = selectedDate.timeInMillis,
-                        status = "P"
-                    )
+                // NEW SESSION MODE - no records exist for this exact sessionId (class + date + type)
+                // This allows different types on the same date (Cours + TD on Dec 9)
+                isNewSession = true
+                dateHasOtherRecords = false
+                android.util.Log.d("AttendanceFragment", "New Session detected for sessionId=$sessionId (records empty, auto-fill enabled)")
+                
+                // Initialize unsavedRecords if empty (first load)
+                if (unsavedRecords.isEmpty()) {
+                     students.forEach { student ->
+                        unsavedRecords[student.id] = AttendanceRecordEntity(
+                            studentId = student.id,
+                            sessionId = sessionId,
+                            date = selectedDate.timeInMillis,
+                            status = "P"
+                        )
+                    }
+                    hasChanges = false // Auto-load doesn't count as user modification for Date Switch warning
                 }
-                // Save to DB in background using BATCH INSERT
-                val recordsToSave = records
-                launch(Dispatchers.IO) {
-                    attendanceViewModel.insertAttendanceList(recordsToSave)
-                    // Ensure session is created with current type
-                    attendanceViewModel.saveSessionType(classId, selectedDate.timeInMillis, currentSessionType)
-                }
+                
+                // Use unsavedRecords for display
+                // Note: records variable is local, we can re-assign it for display purposes
+                records = unsavedRecords.values.toList()
+                
+            } else {
+                // EXISTING SESSION - records loaded for current sessionId
+                isNewSession = false
+                dateHasOtherRecords = false
+                unsavedRecords.clear()
+                hasChanges = false
+            }
+            
+            // Update lock state based on new session status
+            withContext(Dispatchers.Main) {
+                this@AttendanceFragment.view?.let { updateLockState(it) }
             }
 
             // Use HashMap for O(1) lookup instead of O(n) find
@@ -416,30 +589,58 @@ class AttendanceFragment : Fragment() {
         if (statuses.none { it.code == code }) return
         val sessionId = getSessionId(selectedDate)
         
-        lifecycleScope.launch {
+        if (isNewSession) {
+            // Update local state ONLY
             currentStudents.forEach { student ->
-                val record = AttendanceRecordEntity(
+                unsavedRecords[student.id] = AttendanceRecordEntity(
                     studentId = student.id,
                     sessionId = sessionId,
                     date = selectedDate.timeInMillis,
                     status = code
                 )
-                attendanceViewModel.setAttendance(record)
             }
+            hasChanges = true
             summaryTextView?.let { refreshData(currentStudents, it) }
+        } else {
+            // Block if records exist for different type on same date
+            if (dateHasOtherRecords) {
+                android.widget.Toast.makeText(requireContext(), 
+                    "Cannot save: a session already exists for this date.", 
+                    android.widget.Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            // Live Update
+            lifecycleScope.launch {
+                currentStudents.forEach { student ->
+                    val record = AttendanceRecordEntity(
+                        studentId = student.id,
+                        sessionId = sessionId,
+                        date = selectedDate.timeInMillis,
+                        status = code
+                    )
+                    attendanceViewModel.setAttendance(record)
+                }
+                summaryTextView?.let { refreshData(currentStudents, it) }
+            }
         }
     }
 
     private fun clearAll() {
         val sessionId = getSessionId(selectedDate)
         shouldAutoFill = false // Prevent auto-fill after clearing
-        lifecycleScope.launch {
-            attendanceViewModel.deleteSession(sessionId)
+        
+        if (isNewSession) {
+            unsavedRecords.clear()
+            hasChanges = true // Cleared state is a change
             summaryTextView?.let { refreshData(currentStudents, it) }
+        } else {
+            lifecycleScope.launch {
+                attendanceViewModel.deleteSession(sessionId)
+                summaryTextView?.let { refreshData(currentStudents, it) }
+            }
         }
     }
-
-
 
     private var isLocked = true
 
@@ -450,25 +651,25 @@ class AttendanceFragment : Fragment() {
         val btnBulkAbsent = view.findViewById<Button>(R.id.btnBulkAbsent)
         val btnClearAll = view.findViewById<Button>(R.id.btnClearAll)
         
+        // Update lock toggle icon
         if (isLocked) {
             btnLockToggle.setIconResource(R.drawable.ic_lock)
-            spinnerNature.isEnabled = false
-            btnBulkPresent.isEnabled = false
-            btnBulkAbsent.isEnabled = false
-            btnClearAll.isEnabled = false
-            btnBulkPresent.alpha = 0.5f
-            btnBulkAbsent.alpha = 0.5f
-            btnClearAll.alpha = 0.5f
         } else {
             btnLockToggle.setIconResource(R.drawable.ic_lock_open)
-            spinnerNature.isEnabled = true
-            btnBulkPresent.isEnabled = true
-            btnBulkAbsent.isEnabled = true
-            btnClearAll.isEnabled = true
-            btnBulkPresent.alpha = 1.0f
-            btnBulkAbsent.alpha = 1.0f
-            btnClearAll.alpha = 1.0f
         }
+
+        // Enable controls if unlocked OR if it's a new session
+        val enableControls = !isLocked || isNewSession
+
+        spinnerNature.isEnabled = enableControls
+        btnBulkPresent.isEnabled = enableControls
+        btnBulkAbsent.isEnabled = enableControls
+        btnClearAll.isEnabled = enableControls
+        
+        val alpha = if (enableControls) 1.0f else 0.5f
+        btnBulkPresent.alpha = alpha
+        btnBulkAbsent.alpha = alpha
+        btnClearAll.alpha = alpha
     }
 
     private fun showConfirmationDialog(title: String, message: String, onConfirm: () -> Unit) {
@@ -488,3 +689,4 @@ class AttendanceFragment : Fragment() {
         }
     }
 }
+

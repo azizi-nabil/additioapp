@@ -62,6 +62,11 @@ class AttendanceViewModel(private val repository: AppRepository) : ViewModel() {
     fun insertAttendanceList(list: List<AttendanceRecordEntity>) = viewModelScope.launch {
         repository.insertAttendanceList(list)
     }
+    
+    // Suspend version that awaits completion (for use in save flows)
+    suspend fun insertAttendanceListSync(list: List<AttendanceRecordEntity>) {
+        repository.insertAttendanceList(list)
+    }
 
     fun updateAttendance(attendance: AttendanceRecordEntity) = viewModelScope.launch {
         repository.updateAttendance(attendance)
@@ -117,5 +122,11 @@ class AttendanceViewModel(private val repository: AppRepository) : ViewModel() {
     
     suspend fun getSessionCountByType(classId: Long, type: String): Int {
         return repository.getSessionCountByType(classId, type)
+    }
+    
+    suspend fun countRecordsByDatePattern(classId: Long, dateStr: String): Int {
+        // Pattern: classId_dateStr% (matches all types for that date)
+        val pattern = "${classId}_${dateStr}%"
+        return repository.countRecordsBySessionIdPattern(pattern)
     }
 }

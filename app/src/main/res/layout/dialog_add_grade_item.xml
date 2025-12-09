@@ -99,21 +99,40 @@
         android:layout_marginTop="16dp"
         android:text="@string/label_calculated_item" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/layoutFormula"
+    <LinearLayout
+        android:id="@+id/layoutFormulaContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="8dp"
-        android:hint="@string/hint_formula"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:gravity="center_vertical"
         android:visibility="gone">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editFormula"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutFormula"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:minLines="2" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_weight="1"
+            android:hint="@string/hint_formula"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editFormula"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="2" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/btnFormulaHelp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_help_24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_help"
+            app:tint="?attr/colorPrimary"/>
+    </LinearLayout>
 
 </LinearLayout>

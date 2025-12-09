@@ -9,6 +9,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.example.additioapp.data.model.AttendanceRecordEntity
 import com.example.additioapp.data.model.AttendanceSessionSummary
+import com.example.additioapp.data.model.DuplicateInfo
 
 @Dao
 interface AttendanceDao {
@@ -57,6 +58,23 @@ interface AttendanceDao {
     
     @Query("SELECT * FROM attendance_records WHERE studentId = :studentId AND sessionId = :sessionId LIMIT 1")
     suspend fun getAttendanceForStudentAndSession(studentId: Long, sessionId: String): AttendanceRecordEntity?
+    
+    // Find duplicate sessions by date (same classId, date, type pattern)
+    @Query("""
+        SELECT sessionId, date, COUNT(*) as cnt FROM attendance_records 
+        WHERE sessionId LIKE :pattern
+        GROUP BY date
+        HAVING COUNT(DISTINCT sessionId) > 1
+    """)
+    suspend fun findDuplicateDatePatterns(pattern: String): List<DuplicateInfo>
+    
+    // Get all unique sessionIds for a date pattern
+    @Query("SELECT DISTINCT sessionId FROM attendance_records WHERE sessionId LIKE :pattern")
+    suspend fun getSessionIdsForPattern(pattern: String): List<String>
+    
+    // Delete records by id
+    @Query("DELETE FROM attendance_records WHERE id = :id")
+    suspend fun deleteById(id: Long)
 
     @Query("""
         SELECT 
@@ -175,4 +193,8 @@ interface AttendanceDao {
         )
     """)
     suspend fun getTotalSessionCountByType(classId: Long, type: String): Int
+    
+    // Check for any records matching a sessionId pattern (for duplicate detection)
+    @Query("SELECT COUNT(*) FROM attendance_records WHERE sessionId LIKE :sessionIdPattern")
+    suspend fun countRecordsBySessionIdPattern(sessionIdPattern: String): Int
 }
