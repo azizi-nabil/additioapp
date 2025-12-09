@@ -79,6 +79,7 @@ class GradesFragment : Fragment() {
             onMoreClick = { gradeItem, anchor ->
                 val popup = androidx.appcompat.widget.PopupMenu(requireContext(), anchor)
                 popup.menu.add(getString(R.string.action_edit))
+                popup.menu.add(getString(R.string.action_duplicate))
                 popup.menu.add(getString(R.string.action_delete))
                 popup.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.title) {
@@ -87,6 +88,10 @@ class GradesFragment : Fragment() {
                                 viewModel.insertGradeItem(updatedItem)
                             }
                             dialog.show(parentFragmentManager, "EditGradeItemDialog")
+                            true
+                        }
+                        getString(R.string.action_duplicate) -> {
+                            showDuplicateDialog(gradeItem)
                             true
                         }
                         getString(R.string.action_delete) -> {
@@ -123,6 +128,49 @@ class GradesFragment : Fragment() {
                 viewModel.insertGradeItem(itemWithClassId)
             }
             dialog.show(parentFragmentManager, "AddGradeItemDialog")
+        }
+    }
+    
+    private fun showDuplicateDialog(gradeItem: com.example.additioapp.data.model.GradeItemEntity) {
+        val classViewModel: com.example.additioapp.ui.viewmodel.ClassViewModel by viewModels {
+            AdditioViewModelFactory((requireActivity().application as AdditioApplication).repository)
+        }
+        
+        classViewModel.allClasses.observe(viewLifecycleOwner) { classes ->
+            // Remove observer after first result to avoid duplicates
+            classViewModel.allClasses.removeObservers(viewLifecycleOwner)
+            
+            // Filter out current class
+            val otherClasses = classes.filter { it.id != classId }
+            
+            if (otherClasses.isEmpty()) {
+                android.widget.Toast.makeText(requireContext(), 
+                    getString(R.string.msg_no_other_classes), 
+                    android.widget.Toast.LENGTH_SHORT).show()
+                return@observe
+            }
+            
+            val classNames = otherClasses.map { it.name }.toTypedArray()
+            
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.dialog_duplicate_to_class))
+                .setItems(classNames) { _, which ->
+                    val targetClass = otherClasses[which]
+                    
+                    // Create duplicated item with new classId and id=0 for auto-generate
+                    val duplicatedItem = gradeItem.copy(
+                        id = 0,
+                        classId = targetClass.id
+                    )
+                    
+                    viewModel.insertGradeItem(duplicatedItem)
+                    
+                    android.widget.Toast.makeText(requireContext(), 
+                        getString(R.string.msg_duplicated_to, targetClass.name), 
+                        android.widget.Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton(getString(R.string.action_cancel), null)
+                .show()
         }
     }
 

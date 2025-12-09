@@ -60,34 +60,38 @@ class AddGradeItemDialog(
 
         // Formula Help Button
         btnFormulaHelp.setOnClickListener {
+            val helpContent = """
+<b>Use grade item names as variables</b> (spaces are removed).<br/><br/>
+
+<b>📊 Functions:</b><br/>
+• <b>avg</b>(a, b, ...) - Average<br/>
+• <b>max</b>(a, b, ...) - Maximum<br/>
+• <b>min</b>(a, b, ...) - Minimum<br/>
+• <b>if</b>(cond, true, false) - Conditional<br/><br/>
+
+<b>➕ Operators:</b><br/>
+• + - * / ( )<br/>
+• <b>Comparison:</b> &gt; &lt; &gt;= &lt;= ==<br/><br/>
+
+<b>📋 Attendance Variables:</b><br/>
+• <b>abs-td</b> - TD absences<br/>
+• <b>abs-tp</b> - TP absences<br/>
+• <b>pres-c</b> - Course presences<br/>
+• <b>tot-td</b>, <b>tot-tp</b>, <b>tot-c</b> - Session totals<br/><br/>
+
+<b>🌟 Behavior Variables:</b><br/>
+• <b>pos</b> - Positive behavior count<br/>
+• <b>neg</b> - Negative behavior count<br/><br/>
+
+<b>📝 Examples:</b><br/>
+• avg(Test1, Test2, Exam)<br/>
+• if(abs-td>3, 0, 20-abs-td*2)<br/>
+• if(neg>0, Score-neg*2, Score+pos)
+            """.trimIndent()
+            
             com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
                 .setTitle("📐 Formula Help")
-                .setMessage("""
-                    |Use grade item names as variables (spaces are removed).
-                    |
-                    |📊 Functions:
-                    |• avg(a, b, ...) - Average
-                    |• max(a, b, ...) - Maximum
-                    |• min(a, b, ...) - Minimum
-                    |
-                    |➕ Operators:
-                    |• + - * / ( )
-                    |
-                    |📋 Attendance Variables:
-                    |• abs-td - TD absences count
-                    |• abs-tp - TP absences count
-                    |• pres-cours - Course presences
-                    |• tot-td - Total TD sessions
-                    |• tot-tp - Total TP sessions
-                    |• tot-c - Total Course sessions
-                    |
-                    |📝 Examples:
-                    |• avg(Test1, Test2, Exam)
-                    |• max(Quiz1, Quiz2)
-                    |• CC * 0.4 + Exam * 0.6
-                    |• 20 - abs-td * 2
-                    |• pres-cours / tot-c * 20
-                """.trimMargin())
+                .setMessage(android.text.Html.fromHtml(helpContent, android.text.Html.FROM_HTML_MODE_COMPACT))
                 .setPositiveButton("OK", null)
                 .show()
         }

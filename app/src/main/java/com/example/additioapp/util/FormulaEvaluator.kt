@@ -73,9 +73,37 @@ object FormulaEvaluator {
 
             fun parse(): Float {
                 nextChar()
-                val x = parseExpression()
+                val x = parseComparison()
                 if (pos < expression.length) throw RuntimeException("Unexpected: " + ch.toChar())
                 return x
+            }
+            
+            // Handle comparison operators: >, <, >=, <=, ==
+            fun parseComparison(): Float {
+                var x = parseExpression()
+                while (true) {
+                    when {
+                        eat('>'.code) -> {
+                            x = if (eat('='.code)) {
+                                if (x >= parseExpression()) 1f else 0f
+                            } else {
+                                if (x > parseExpression()) 1f else 0f
+                            }
+                        }
+                        eat('<'.code) -> {
+                            x = if (eat('='.code)) {
+                                if (x <= parseExpression()) 1f else 0f
+                            } else {
+                                if (x < parseExpression()) 1f else 0f
+                            }
+                        }
+                        eat('='.code) -> {
+                            eat('='.code) // consume second =
+                            x = if (x == parseExpression()) 1f else 0f
+                        }
+                        else -> return x
+                    }
+                }
             }
 
             fun parseExpression(): Float {
@@ -122,6 +150,14 @@ object FormulaEvaluator {
                             "max" -> if (args.isNotEmpty()) args.maxOrNull() ?: 0f else 0f
                             "min" -> if (args.isNotEmpty()) args.minOrNull() ?: 0f else 0f
                             "avg", "mean" -> if (args.isNotEmpty()) args.average().toFloat() else 0f
+                            "if" -> {
+                                // if(condition, trueVal, falseVal) - condition > 0 means true
+                                if (args.size >= 3) {
+                                    if (args[0] > 0) args[1] else args[2]
+                                } else if (args.size == 2) {
+                                    if (args[0] > 0) args[1] else 0f
+                                } else 0f
+                            }
                             else -> 0f
                         }
                     } else {

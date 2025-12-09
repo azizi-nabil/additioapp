@@ -20,6 +20,9 @@ interface BehaviorDao {
     @Query("SELECT * FROM behavior_records")
     suspend fun getAllBehaviorsSync(): List<BehaviorRecordEntity>
 
+    @Query("SELECT * FROM behavior_records WHERE classId = :classId")
+    suspend fun getBehaviorsForClassSync(classId: Long): List<BehaviorRecordEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBehavior(behavior: BehaviorRecordEntity): Long
 

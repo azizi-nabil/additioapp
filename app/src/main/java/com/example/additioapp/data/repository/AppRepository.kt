@@ -222,6 +222,7 @@ class AppRepository(
     // Behavior
     fun getBehaviorForStudent(studentId: Long) = behaviorDao.getBehaviorForStudent(studentId)
     fun getBehaviorsForClass(classId: Long) = behaviorDao.getBehaviorsForClass(classId)
+    suspend fun getBehaviorsForClassSync(classId: Long) = behaviorDao.getBehaviorsForClassSync(classId)
     suspend fun insertBehavior(behavior: BehaviorRecordEntity) = behaviorDao.insertBehavior(behavior)
     suspend fun updateBehavior(behavior: BehaviorRecordEntity) = behaviorDao.updateBehavior(behavior)
     suspend fun deleteBehavior(behavior: BehaviorRecordEntity) = behaviorDao.deleteBehavior(behavior)

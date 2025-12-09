@@ -303,6 +303,102 @@ class SettingsFragment : Fragment() {
             prefs.edit().putBoolean("pref_show_global_search", isChecked).apply()
             Toast.makeText(requireContext(), if (isChecked) getString(R.string.toast_global_search_enabled) else getString(R.string.toast_global_search_hidden), Toast.LENGTH_SHORT).show()
         }
+        
+        // User Guide Button
+        val btnUserGuide = view.findViewById<android.widget.LinearLayout>(R.id.btnUserGuide)
+        btnUserGuide.setOnClickListener {
+            showUserGuideDialog()
+        }
+    }
+    
+    private fun showUserGuideDialog() {
+        val guideContent = """
+<h2>📱 TEACHERHUB USER GUIDE</h2>
+
+<h3>📚 CLASSES</h3>
+• Tap + to create a new class<br/>
+• Long-press a class card for options (Edit, Duplicate, Archive, Delete)<br/>
+• Archived classes are hidden but data is preserved<br/>
+• Each class has tabs for Students, Attendance, Grades, and Behavior<br/><br/>
+
+<h3>👨‍🎓 STUDENTS</h3>
+• Tap + to add a student manually<br/>
+• Long-press + to import students from CSV<br/>
+• Long-press a student card to select multiple for bulk delete<br/>
+• Swipe left on a student to delete quickly<br/>
+• Use the 🎲 dice icon to randomly pick a student<br/><br/>
+
+<h3>📋 ATTENDANCE</h3>
+• Select date and session type (Cours, TD, TP)<br/>
+• Tap a student to cycle through: Present → Absent → Excused → Delay<br/>
+• Use bulk action buttons to mark all Present/Absent<br/>
+• Use 🔒 lock icon to prevent accidental changes<br/>
+• Different session types on the same date are allowed<br/><br/>
+
+<h3>📊 GRADES</h3>
+• Create grade items with name, category, max score<br/>
+• Tap a grade item to enter scores for students<br/>
+• <b>Calculated Grades</b>: Use formulas like:<br/>
+&nbsp;&nbsp;- max([Item1], [Item2])<br/>
+&nbsp;&nbsp;- avg([Exam], [Test])<br/>
+&nbsp;&nbsp;- [Score] * 0.5 + [Bonus]<br/>
+• <b>Attendance variables</b>: abs-td, abs-tp, pres-c, tot-td, tot-tp, tot-c<br/>
+• <b>Duplicate</b>: Use menu ⋮ to copy grade items to other classes<br/><br/>
+
+<h3>🌟 BEHAVIOR</h3>
+• Track positive (+) and negative (-) behaviors<br/>
+• Each behavior entry shows date and optional notes<br/>
+• Customize behavior types in Settings<br/><br/>
+
+<h3>📅 PLANNER</h3>
+• <b>Events</b>: Classes, meetings, exams with date/time<br/>
+• <b>Tasks</b>: To-do items with due dates and reminders<br/>
+• <b>Schedule</b>: Weekly recurring class schedule<br/>
+• <b>Replacements</b>: Track teacher absences and substitutions<br/>
+• Long-press events/tasks to duplicate them<br/><br/>
+
+<h3>📈 REPORTS &amp; ANALYTICS</h3>
+• View attendance statistics per class<br/>
+• Export reports in PDF format<br/>
+• See grade distribution and averages<br/><br/>
+
+<h3>🔔 WIDGETS</h3>
+• Add "Today" widget to your home screen<br/>
+• Shows today's schedule and upcoming events/tasks<br/><br/>
+
+<h3>💾 BACKUP &amp; RESTORE</h3>
+• <b>Backup</b>: Save all data to JSON file<br/>
+• <b>Restore</b>: Load data from backup file<br/>
+• Store backups in cloud storage for safety<br/><br/>
+
+<h3>⚙️ SETTINGS</h3>
+• Choose language (English, French, Arabic)<br/>
+• Set theme (Light, Dark, System)<br/>
+• Customize student name display order<br/>
+• Set default sort order (Last Name, First Name, ID)<br/>
+• Configure notification reminder times<br/>
+• Toggle FAB button visibility with 👁️ icon<br/><br/>
+
+<h3>💡 PRO TIPS</h3>
+• Swipe left/right on calendar for navigation<br/>
+• Long-press the + button for extra options<br/>
+• Use the 👁️ button to show/hide the FAB<br/>
+• Export attendance to CSV for external use
+        """.trimIndent()
+        
+        val scrollView = android.widget.ScrollView(requireContext())
+        val textView = android.widget.TextView(requireContext())
+        textView.text = android.text.Html.fromHtml(guideContent, android.text.Html.FROM_HTML_MODE_COMPACT)
+        textView.setPadding(48, 32, 48, 32)
+        textView.textSize = 14f
+        textView.setLineSpacing(0f, 1.3f)
+        scrollView.addView(textView)
+        
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("📖 User Guide")
+            .setView(scrollView)
+            .setPositiveButton(getString(R.string.action_close), null)
+            .show()
     }
 
     private fun showEditListDialog(title: String, prefKey: String, defaultList: List<String>) {

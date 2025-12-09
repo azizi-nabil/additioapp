@@ -9,6 +9,10 @@
     <string name="action_add">Add</string>
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
+    <string name="action_duplicate">Duplicate</string>
+    <string name="dialog_duplicate_to_class">Duplicate to Class</string>
+    <string name="msg_duplicated_to">Duplicated to %1$s</string>
+    <string name="msg_no_other_classes">No other classes available</string>
     <string name="action_save">Save</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_close">Close</string>
@@ -463,6 +467,8 @@
     <string name="settings_edit_positive">Edit Positive Behaviors</string>
     <string name="settings_edit_negative">Edit Negative Behaviors</string>
     <string name="settings_edit_categories">Edit Grade Categories</string>
+    <string name="settings_user_guide_title">User Guide</string>
+    <string name="settings_user_guide_desc">Learn how to use all features of the app</string>
     <string name="settings_hidden_features">Hidden Features</string>
     <string name="settings_tip_longpress_student">Long-press student card</string>
     <string name="settings_tip_longpress_student_desc">Select multiple students for bulk deletion</string>
@@ -584,7 +590,6 @@
     <string name="msg_duplicate_event_confirm">Create a copy of \"%s\"?</string>
     <string name="msg_restore_data_confirm">Importing data will overwrite existing records. Are you sure you want to proceed?</string>
     <!-- Planner Actions & Messages -->
-    <string name="action_duplicate">Duplicate</string>
     <string name="dialog_edit_event">Edit Event</string>
     <string name="dialog_edit_task">Edit Task</string>
     <string name="msg_title_required">Title is required</string>

@@ -111,6 +111,10 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
         val attendanceRecords = repository.getAttendanceWithTypeForClassSync(classId)
         val attendanceByStudent = attendanceRecords.groupBy { it.studentId }
         
+        // Fetch behavior data for the class
+        val behaviorRecords = repository.getBehaviorsForClassSync(classId)
+        val behaviorByStudent = behaviorRecords.groupBy { it.studentId }
+        
         // Get total session counts
         val totalTD = repository.getTotalSessionCountByType(classId, "TD")
         val totalTP = repository.getTotalSessionCountByType(classId, "TP")
@@ -132,6 +136,11 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
             val absTP = studentAttendance.count { it.type == "TP" && it.status in listOf("A", "E") }
             val presCours = studentAttendance.count { (it.type == "Cours" || it.type.isEmpty()) && it.status == "P" }
             
+            // Calculate behavior stats for this student
+            val studentBehavior = behaviorByStudent[studentId] ?: emptyList()
+            val posCount = studentBehavior.count { it.type == "POSITIVE" }
+            val negCount = studentBehavior.count { it.type == "NEGATIVE" }
+            
             calculatedItems.forEach { calcItem ->
                 val formula = calcItem.formula
                 if (formula != null) {
@@ -147,10 +156,14 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
                     // Add attendance variables
                     variables["abs-td"] = absTD.toFloat()
                     variables["abs-tp"] = absTP.toFloat()
-                    variables["pres-cours"] = presCours.toFloat()
+                    variables["pres-c"] = presCours.toFloat()
                     variables["tot-td"] = totalTD.toFloat()
                     variables["tot-tp"] = totalTP.toFloat()
                     variables["tot-c"] = totalCours.toFloat()
+                    
+                    // Add behavior variables
+                    variables["pos"] = posCount.toFloat()
+                    variables["neg"] = negCount.toFloat()
                     
                     val result = com.example.additioapp.util.FormulaEvaluator.evaluate(formula, variables)
                     android.util.Log.d("GradeViewModel", "Calculated grade for student $studentId item ${calcItem.name}: $result")
