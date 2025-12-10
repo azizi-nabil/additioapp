@@ -20,21 +20,18 @@
 - **Sort by Score**: Added ability to sort students by their scores (ascending ↑ or descending ↓)
 - **Sort State Display**: The sort button now shows the current sort mode (A-Z, Z-A, ID, Score ↑, Score ↓)
 
-### Widget
-- **Auto-refresh on app exit**: Widget automatically updates when you exit/minimize the app
+### Widget - Scrollable Sections
+- **All sections now scroll**: Schedule, Tasks, Events, and Replacements sections use ListViews
+- **Unlimited items**: No longer limited to 3-4 items per section
+- **Auto-refresh on app exit**: Widget automatically updates when you leave the app
 
 ## 🔧 Improvements
 
 ### UI
-- Shortened sort option labels for cleaner display:
-  - "ID/Matricule" → "ID"
-  - "Score ↑ (Low to High)" → "Score ↑"
-  - "Score ↓ (High to Low)" → "Score ↓"
+- Shortened sort option labels for cleaner display (ID, Score ↑, Score ↓)
 
-### Widget Schedule Display
-- Format: `ClassName - Time • SessionType (Room)`
-- Example: `Math 101 - 08:00 • TD (Salle 1)`
-
-### Task Display (Home & Widget)
-- Now shows all associated classes from cross-reference table
-- Fallback to legacy single classId for older tasks
+### Widget Architecture
+- New `WidgetService.kt` - RemoteViewsService for collection data
+- New `WidgetDataProvider.kt` - Factory providing data for all sections
+- New `item_widget_row.xml` - Row layout with icon, title, subtitle
+- Updated `widget_today.xml` - Uses ListViews for scrollable sections

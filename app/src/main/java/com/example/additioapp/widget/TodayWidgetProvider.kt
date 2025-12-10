@@ -5,17 +5,10 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.view.View
+import android.net.Uri
 import android.widget.RemoteViews
 import com.example.additioapp.MainActivity
 import com.example.additioapp.R
-import com.example.additioapp.data.AppDatabase
-import com.example.additioapp.data.model.EventEntity
-import com.example.additioapp.data.model.TaskEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -38,6 +31,13 @@ class TodayWidgetProvider : AppWidgetProvider() {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val componentName = android.content.ComponentName(context, TodayWidgetProvider::class.java)
             val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
+            
+            // Notify data changed for all ListViews
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.listSchedule)
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.listTasks)
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.listEvents)
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.listReplacements)
+            
             for (appWidgetId in appWidgetIds) {
                 updateAppWidget(context, appWidgetManager, appWidgetId)
             }
@@ -60,197 +60,70 @@ class TodayWidgetProvider : AppWidgetProvider() {
             intent.action = ACTION_REFRESH
             context.sendBroadcast(intent)
         }
+
         fun updateAppWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
             appWidgetId: Int
         ) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val views = RemoteViews(context.packageName, R.layout.widget_today)
-                
-                // Set date
-                val dateFormat = SimpleDateFormat("EEE, MMM dd", Locale.getDefault())
-                val today = dateFormat.format(Date())
-                views.setTextViewText(R.id.textDate, today)
-                
-                // Get database
-                val db = AppDatabase.getDatabase(context)
-                
-                // Get today's events
-                val calendar = Calendar.getInstance()
-                calendar.set(Calendar.HOUR_OF_DAY, 0)
-                calendar.set(Calendar.MINUTE, 0)
-                calendar.set(Calendar.SECOND, 0)
-                calendar.set(Calendar.MILLISECOND, 0)
-                val startOfDay = calendar.timeInMillis
-                
-                calendar.set(Calendar.HOUR_OF_DAY, 23)
-                calendar.set(Calendar.MINUTE, 59)
-                calendar.set(Calendar.SECOND, 59)
-                val endOfDay = calendar.timeInMillis
-                
-                val events = db.eventDao().getEventsInRangeSync(startOfDay, endOfDay)
-                val tasks = db.taskDao().getPendingTasksSync()
-                
-                // Fetch all classes for name lookup (used for tasks and schedule)
-                val allClasses = db.classDao().getAllClassesSync()
-                val classMap = allClasses.associateBy { it.id }
-                
-                // Fetch task-class associations for multi-class support
-                val taskClassRefs = db.taskDao().getAllTaskClassRefs()
-                val taskClassMap = taskClassRefs.groupBy { it.taskId }.mapValues { entry -> 
-                    entry.value.map { it.classId } 
-                }
-                
-                val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-                
-                withContext(Dispatchers.Main) {
-                    // Clear all event views first
-                    views.setViewVisibility(R.id.textEvent1, View.GONE)
-                    views.setViewVisibility(R.id.textEvent2, View.GONE)
-                    
-                    // Show events
-                    if (events.isEmpty()) {
-                        views.setViewVisibility(R.id.textNoEvents, View.VISIBLE)
-                    } else {
-                        views.setViewVisibility(R.id.textNoEvents, View.GONE)
-                        
-                        events.take(2).forEachIndexed { index, event: EventEntity ->
-                            val time = event.startTime ?: ""
-                            val text = if (time.isNotEmpty()) "$time - ${event.title}" else event.title
-                            val viewId = when (index) {
-                                0 -> R.id.textEvent1
-                                else -> R.id.textEvent2
-                            }
-                            views.setTextViewText(viewId, text)
-                            views.setViewVisibility(viewId, View.VISIBLE)
-                        }
-                    }
-                    
-                    // Clear all task views first
-                    views.setViewVisibility(R.id.textTask1, View.GONE)
-                    views.setViewVisibility(R.id.textTask2, View.GONE)
-                    views.setViewVisibility(R.id.textTask3, View.GONE)
-                    
-                    // Show tasks
-                    if (tasks.isEmpty()) {
-                        views.setViewVisibility(R.id.textNoTasks, View.VISIBLE)
-                    } else {
-                        views.setViewVisibility(R.id.textNoTasks, View.GONE)
-                        
-                        tasks.take(3).forEachIndexed { index, task: TaskEntity ->
-                            val priorityEmoji = when (task.priority) {
-                                "HIGH" -> "🔴"
-                                "MEDIUM" -> "🟡"
-                                else -> "🟢"
-                            }
-                            // Get class names from cross-ref table, fallback to legacy classId
-                            val classIds = taskClassMap[task.id] ?: task.classId?.let { listOf(it) } ?: emptyList()
-                            val classNames = classIds.mapNotNull { classMap[it]?.name }.joinToString(", ")
-                            val text = if (classNames.isNotEmpty()) {
-                                "$priorityEmoji ${task.title} • $classNames"
-                            } else {
-                                "$priorityEmoji ${task.title}"
-                            }
-                            val viewId = when (index) {
-                                0 -> R.id.textTask1
-                                1 -> R.id.textTask2
-                                else -> R.id.textTask3
-                            }
-                            views.setTextViewText(viewId, text)
-                            views.setViewVisibility(viewId, View.VISIBLE)
-                        }
-                    }
-                    
-                    // Clear all schedule views first
-                    views.setViewVisibility(R.id.textSchedule1, View.GONE)
-                    views.setViewVisibility(R.id.textSchedule2, View.GONE)
-                    views.setViewVisibility(R.id.textSchedule3, View.GONE)
-                    views.setViewVisibility(R.id.textSchedule4, View.GONE)
-                    
-                    // Get today's day of week (Calendar.DAY_OF_WEEK: 1=Sunday, 7=Saturday)
-                    val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-                    val scheduleItems = db.scheduleItemDao().getScheduleItemsForDaySync(dayOfWeek)
-                    
-                    // Show schedule (using classMap fetched earlier)
-                    if (scheduleItems.isEmpty()) {
-                        views.setViewVisibility(R.id.textNoSchedule, View.VISIBLE)
-                    } else {
-                        views.setViewVisibility(R.id.textNoSchedule, View.GONE)
-                        
-                        scheduleItems.take(4).forEachIndexed { index, item ->
-                            val className = classMap[item.classId]?.name ?: ""
-                            val time = item.startTime
-                            val sessionInfo = if (item.room.isNotEmpty()) "${item.sessionType} (${item.room})" else item.sessionType
-                            val text = if (className.isNotEmpty()) {
-                                "$className - $time • $sessionInfo"
-                            } else {
-                                "$time - $sessionInfo"
-                            }
-                            val viewId = when (index) {
-                                0 -> R.id.textSchedule1
-                                1 -> R.id.textSchedule2
-                                2 -> R.id.textSchedule3
-                                else -> R.id.textSchedule4
-                            }
-                            views.setTextViewText(viewId, text)
-                            views.setViewVisibility(viewId, View.VISIBLE)
-                        }
-                    }
-
-                    // Get today's replacements (Manual filter since DAO method was removed)
-                    val allAbsences = db.teacherAbsenceDao().getAllAbsencesSync()
-                    val replacements = allAbsences.filter { absence ->
-                        absence.status != "COMPLETED" &&
-                        absence.replacementDate != null &&
-                        absence.replacementDate >= startOfDay &&
-                        absence.replacementDate <= endOfDay
-                    }.sortedBy { it.replacementDate }
-                    
-                    // Clear replacements views first
-                    views.setViewVisibility(R.id.textReplacement1, View.GONE)
-                    views.setViewVisibility(R.id.textReplacement2, View.GONE)
-
-                    if (replacements.isEmpty()) {
-                        views.setViewVisibility(R.id.textNoReplacements, View.VISIBLE)
-                    } else {
-                        views.setViewVisibility(R.id.textNoReplacements, View.GONE)
-                        
-                        // We need to resolve class names. Since we are in background, we can query classDao
-                        val allClasses = db.classDao().getAllClassesSync().associateBy { it.id }
-                        
-                        replacements.take(2).forEachIndexed { index, absence ->
-                            // Resolve class names
-                            val classIds = absence.getClassIdList()
-                            val classNames = classIds.mapNotNull { allClasses[it]?.name }.joinToString(", ")
-                            val title = if (classNames.isNotEmpty()) classNames else "Class"
-                            
-                            val roomInfo = if (!absence.room.isNullOrEmpty()) " - ${absence.room}" else ""
-                            val statusEmoji = when (absence.status) {
-                                "SCHEDULED" -> "🔄"
-                                else -> "⏳" // Pending
-                            }
-                            val text = "$statusEmoji $title (${absence.sessionType}$roomInfo)"
-                            val viewId = when (index) {
-                                0 -> R.id.textReplacement1
-                                else -> R.id.textReplacement2
-                            }
-                            views.setTextViewText(viewId, text)
-                            views.setViewVisibility(viewId, View.VISIBLE)
-                        }
-                    }
-
-                    // Open app on click (entire widget clickable)
-                    val intent = Intent(context, MainActivity::class.java)
-                    val pendingIntent = PendingIntent.getActivity(
-                        context, 0, intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                    )
-                    views.setOnClickPendingIntent(R.id.widgetRoot, pendingIntent)
-                    
-                    appWidgetManager.updateAppWidget(appWidgetId, views)
-                }
+            val views = RemoteViews(context.packageName, R.layout.widget_today)
+            
+            // Set date
+            val dateFormat = SimpleDateFormat("EEE, MMM dd", Locale.getDefault())
+            val today = dateFormat.format(Date())
+            views.setTextViewText(R.id.textDate, today)
+            
+            // Set up Schedule ListView
+            val scheduleIntent = Intent(context, WidgetService::class.java).apply {
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                putExtra(WidgetDataProvider.EXTRA_SECTION_TYPE, WidgetDataProvider.SECTION_SCHEDULE)
+                data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
             }
+            views.setRemoteAdapter(R.id.listSchedule, scheduleIntent)
+            views.setEmptyView(R.id.listSchedule, R.id.textNoSchedule)
+            
+            // Set up Tasks ListView
+            val tasksIntent = Intent(context, WidgetService::class.java).apply {
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                putExtra(WidgetDataProvider.EXTRA_SECTION_TYPE, WidgetDataProvider.SECTION_TASKS)
+                data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
+            }
+            views.setRemoteAdapter(R.id.listTasks, tasksIntent)
+            views.setEmptyView(R.id.listTasks, R.id.textNoTasks)
+            
+            // Set up Events ListView
+            val eventsIntent = Intent(context, WidgetService::class.java).apply {
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                putExtra(WidgetDataProvider.EXTRA_SECTION_TYPE, WidgetDataProvider.SECTION_EVENTS)
+                data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
+            }
+            views.setRemoteAdapter(R.id.listEvents, eventsIntent)
+            views.setEmptyView(R.id.listEvents, R.id.textNoEvents)
+            
+            // Set up Replacements ListView
+            val replacementsIntent = Intent(context, WidgetService::class.java).apply {
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                putExtra(WidgetDataProvider.EXTRA_SECTION_TYPE, WidgetDataProvider.SECTION_REPLACEMENTS)
+                data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
+            }
+            views.setRemoteAdapter(R.id.listReplacements, replacementsIntent)
+            views.setEmptyView(R.id.listReplacements, R.id.textNoReplacements)
+            
+            // Set up pending intent template for list item clicks (opens main app)
+            val clickIntent = Intent(context, MainActivity::class.java)
+            val clickPendingIntent = PendingIntent.getActivity(
+                context, 0, clickIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            views.setPendingIntentTemplate(R.id.listSchedule, clickPendingIntent)
+            views.setPendingIntentTemplate(R.id.listTasks, clickPendingIntent)
+            views.setPendingIntentTemplate(R.id.listEvents, clickPendingIntent)
+            views.setPendingIntentTemplate(R.id.listReplacements, clickPendingIntent)
+            
+            // Open app on header click
+            views.setOnClickPendingIntent(R.id.widgetRoot, clickPendingIntent)
+            
+            appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
 }

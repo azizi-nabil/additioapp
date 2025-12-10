@@ -50,6 +50,12 @@
                 android:resource="@xml/widget_today_info" />
         </receiver>
         
+        <!-- Widget Remote Views Service for scrollable collections -->
+        <service
+            android:name=".widget.WidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        
         <!-- Replacement Reminder Alarm Receiver -->
         <receiver
             android:name=".receiver.ReplacementAlarmReceiver"

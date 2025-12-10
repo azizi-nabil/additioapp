@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="6dp">
 
         <TextView
             android:layout_width="0dp"
@@ -21,7 +21,7 @@
             android:layout_weight="1"
             android:text="📚 TeacherHub"
             android:textColor="#1976D2"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"/>
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#666666"
-            android:textSize="12sp"/>
+            android:textSize="11sp"/>
     </LinearLayout>
 
     <!-- Schedule Section (Classes) -->
@@ -38,63 +38,18 @@
         android:layout_height="wrap_content"
         android:text="@string/widget_todays_classes"
         android:textColor="#333333"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:textStyle="bold"
-        android:layout_marginBottom="4dp"/>
+        android:layout_marginBottom="2dp"/>
 
-    <LinearLayout
-        android:id="@+id/scheduleContainer"
+    <ListView
+        android:id="@+id/listSchedule"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textSchedule1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/textSchedule2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/textSchedule3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/textSchedule4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="2dp"
+        android:scrollbars="none"/>
 
     <TextView
         android:id="@+id/textNoSchedule"
@@ -102,128 +57,16 @@
         android:layout_height="wrap_content"
         android:text="@string/widget_no_classes"
         android:textColor="#999999"
-        android:textSize="11sp"/>
+        android:textSize="10sp"
+        android:visibility="gone"/>
 
     <!-- Divider -->
-    <TextView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#E0E0E0"
-        android:layout_marginVertical="4dp"/>
-
-    <!-- Replacements Section -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🔄 Today's Replacements"
-        android:textColor="#333333"
-        android:textSize="13sp"
-        android:textStyle="bold"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"/>
-
-    <LinearLayout
-        android:id="@+id/replacementsContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textReplacement1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/textReplacement2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textNoReplacements"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/widget_no_replacements"
-        android:textColor="#999999"
-        android:textSize="11sp"/>
-
-    <!-- Divider -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#E0E0E0"
-        android:layout_marginVertical="4dp"/>
-
-    <!-- Events Section -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="📅 Today's Events"
-        android:textColor="#333333"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="4dp"/>
-
-    <LinearLayout
-        android:id="@+id/eventsContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="4dp">
-
-        <TextView
-            android:id="@+id/textEvent1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/textEvent2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-            
-        <!-- Removed 3rd event to save space since adding replacements -->
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textNoEvents"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No events today ✓"
-        android:textColor="#999999"
-        android:textSize="11sp"
-        android:layout_marginBottom="8dp"/>
-
-    <!-- Divider -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#E0E0E0"
-        android:layout_marginVertical="4dp"/>
 
     <!-- Tasks Section -->
     <TextView
@@ -231,51 +74,18 @@
         android:layout_height="wrap_content"
         android:text="📝 Pending Tasks"
         android:textColor="#333333"
-        android:textSize="13sp"
+        android:textSize="12sp"
         android:textStyle="bold"
-        android:layout_marginBottom="4dp"/>
+        android:layout_marginBottom="2dp"/>
 
-    <LinearLayout
-        android:id="@+id/tasksContainer"
+    <ListView
+        android:id="@+id/listTasks"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textTask1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/textTask2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/textTask3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/widget_item_background"
-            android:padding="6dp"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:visibility="gone"/>
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="2dp"
+        android:scrollbars="none"/>
 
     <TextView
         android:id="@+id/textNoTasks"
@@ -283,7 +93,79 @@
         android:layout_height="wrap_content"
         android:text="No pending tasks ✓"
         android:textColor="#999999"
-        android:textSize="11sp"
+        android:textSize="10sp"
+        android:visibility="gone"/>
+
+    <!-- Divider -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"/>
+
+    <!-- Events Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="📅 Today's Events"
+        android:textColor="#333333"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="2dp"/>
+
+    <ListView
+        android:id="@+id/listEvents"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="2dp"
+        android:scrollbars="none"/>
+
+    <TextView
+        android:id="@+id/textNoEvents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No events today ✓"
+        android:textColor="#999999"
+        android:textSize="10sp"
+        android:visibility="gone"/>
+
+    <!-- Divider -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"/>
+
+    <!-- Replacements Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🔄 Replacements"
+        android:textColor="#333333"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="2dp"/>
+
+    <ListView
+        android:id="@+id/listReplacements"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="2dp"
+        android:scrollbars="none"/>
+
+    <TextView
+        android:id="@+id/textNoReplacements"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_no_replacements"
+        android:textColor="#999999"
+        android:textSize="10sp"
+        android:visibility="gone"/>
 
 </LinearLayout>
