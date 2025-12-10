@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.viewModels
@@ -64,14 +65,17 @@ class GradesReportDialog : BottomSheetDialogFragment() {
                 val fmt = java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM, Locale.getDefault())
                 val decimalFormat = java.text.DecimalFormat("#.##")
 
-                // Find calculated item for Continuous calendar (CC)
-                val calculatedItem = grades.find { it.isCalculated }
+                // Find CC item for Continuous Control grade
+                val calculatedItem = grades.find { it.category.trim().equals("CC", ignoreCase = true) }
                 
                 // Find Exam item
                 val examItem = grades.find { it.category.trim().equals("Exam", ignoreCase = true) }
 
-                // Filter out CC and Exam from the list
-                val listItems = grades.filter { !it.isCalculated && !it.category.trim().equals("Exam", ignoreCase = true) }
+                // Filter out CC and Exam from the list (they're shown on top)
+                val listItems = grades.filter { 
+                    !it.category.trim().equals("CC", ignoreCase = true) && 
+                    !it.category.trim().equals("Exam", ignoreCase = true) 
+                }
 
                 listItems.forEach { grade ->
                     // Inflate Item
@@ -82,6 +86,12 @@ class GradesReportDialog : BottomSheetDialogFragment() {
                     itemView.findViewById<TextView>(R.id.textGradeScore).text = decimalFormat.format(grade.score)
                     itemView.findViewById<TextView>(R.id.textGradeMax).text = " / ${decimalFormat.format(grade.maxScore)}"
                     itemView.findViewById<TextView>(R.id.textGradeWeight).text = getString(R.string.grade_weight_format, decimalFormat.format(grade.weight))
+
+                    // Style calculated items with sigma icon and soft green background
+                    if (grade.isCalculated) {
+                        itemView.findViewById<ImageView>(R.id.imgGradeIcon).setImageResource(R.drawable.ic_sigma_orange)
+                        (itemView as? com.google.android.material.card.MaterialCardView)?.setCardBackgroundColor(android.graphics.Color.parseColor("#E8F5E9"))
+                    }
 
                     layoutList.addView(itemView)
                 }

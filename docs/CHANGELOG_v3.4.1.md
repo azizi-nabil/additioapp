@@ -4,12 +4,17 @@
 
 ## 🐛 Bug Fixes
 
+### Grades Report
+- **Fixed grade item filtering**: Report now list shows ALL grade items (including calculated ones), except for "CC" and "Exam" categories which remain highlighted at the top.
+- **Improved calculated item visibility**: Calculated items in the report list now use the orange sigma icon (Σ) and a soft green background for easier identification.
+
 ### Calculated Grades
 - **Fixed calculated grades not appearing for all students**: Previously, calculated grade items only showed values for students who already had other grade records. Now all students in the class receive calculated grades immediately.
 
 ### Widget
 - **Fixed widget not showing today's classes**: Day-of-week calculation was off by 1, causing wrong day's schedule to display.
 - **Fixed widget schedule missing class names**: Schedule items now show class name along with time and session type.
+- **Fixed widget dividers**: Replaced View with FrameLayout to fix inflation error.
 
 ### Tasks
 - **Fixed tasks showing only one class**: Tasks with multiple classes now display all class names (comma-separated) in both home screen and widget.
