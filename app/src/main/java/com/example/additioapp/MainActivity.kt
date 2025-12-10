@@ -89,4 +89,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    
+    override fun onStop() {
+        super.onStop()
+        // Refresh widget when app goes to background
+        com.example.additioapp.widget.TodayWidgetProvider.refreshAllWidgets(this)
+    }
 }

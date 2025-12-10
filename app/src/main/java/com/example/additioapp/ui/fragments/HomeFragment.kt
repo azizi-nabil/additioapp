@@ -48,6 +48,7 @@ class HomeFragment : Fragment() {
     
     // Store data for re-rendering
     private var cachedTasks: List<TaskEntity> = emptyList()
+    private var taskClassMap: Map<Long, List<Long>> = emptyMap()
     private var cachedEvents: List<EventEntity> = emptyList()
     private var cachedScheduleItems: List<ScheduleItemEntity> = emptyList()
 
@@ -127,6 +128,10 @@ class HomeFragment : Fragment() {
             updateStudentCount()
             loadTodayClasses(containerTodayClasses)
             loadUpcomingEvents(containerUpcomingEvents)
+            // Re-render tasks after classLookup is updated so class names appear
+            if (cachedTasks.isNotEmpty()) {
+                renderTasks(containerPendingTasks, cachedTasks)
+            }
         }
 
         studentViewModel.allStudents.observe(viewLifecycleOwner) { students ->
@@ -137,7 +142,16 @@ class HomeFragment : Fragment() {
         // Observe pending tasks count
         repository.getPendingTasks().observe(viewLifecycleOwner) { tasks ->
             textPendingTasks.text = tasks.size.toString()
-            loadPendingTasks(containerPendingTasks, tasks)
+            // Fetch task-class associations for multi-class support
+            lifecycleScope.launch {
+                val taskClassRefs = withContext(Dispatchers.IO) {
+                    repository.getAllTaskClassRefs()
+                }
+                taskClassMap = taskClassRefs.groupBy { it.taskId }.mapValues { entry ->
+                    entry.value.map { it.classId }
+                }
+                loadPendingTasks(containerPendingTasks, tasks)
+            }
         }
 
         // Load today's replacements
@@ -387,7 +401,9 @@ class HomeFragment : Fragment() {
             if (isOverdue) "⚠️ Overdue" else "Due ${dateFormat.format(Date(task.dueDate))}"
         } else "No due date"
         
-        val classStr = classLookup[task.classId]?.name ?: ""
+        // Get class names from cross-ref table, fallback to legacy classId
+        val classIds = taskClassMap[task.id] ?: task.classId?.let { listOf(it) } ?: emptyList()
+        val classStr = classIds.mapNotNull { classLookup[it]?.name }.joinToString(", ")
         row.findViewById<TextView>(R.id.textRowMeta).text = if (classStr.isNotEmpty()) "$dueStr • $classStr" else dueStr
         
         val priorityView = row.findViewById<TextView>(R.id.textRowExtra)

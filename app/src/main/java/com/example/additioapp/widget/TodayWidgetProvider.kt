@@ -31,6 +31,19 @@ class TodayWidgetProvider : AppWidgetProvider() {
         }
     }
 
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        if (intent.action == ACTION_REFRESH) {
+            // Refresh all widgets
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val componentName = android.content.ComponentName(context, TodayWidgetProvider::class.java)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
+            for (appWidgetId in appWidgetIds) {
+                updateAppWidget(context, appWidgetManager, appWidgetId)
+            }
+        }
+    }
+
     override fun onEnabled(context: Context) {
         // First widget added
     }
@@ -40,6 +53,13 @@ class TodayWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
+        const val ACTION_REFRESH = "com.example.additioapp.widget.ACTION_REFRESH"
+        
+        fun refreshAllWidgets(context: Context) {
+            val intent = Intent(context, TodayWidgetProvider::class.java)
+            intent.action = ACTION_REFRESH
+            context.sendBroadcast(intent)
+        }
         fun updateAppWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
@@ -71,6 +91,16 @@ class TodayWidgetProvider : AppWidgetProvider() {
                 
                 val events = db.eventDao().getEventsInRangeSync(startOfDay, endOfDay)
                 val tasks = db.taskDao().getPendingTasksSync()
+                
+                // Fetch all classes for name lookup (used for tasks and schedule)
+                val allClasses = db.classDao().getAllClassesSync()
+                val classMap = allClasses.associateBy { it.id }
+                
+                // Fetch task-class associations for multi-class support
+                val taskClassRefs = db.taskDao().getAllTaskClassRefs()
+                val taskClassMap = taskClassRefs.groupBy { it.taskId }.mapValues { entry -> 
+                    entry.value.map { it.classId } 
+                }
                 
                 val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
                 
@@ -114,7 +144,14 @@ class TodayWidgetProvider : AppWidgetProvider() {
                                 "MEDIUM" -> "🟡"
                                 else -> "🟢"
                             }
-                            val text = "$priorityEmoji ${task.title}"
+                            // Get class names from cross-ref table, fallback to legacy classId
+                            val classIds = taskClassMap[task.id] ?: task.classId?.let { listOf(it) } ?: emptyList()
+                            val classNames = classIds.mapNotNull { classMap[it]?.name }.joinToString(", ")
+                            val text = if (classNames.isNotEmpty()) {
+                                "$priorityEmoji ${task.title} • $classNames"
+                            } else {
+                                "$priorityEmoji ${task.title}"
+                            }
                             val viewId = when (index) {
                                 0 -> R.id.textTask1
                                 1 -> R.id.textTask2
@@ -131,20 +168,25 @@ class TodayWidgetProvider : AppWidgetProvider() {
                     views.setViewVisibility(R.id.textSchedule3, View.GONE)
                     views.setViewVisibility(R.id.textSchedule4, View.GONE)
                     
-                    // Get today's day of week (Calendar.SUNDAY=1, we need 0=Sunday for our DB)
-                    val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
+                    // Get today's day of week (Calendar.DAY_OF_WEEK: 1=Sunday, 7=Saturday)
+                    val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
                     val scheduleItems = db.scheduleItemDao().getScheduleItemsForDaySync(dayOfWeek)
                     
-                    // Show schedule
+                    // Show schedule (using classMap fetched earlier)
                     if (scheduleItems.isEmpty()) {
                         views.setViewVisibility(R.id.textNoSchedule, View.VISIBLE)
                     } else {
                         views.setViewVisibility(R.id.textNoSchedule, View.GONE)
                         
                         scheduleItems.take(4).forEachIndexed { index, item ->
+                            val className = classMap[item.classId]?.name ?: ""
                             val time = item.startTime
-                            val info = if (item.room.isNotEmpty()) "${item.sessionType} (${item.room})" else item.sessionType
-                            val text = "$time - $info"
+                            val sessionInfo = if (item.room.isNotEmpty()) "${item.sessionType} (${item.room})" else item.sessionType
+                            val text = if (className.isNotEmpty()) {
+                                "$className - $time • $sessionInfo"
+                            } else {
+                                "$time - $sessionInfo"
+                            }
                             val viewId = when (index) {
                                 0 -> R.id.textSchedule1
                                 1 -> R.id.textSchedule2
@@ -198,7 +240,6 @@ class TodayWidgetProvider : AppWidgetProvider() {
                         }
                     }
 
-                    
                     // Open app on click (entire widget clickable)
                     val intent = Intent(context, MainActivity::class.java)
                     val pendingIntent = PendingIntent.getActivity(

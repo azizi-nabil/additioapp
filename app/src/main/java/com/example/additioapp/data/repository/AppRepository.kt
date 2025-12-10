@@ -481,6 +481,7 @@ class AppRepository(
     
     suspend fun getClassIdsForTask(taskId: Long): List<Long> = taskDao.getClassIdsForTask(taskId)
     fun getClassIdsForTaskLive(taskId: Long) = taskDao.getClassIdsForTaskLive(taskId)
+    suspend fun getAllTaskClassRefs() = taskDao.getAllTaskClassRefs()
 
     // Schedule Items
     fun getAllScheduleItems() = scheduleItemDao.getAllScheduleItems()
