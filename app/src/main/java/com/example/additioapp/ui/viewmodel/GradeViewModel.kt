@@ -107,6 +107,10 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
         val calculatedItems = items.filter { !it.formula.isNullOrEmpty() }
         if (calculatedItems.isEmpty()) return@launch
 
+        // Fetch ALL students in the class
+        val students = repository.getStudentsForClassOnce(classId)
+        if (students.isEmpty()) return@launch
+
         // Fetch attendance data for the class
         val attendanceRecords = repository.getAttendanceWithTypeForClassSync(classId)
         val attendanceByStudent = attendanceRecords.groupBy { it.studentId }
@@ -123,11 +127,10 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
         // Group records by student
         val recordsByStudent = records.groupBy { it.studentId }
         
-        // Get all student IDs (we might need a better way to get ALL students if some have no grades)
-        // For now, we only update students who have at least one grade record or if we fetch all students.
-        // Let's iterate over recordsByStudent keys.
-        
-        recordsByStudent.forEach { (studentId, studentRecords) ->
+        // Iterate over ALL students, not just those with records
+        students.forEach { student ->
+            val studentId = student.id
+            val studentRecords = recordsByStudent[studentId] ?: emptyList()
             val studentRecordsMap = studentRecords.associateBy { it.gradeItemId }
             
             // Calculate attendance stats for this student

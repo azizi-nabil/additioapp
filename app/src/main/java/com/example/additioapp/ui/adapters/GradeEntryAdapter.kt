@@ -41,6 +41,7 @@ class GradeEntryAdapter(
                 val oldItem = items[oldItemPosition]
                 val newItem = newItems[newItemPosition]
                 return oldItem.gradeRecord?.score == newItem.gradeRecord?.score &&
+                       oldItem.gradeRecord?.status == newItem.gradeRecord?.status &&
                        oldItem.student.name == newItem.student.name
             }
         }

@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.additioapp"
         minSdk = 24
         targetSdk = 34
-        versionCode = 14
-        versionName = "3.4.0"
+        versionCode = 15
+        versionName = "3.4.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

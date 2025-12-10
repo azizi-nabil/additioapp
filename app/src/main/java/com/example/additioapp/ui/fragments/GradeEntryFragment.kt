@@ -56,7 +56,7 @@ class GradeEntryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val titleTextView = view.findViewById<TextView>(R.id.textGradeItemTitle)
-        val btnSort = view.findViewById<View>(R.id.btnSort)
+        val btnSort = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSort)
         val btnFilter = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnFilter)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewGradeEntry)
         val editSearch = view.findViewById<EditText>(R.id.editSearchStudent)
@@ -132,6 +132,8 @@ class GradeEntryFragment : Fragment() {
                 "FIRSTNAME_ASC" -> filteredItems.sortedBy { it.student.firstNameFr }
                 "FIRSTNAME_DESC" -> filteredItems.sortedByDescending { it.student.firstNameFr }
                 "ID_ASC" -> filteredItems.sortedBy { it.student.id }
+                "SCORE_ASC" -> filteredItems.sortedBy { it.gradeRecord?.score ?: Float.MAX_VALUE }
+                "SCORE_DESC" -> filteredItems.sortedByDescending { it.gradeRecord?.score ?: Float.MIN_VALUE }
                 else -> filteredItems
             }
             
@@ -203,7 +205,9 @@ class GradeEntryFragment : Fragment() {
                     val options = arrayOf(
                         getString(R.string.sort_az),
                         getString(R.string.sort_za),
-                        getString(R.string.sort_id_matricule_option)
+                        getString(R.string.sort_id_matricule_option),
+                        getString(R.string.sort_score_low_high),
+                        getString(R.string.sort_score_high_low)
                     )
                     androidx.appcompat.app.AlertDialog.Builder(requireContext())
                         .setTitle(getString(R.string.dialog_sort_students_by))
@@ -212,8 +216,12 @@ class GradeEntryFragment : Fragment() {
                                 0 -> if (nameField == "firstname") "FIRSTNAME_ASC" else "NAME_ASC"
                                 1 -> if (nameField == "firstname") "FIRSTNAME_DESC" else "NAME_DESC"
                                 2 -> "ID_ASC"
+                                3 -> "SCORE_ASC"
+                                4 -> "SCORE_DESC"
                                 else -> if (nameField == "firstname") "FIRSTNAME_ASC" else "NAME_ASC"
                             }
+                            // Update button text to show current sort
+                            btnSort.text = options[which]
                             filterAndUpdate()
                         }
                         .show()

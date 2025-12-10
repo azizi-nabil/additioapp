@@ -640,13 +640,14 @@
     <string name="sort_lastname_desc_option">Last Name (Z-A)</string>
     <string name="sort_firstname_asc_option">First Name (A-Z)</string>
     <string name="sort_firstname_desc_option">First Name (Z-A)</string>
-    <string name="sort_id_matricule_option">ID/Matricule</string>
     <string name="sort_az">A-Z</string>
     <string name="sort_za">Z-A</string>
     <string name="sort_display_az">Sort: A-Z</string>
     <string name="sort_display_za">Sort: Z-A</string>
     <string name="sort_display_id">Sort: ID</string>
-    
+    <string name="sort_score_low_high">Score ↑</string>
+    <string name="sort_score_high_low">Score ↓</string>
+    <string name="sort_id_matricule_option">ID</string>
     <string name="action_import_from_csv">Import from CSV</string>
     <string name="action_export_to_csv">Export to CSV</string>
     <string name="toast_no_students_to_export">No students to export</string>
