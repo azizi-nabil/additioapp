@@ -23,6 +23,7 @@ class GradesFragment : Fragment() {
     private val viewModel: GradeViewModel by viewModels {
         AdditioViewModelFactory((requireActivity().application as AdditioApplication).repository)
     }
+    private var currentGradeItems: List<com.example.additioapp.data.model.GradeItemEntity> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +88,8 @@ class GradesFragment : Fragment() {
                 
                 menuView.findViewById<android.view.View>(R.id.menuEdit).setOnClickListener {
                     bottomSheet.dismiss()
-                    val dialog = AddGradeItemDialog(classId, gradeItem) { updatedItem ->
+                    val otherNames = currentGradeItems.filter { it.id != gradeItem.id }.map { it.name }
+                    val dialog = AddGradeItemDialog(classId, gradeItem, otherNames) { updatedItem ->
                         viewModel.insertGradeItem(updatedItem)
                     }
                     dialog.show(parentFragmentManager, "EditGradeItemDialog")
@@ -119,6 +121,7 @@ class GradesFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.getGradeItemsForClass(classId).observe(viewLifecycleOwner) { items ->
+            currentGradeItems = items
             // Update Text
             textAssessmentCount.text = getString(R.string.header_assessments_subtitle, items.size)
             
@@ -134,7 +137,8 @@ class GradesFragment : Fragment() {
         }
 
         fab.setOnClickListener {
-            val dialog = AddGradeItemDialog(classId, null) { newItem ->
+            val names = currentGradeItems.map { it.name }
+            val dialog = AddGradeItemDialog(classId, null, names) { newItem ->
                 val itemWithClassId = newItem.copy(classId = classId)
                 viewModel.insertGradeItem(itemWithClassId)
             }

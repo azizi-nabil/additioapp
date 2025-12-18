@@ -11,6 +11,7 @@ import com.example.additioapp.data.model.GradeItemEntity
 class AddGradeItemDialog(
     private val classId: Long,
     private val gradeItem: GradeItemEntity? = null,
+    private val variableNames: List<String> = emptyList(),
     private val onSave: (GradeItemEntity) -> Unit
 ) : DialogFragment() {
 
@@ -29,7 +30,21 @@ class AddGradeItemDialog(
         val layoutFormulaContainer = view.findViewById<android.widget.LinearLayout>(R.id.layoutFormulaContainer)
         val editFormula = view.findViewById<EditText>(R.id.editFormula)
         val btnFormulaHelp = view.findViewById<android.widget.ImageButton>(R.id.btnFormulaHelp)
+        val btnOpenEditor = view.findViewById<android.widget.ImageButton>(R.id.btnOpenEditor)
         val editNotes = view.findViewById<EditText>(R.id.editGradeItemNotes)
+
+        // Listen for Formula Editor Result
+        parentFragmentManager.setFragmentResultListener(com.example.additioapp.ui.fragments.FormulaEditorFragment.REQUEST_KEY, this) { _, bundle ->
+            val result = bundle.getString(com.example.additioapp.ui.fragments.FormulaEditorFragment.RESULT_FORMULA)
+            result?.let { editFormula.setText(it) }
+        }
+
+        // Open Formula Editor
+        btnOpenEditor.setOnClickListener {
+            val formula = editFormula.text.toString()
+            val fragment = com.example.additioapp.ui.fragments.FormulaEditorFragment.newInstance(formula, ArrayList(variableNames))
+            fragment.show(parentFragmentManager, com.example.additioapp.ui.fragments.FormulaEditorFragment.TAG)
+        }
 
         // Setup Category Dropdown
         val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
