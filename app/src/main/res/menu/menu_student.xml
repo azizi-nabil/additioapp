@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_edit"
+        android:title="@string/action_edit"
+        android:icon="@drawable/ic_edit"/>
+    <item
+        android:id="@+id/menu_delete"
+        android:title="@string/action_delete"
+        android:icon="@drawable/ic_delete"/>
+    <item
+        android:id="@+id/menu_grades"
+        android:title="@string/action_marks"
+        android:icon="@drawable/ic_grade"/>
+    <item
+        android:id="@+id/menu_absence_report"
+        android:title="@string/action_report"
+        android:icon="@drawable/ic_assignment"/>
+    <item
+        android:id="@+id/menu_notes"
+        android:title="@string/action_notes"
+        android:icon="@drawable/ic_notes"/>
+</menu>

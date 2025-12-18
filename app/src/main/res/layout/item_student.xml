@@ -278,44 +278,5 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- LINE 3: Report and Marks Buttons -->
-        <LinearLayout
-            android:id="@+id/layoutActions"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="start|center_vertical"
-            android:layout_marginTop="2dp"
-            app:layout_constraintStart_toStartOf="@id/textStudentName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layoutRow2">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAbsenceReport"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/action_report"
-                android:textSize="12sp"
-                android:minWidth="0dp"
-                android:paddingHorizontal="8dp"
-                app:icon="@drawable/ic_assignment"
-                app:iconSize="18dp"
-                android:visibility="gone"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnGradesReport"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/action_marks"
-                android:textSize="12sp"
-                android:minWidth="0dp"
-                android:paddingHorizontal="8dp"
-                app:icon="@drawable/ic_grade"
-                app:iconSize="18dp"
-                android:visibility="gone"/>
-        </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

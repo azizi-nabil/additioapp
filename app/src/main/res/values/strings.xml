@@ -10,6 +10,8 @@
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
     <string name="action_duplicate">Duplicate</string>
+    <string name="action_archive">Archive</string>
+    <string name="action_unarchive">Unarchive</string>
     <string name="dialog_duplicate_to_class">Duplicate to Class</string>
     <string name="msg_duplicated_to">Duplicated to %1$s</string>
     <string name="msg_no_other_classes">No other classes available</string>
@@ -399,6 +401,7 @@
     <!-- Item Layout Actions -->
     <string name="action_report">Report</string>
     <string name="action_marks">Marks</string>
+    <string name="action_notes">Notes</string>
     
     <!-- Fragment Common Strings -->
     <string name="hint_search">Search...</string>

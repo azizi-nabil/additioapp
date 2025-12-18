@@ -159,6 +159,9 @@ class StudentsFragment : Fragment() {
 
         val adapter = StudentAdapter(
             onStudentClick = { student ->
+                // Card click - no action, use menu for actions
+            },
+            onEditClick = { student ->
                 val dialog = AddStudentDialog(
                     classId = classId,
                     studentEntity = student,
@@ -171,6 +174,16 @@ class StudentsFragment : Fragment() {
                 )
                 dialog.show(parentFragmentManager, "EditStudentDialog")
             },
+            onDeleteClick = { student ->
+                androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.dialog_delete_student)
+                    .setMessage(getString(R.string.msg_delete_student_confirm, student.name))
+                    .setPositiveButton(R.string.action_delete) { _, _ ->
+                        studentViewModel.deleteStudent(student)
+                    }
+                    .setNegativeButton(R.string.action_cancel, null)
+                    .show()
+            },
             onReportClick = { student ->
                 val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(student.id, student.name, classId)
                 dialog.show(parentFragmentManager, "AbsenceReportDialog")
@@ -178,6 +191,10 @@ class StudentsFragment : Fragment() {
             onGradesClick = { student ->
                 val dialog = com.example.additioapp.ui.dialogs.GradesReportDialog.newInstance(student.id, student.name)
                 dialog.show(parentFragmentManager, "GradesReportDialog")
+            },
+            onNotesClick = { student ->
+                val dialog = com.example.additioapp.ui.dialogs.StudentNotesDialog.newInstance(student.id, student.name)
+                dialog.show(parentFragmentManager, "StudentNotesDialog")
             },
             onBehaviorClick = { student, type ->
                 val dialog = com.example.additioapp.ui.dialogs.BehaviorReportDialog.newInstance(student.id, student.name, type)

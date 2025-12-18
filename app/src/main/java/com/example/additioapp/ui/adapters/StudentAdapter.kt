@@ -28,8 +28,11 @@ class StudentAdapter(
     private var items: List<StudentEntity> = emptyList(),
     private var attendanceStats: Map<Long, StudentStats> = emptyMap(),
     private val onStudentClick: (StudentEntity) -> Unit,
+    private val onEditClick: (StudentEntity) -> Unit = {},
+    private val onDeleteClick: (StudentEntity) -> Unit = {},
     private val onReportClick: (StudentEntity) -> Unit = {},
     private val onGradesClick: (StudentEntity) -> Unit = {},
+    private val onNotesClick: (StudentEntity) -> Unit = {},
     private val onBehaviorClick: (StudentEntity, String) -> Unit = { _, _ -> },
     private val onSelectionChanged: ((Int) -> Unit)? = null
 ) : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() {
@@ -123,9 +126,12 @@ class StudentAdapter(
             attendanceStats[student.id], 
             isSelectionMode,
             isSelected,
-            onStudentClick, 
+            onStudentClick,
+            onEditClick,
+            onDeleteClick,
             onReportClick, 
-            onGradesClick, 
+            onGradesClick,
+            onNotesClick,
             onBehaviorClick,
             { enterSelectionMode(student.id) },
             { toggleSelection(student.id) }
@@ -150,21 +156,21 @@ class StudentAdapter(
         private val behaviorPosTextView: TextView = itemView.findViewById(R.id.textStudentBehaviorPos)
         private val layoutBehaviorNeg: View = itemView.findViewById(R.id.layoutBehaviorNeg)
         private val behaviorNegTextView: TextView = itemView.findViewById(R.id.textStudentBehaviorNeg)
-        private val btnReport: com.google.android.material.button.MaterialButton = itemView.findViewById(R.id.btnAbsenceReport)
-        private val btnGrades: com.google.android.material.button.MaterialButton = itemView.findViewById(R.id.btnGradesReport)
         private val btnMoreOptions: android.widget.ImageView = itemView.findViewById(R.id.btnMoreOptions)
         private val layoutRow1: View = itemView.findViewById(R.id.layoutRow1)
         private val layoutRow2: View = itemView.findViewById(R.id.layoutRow2)
-        private val layoutActions: View = itemView.findViewById(R.id.layoutActions)
 
         fun bind(
             student: StudentEntity, 
             stats: StudentStats?,
             isSelectionMode: Boolean,
             isSelected: Boolean,
-            onStudentClick: (StudentEntity) -> Unit, 
+            onStudentClick: (StudentEntity) -> Unit,
+            onEditClick: (StudentEntity) -> Unit,
+            onDeleteClick: (StudentEntity) -> Unit,
             onReportClick: (StudentEntity) -> Unit, 
             onGradesClick: (StudentEntity) -> Unit,
+            onNotesClick: (StudentEntity) -> Unit,
             onBehaviorClick: (StudentEntity, String) -> Unit,
             onLongPress: () -> Unit,
             onToggleSelection: () -> Unit
@@ -317,35 +323,14 @@ class StudentAdapter(
                 } else {
                     layoutBehaviorNeg.visibility = View.GONE
                 }
-
-                // Show report button if any absence
-                if (stats.tdAbsent > 0 || stats.tpAbsent > 0) {
-                    btnReport.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
-                    btnReport.setOnClickListener { onReportClick(student) }
-                } else {
-                    btnReport.visibility = View.GONE
-                }
-
-                // Show grades button if any grades
-                if (stats.hasGrades) {
-                    btnGrades.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
-                    btnGrades.setOnClickListener { onGradesClick(student) }
-                } else {
-                    btnGrades.visibility = View.GONE
-                }
             } else {
                 layoutStatsCours.visibility = View.GONE
                 layoutStatsTD.visibility = View.GONE
                 layoutStatsTP.visibility = View.GONE
                 layoutBehaviorPos.visibility = View.GONE
                 layoutBehaviorNeg.visibility = View.GONE
-                btnReport.visibility = View.GONE
-                btnGrades.visibility = View.GONE
             }
-            
-            btnMoreOptions.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
-            btnMoreOptions.setOnClickListener { onStudentClick(student) }
-            
+
             // Hide empty rows to reduce visual clutter
             val row1HasContent = layoutStatsTD.visibility == View.VISIBLE || layoutStatsTP.visibility == View.VISIBLE
             layoutRow1.visibility = if (row1HasContent) View.VISIBLE else View.GONE
@@ -355,8 +340,41 @@ class StudentAdapter(
                                  layoutBehaviorNeg.visibility == View.VISIBLE
             layoutRow2.visibility = if (row2HasContent) View.VISIBLE else View.GONE
             
-            val actionsHasContent = btnReport.visibility == View.VISIBLE || btnGrades.visibility == View.VISIBLE
-            layoutActions.visibility = if (actionsHasContent) View.VISIBLE else View.GONE
+            // Modern bottom sheet menu on more options button
+            btnMoreOptions.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
+            btnMoreOptions.setOnClickListener { _ ->
+                val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(itemView.context)
+                val menuView = android.view.LayoutInflater.from(itemView.context)
+                    .inflate(com.example.additioapp.R.layout.bottom_sheet_student_menu, null)
+                
+                // Set student name in header
+                menuView.findViewById<android.widget.TextView>(com.example.additioapp.R.id.textMenuTitle).text = student.name
+                
+                // Set click listeners
+                menuView.findViewById<View>(com.example.additioapp.R.id.menuEdit).setOnClickListener {
+                    bottomSheet.dismiss()
+                    onEditClick(student)
+                }
+                menuView.findViewById<View>(com.example.additioapp.R.id.menuGrades).setOnClickListener {
+                    bottomSheet.dismiss()
+                    onGradesClick(student)
+                }
+                menuView.findViewById<View>(com.example.additioapp.R.id.menuReport).setOnClickListener {
+                    bottomSheet.dismiss()
+                    onReportClick(student)
+                }
+                menuView.findViewById<View>(com.example.additioapp.R.id.menuNotes).setOnClickListener {
+                    bottomSheet.dismiss()
+                    onNotesClick(student)
+                }
+                menuView.findViewById<View>(com.example.additioapp.R.id.menuDelete).setOnClickListener {
+                    bottomSheet.dismiss()
+                    onDeleteClick(student)
+                }
+                
+                bottomSheet.setContentView(menuView)
+                bottomSheet.show()
+            }
         }
     }
 }

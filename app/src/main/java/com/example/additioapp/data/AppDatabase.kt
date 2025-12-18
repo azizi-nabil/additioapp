@@ -21,6 +21,8 @@ import com.example.additioapp.data.dao.StudentDao
 import com.example.additioapp.data.dao.TaskDao
 import com.example.additioapp.data.dao.TeacherAbsenceDao
 import com.example.additioapp.data.dao.UnitDao
+import com.example.additioapp.data.dao.StudentNoteDao
+import com.example.additioapp.data.dao.ClassNoteDao
 import com.example.additioapp.data.model.AttendanceRecordEntity
 import com.example.additioapp.data.model.AttendanceStatusEntity
 import com.example.additioapp.data.model.BehaviorRecordEntity
@@ -39,6 +41,8 @@ import com.example.additioapp.data.model.EventClassCrossRef
 import com.example.additioapp.data.model.ScheduleItemClassCrossRef
 import com.example.additioapp.data.model.TeacherAbsenceEntity
 import com.example.additioapp.data.model.UnitEntity
+import com.example.additioapp.data.model.StudentNoteEntity
+import com.example.additioapp.data.model.ClassNoteEntity
 
 @Database(
     entities = [
@@ -59,9 +63,11 @@ import com.example.additioapp.data.model.UnitEntity
         EventClassCrossRef::class,
         ScheduleItemEntity::class,
         ScheduleItemClassCrossRef::class,
-        TeacherAbsenceEntity::class
+        TeacherAbsenceEntity::class,
+        StudentNoteEntity::class,
+        ClassNoteEntity::class
     ],
-    version = 20,
+    version = 21,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -79,6 +85,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
     abstract fun scheduleItemDao(): ScheduleItemDao
     abstract fun teacherAbsenceDao(): TeacherAbsenceDao
+    abstract fun studentNoteDao(): StudentNoteDao
+    abstract fun classNoteDao(): ClassNoteDao
 
     companion object {
         @Volatile
@@ -343,6 +351,33 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // Migration from v20 to v21: Add student_notes and class_notes tables
+        private val MIGRATION_20_21 = object : androidx.room.migration.Migration(20, 21) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS student_notes (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        studentId INTEGER NOT NULL,
+                        content TEXT NOT NULL,
+                        date INTEGER NOT NULL,
+                        FOREIGN KEY(studentId) REFERENCES students(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_student_notes_studentId ON student_notes(studentId)")
+                
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS class_notes (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        classId INTEGER NOT NULL,
+                        content TEXT NOT NULL,
+                        date INTEGER NOT NULL,
+                        FOREIGN KEY(classId) REFERENCES classes(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_class_notes_classId ON class_notes(classId)")
+            }
+        }
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -351,7 +386,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "additio_database"
                 )
                 // Use proper migrations to preserve data
-                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20)
+                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21)
                 // Only use destructive migration as last resort for older versions
                 .fallbackToDestructiveMigrationFrom(1, 2, 3, 4, 5)
                 .build()

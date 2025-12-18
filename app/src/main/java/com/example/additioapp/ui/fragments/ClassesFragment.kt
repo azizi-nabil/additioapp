@@ -228,44 +228,64 @@ class ClassesFragment : Fragment() {
 
     private fun showClassOptions(classSummary: ClassWithSummary) {
         val classEntity = classSummary.classEntity
-        val options = if (classEntity.isArchived) {
-            arrayOf("Edit", "Duplicate", "Unarchive", "Delete")
+        val isArchived = classEntity.isArchived
+        
+        val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(requireContext())
+        val menuView = layoutInflater.inflate(R.layout.bottom_sheet_class_menu, null)
+        
+        // Set class name in header
+        menuView.findViewById<android.widget.TextView>(R.id.textMenuTitle).text = classEntity.name
+        
+        // Update archive/unarchive icon and text based on state
+        val iconArchive = menuView.findViewById<android.widget.ImageView>(R.id.iconArchive)
+        val textArchive = menuView.findViewById<android.widget.TextView>(R.id.textArchive)
+        if (isArchived) {
+            iconArchive.setImageResource(R.drawable.ic_unarchive)
+            textArchive.text = getString(R.string.action_unarchive)
         } else {
-            arrayOf("Edit", "Duplicate", "Archive", "Delete")
+            iconArchive.setImageResource(R.drawable.ic_archive)
+            textArchive.text = getString(R.string.action_archive)
         }
-
-        androidx.appcompat.app.AlertDialog.Builder(requireContext())
-            .setTitle(classEntity.name)
-            .setItems(options) { _, which ->
-                when (options[which]) {
-                    "Edit" -> {
-                        val dialog = AddClassDialog(classEntity) { updatedClass ->
-                            viewModel.updateClass(updatedClass)
-                        }
-                        dialog.show(parentFragmentManager, "EditClassDialog")
-                    }
-                    "Duplicate" -> {
-                        duplicateClass(classEntity)
-                    }
-                    "Archive" -> {
-                        viewModel.updateClass(classEntity.copy(isArchived = true))
-                    }
-                    "Unarchive" -> {
-                        viewModel.updateClass(classEntity.copy(isArchived = false))
-                    }
-                    "Delete" -> {
-                        androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                            .setTitle("Delete Class")
-                            .setMessage("Are you sure you want to delete ${classEntity.name}? This cannot be undone.")
-                            .setPositiveButton("Delete") { _, _ ->
-                                viewModel.deleteClass(classEntity)
-                            }
-                            .setNegativeButton("Cancel", null)
-                            .show()
-                    }
-                }
+        
+        // Set click listeners
+        menuView.findViewById<android.view.View>(R.id.menuEdit).setOnClickListener {
+            bottomSheet.dismiss()
+            val dialog = AddClassDialog(classEntity) { updatedClass ->
+                viewModel.updateClass(updatedClass)
             }
-            .show()
+            dialog.show(parentFragmentManager, "EditClassDialog")
+        }
+        
+        menuView.findViewById<android.view.View>(R.id.menuDuplicate).setOnClickListener {
+            bottomSheet.dismiss()
+            duplicateClass(classEntity)
+        }
+        
+        menuView.findViewById<android.view.View>(R.id.menuNotes).setOnClickListener {
+            bottomSheet.dismiss()
+            val dialog = com.example.additioapp.ui.dialogs.ClassNotesDialog.newInstance(classEntity.id, classEntity.name)
+            dialog.show(parentFragmentManager, "ClassNotesDialog")
+        }
+        
+        menuView.findViewById<android.view.View>(R.id.menuArchive).setOnClickListener {
+            bottomSheet.dismiss()
+            viewModel.updateClass(classEntity.copy(isArchived = !isArchived))
+        }
+        
+        menuView.findViewById<android.view.View>(R.id.menuDelete).setOnClickListener {
+            bottomSheet.dismiss()
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Delete Class")
+                .setMessage("Are you sure you want to delete ${classEntity.name}? This cannot be undone.")
+                .setPositiveButton("Delete") { _, _ ->
+                    viewModel.deleteClass(classEntity)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+        
+        bottomSheet.setContentView(menuView)
+        bottomSheet.show()
     }
 
     private fun duplicateClass(classEntity: com.example.additioapp.data.model.ClassEntity) {

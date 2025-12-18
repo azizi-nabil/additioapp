@@ -77,38 +77,38 @@ class GradesFragment : Fragment() {
                 androidx.navigation.Navigation.findNavController(view).navigate(R.id.gradeEntryFragment, bundle)
             },
             onMoreClick = { gradeItem, anchor ->
-                val popup = androidx.appcompat.widget.PopupMenu(requireContext(), anchor)
-                popup.menu.add(getString(R.string.action_edit))
-                popup.menu.add(getString(R.string.action_duplicate))
-                popup.menu.add(getString(R.string.action_delete))
-                popup.setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.title) {
-                        getString(R.string.action_edit) -> {
-                            val dialog = AddGradeItemDialog(classId, gradeItem) { updatedItem ->
-                                viewModel.insertGradeItem(updatedItem)
-                            }
-                            dialog.show(parentFragmentManager, "EditGradeItemDialog")
-                            true
-                        }
-                        getString(R.string.action_duplicate) -> {
-                            showDuplicateDialog(gradeItem)
-                            true
-                        }
-                        getString(R.string.action_delete) -> {
-                            androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                                .setTitle(getString(R.string.dialog_delete_grade_item))
-                                .setMessage(getString(R.string.msg_delete_grade_confirm, gradeItem.name))
-                                .setPositiveButton(getString(R.string.action_delete)) { _, _ ->
-                                    viewModel.deleteGradeItem(gradeItem)
-                                }
-                                .setNegativeButton(getString(R.string.action_cancel), null)
-                                .show()
-                            true
-                        }
-                        else -> false
+                val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(requireContext())
+                val menuView = layoutInflater.inflate(R.layout.bottom_sheet_grade_item_menu, null)
+                
+                menuView.findViewById<android.widget.TextView>(R.id.textMenuTitle).text = gradeItem.name
+                
+                menuView.findViewById<android.view.View>(R.id.menuEdit).setOnClickListener {
+                    bottomSheet.dismiss()
+                    val dialog = AddGradeItemDialog(classId, gradeItem) { updatedItem ->
+                        viewModel.insertGradeItem(updatedItem)
                     }
+                    dialog.show(parentFragmentManager, "EditGradeItemDialog")
                 }
-                popup.show()
+                
+                menuView.findViewById<android.view.View>(R.id.menuDuplicate).setOnClickListener {
+                    bottomSheet.dismiss()
+                    showDuplicateDialog(gradeItem)
+                }
+                
+                menuView.findViewById<android.view.View>(R.id.menuDelete).setOnClickListener {
+                    bottomSheet.dismiss()
+                    androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                        .setTitle(getString(R.string.dialog_delete_grade_item))
+                        .setMessage(getString(R.string.msg_delete_grade_confirm, gradeItem.name))
+                        .setPositiveButton(getString(R.string.action_delete)) { _, _ ->
+                            viewModel.deleteGradeItem(gradeItem)
+                        }
+                        .setNegativeButton(getString(R.string.action_cancel), null)
+                        .show()
+                }
+                
+                bottomSheet.setContentView(menuView)
+                bottomSheet.show()
             }
         )
 
