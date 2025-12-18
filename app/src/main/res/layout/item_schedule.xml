@@ -25,7 +25,7 @@
             android:layout_width="4dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="12dp"
-            android:background="#2196F3"/>
+            android:background="@color/accent_blue"/>
 
         <LinearLayout
             android:layout_width="0dp"

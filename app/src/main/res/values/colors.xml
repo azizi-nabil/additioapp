@@ -41,4 +41,17 @@
     <color name="blue_500">#2196F3</color>
     <color name="green_500">#4CAF50</color>
     <color name="red_500">#F44336</color>
+
+    <!-- Semantic Colors for Layouts -->
+    <color name="divider_color">#E0E0E0</color>
+    <color name="accent_blue">#2196F3</color>
+    <color name="accent_purple">#9C27B0</color>
+    <color name="status_present">#4CAF50</color>
+    <color name="status_absent">#F44336</color>
+    <color name="status_late">#FFC107</color>
+    <color name="status_excused">#2196F3</color>
+    <color name="item_background_purple">#F3E5F5</color>
+    <color name="home_header_overlay">#33FFFFFF</color>
+    <color name="text_primary">#FF000000</color>
+    <color name="text_purple_accent">#7B1FA2</color>
 </resources>

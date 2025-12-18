@@ -32,5 +32,6 @@ data class SessionEntity(
     val endTime: Long? = null,
     val title: String? = null,
     val location: String? = null,
-    val type: String = "Cours" // Cours, TD, TP
+    val type: String = "Cours", // Cours, TD, TP
+    val notes: String? = null
 )

@@ -125,6 +125,9 @@ class AttendanceHistoryFragment : Fragment() {
                     }
                     .setNegativeButton("Cancel", null)
                     .show()
+            },
+            onNotesClick = { _, currentNotes, date ->
+                showSessionNotesDialog(date, currentNotes)
             }
         )
         recyclerView.adapter = adapter
@@ -312,6 +315,37 @@ class AttendanceHistoryFragment : Fragment() {
         }
     }
 
+    private fun showSessionNotesDialog(sessionDate: Long, currentNotes: String?) {
+        val editText = android.widget.EditText(requireContext()).apply {
+            hint = getString(R.string.hint_notes_optional)
+            setText(currentNotes ?: "")
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            minLines = 3
+            maxLines = 6
+            setPadding(48, 32, 48, 32)
+        }
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.dialog_session_notes)
+            .setView(editText)
+            .setPositiveButton(R.string.action_save) { _, _ ->
+                val notes = editText.text.toString().ifEmpty { null }
+                lifecycleScope.launch {
+                    (requireActivity().application as AdditioApplication).repository.updateSessionNotes(classId, sessionDate, notes)
+                    Toast.makeText(requireContext(), "Notes saved", Toast.LENGTH_SHORT).show()
+                    loadSummaries()
+                }
+            }
+            .setNegativeButton(R.string.action_cancel, null)
+            .setNeutralButton(R.string.action_clear) { _, _ ->
+                lifecycleScope.launch {
+                    (requireActivity().application as AdditioApplication).repository.updateSessionNotes(classId, sessionDate, null)
+                    Toast.makeText(requireContext(), "Notes cleared", Toast.LENGTH_SHORT).show()
+                    loadSummaries()
+                }
+            }
+            .show()
+    }
 
     companion object {
         fun newInstance(classId: Long) = AttendanceHistoryFragment().apply {

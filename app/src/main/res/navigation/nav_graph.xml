@@ -100,4 +100,10 @@
         android:name="com.example.additioapp.ui.fragments.GlobalSearchFragment"
         android:label="Search"
         tools:layout="@layout/fragment_global_search" />
+
+    <fragment
+        android:id="@+id/driveBackupsFragment"
+        android:name="com.example.additioapp.ui.fragments.DriveBackupsFragment"
+        android:label="Manage Backups"
+        tools:layout="@layout/fragment_drive_backups" />
 </navigation>

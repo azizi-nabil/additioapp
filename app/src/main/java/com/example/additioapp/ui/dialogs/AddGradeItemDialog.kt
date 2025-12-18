@@ -29,6 +29,7 @@ class AddGradeItemDialog(
         val layoutFormulaContainer = view.findViewById<android.widget.LinearLayout>(R.id.layoutFormulaContainer)
         val editFormula = view.findViewById<EditText>(R.id.editFormula)
         val btnFormulaHelp = view.findViewById<android.widget.ImageButton>(R.id.btnFormulaHelp)
+        val editNotes = view.findViewById<EditText>(R.id.editGradeItemNotes)
 
         // Setup Category Dropdown
         val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
@@ -52,6 +53,7 @@ class AddGradeItemDialog(
                 layoutFormulaContainer.visibility = android.view.View.VISIBLE
                 editFormula.setText(item.formula)
             }
+            editNotes.setText(item.notes ?: "")
         }
 
         switchCalculated.setOnCheckedChangeListener { _, isChecked ->
@@ -118,6 +120,7 @@ class AddGradeItemDialog(
                 val weightStr = editWeight.text.toString()
                 val isCalculated = switchCalculated.isChecked
                 val formula = if (isCalculated) editFormula.text.toString() else null
+                val notes = editNotes.text.toString().ifEmpty { null }
                 
                 if (name.isNotEmpty() && maxScoreStr.isNotEmpty()) {
                     val maxScore = maxScoreStr.toFloatOrNull() ?: 100f
@@ -131,7 +134,8 @@ class AddGradeItemDialog(
                         maxScore = maxScore,
                         weight = weight,
                         date = selectedDate,
-                        formula = formula
+                        formula = formula,
+                        notes = notes
                     )
                     onSave(newItem)
                 }

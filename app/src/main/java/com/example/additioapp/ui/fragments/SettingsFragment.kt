@@ -5,16 +5,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.additioapp.R
 
 import android.widget.Button
 import android.widget.Toast
 import java.io.File
 import java.io.FileWriter
+import android.app.ProgressDialog
+import androidx.activity.result.IntentSenderRequest
+import androidx.lifecycle.lifecycleScope
+import com.example.additioapp.util.DriveBackupHelper
+import com.google.gson.GsonBuilder
+import kotlinx.coroutines.launch
 
 class SettingsFragment : Fragment() {
 
     private lateinit var viewModel: com.example.additioapp.ui.viewmodel.SettingsViewModel
+    private lateinit var driveHelper: DriveBackupHelper
+    private var pendingDriveAction: DriveAction? = null
+
+    private enum class DriveAction { BACKUP, RESTORE }
 
     private val backupLauncher = registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.CreateDocument("application/json")) { uri ->
         uri?.let {
@@ -26,6 +37,23 @@ class SettingsFragment : Fragment() {
         uri?.let {
             viewModel.restoreData(it, requireContext())
         }
+    }
+
+    // Drive authorization launcher
+    private val driveAuthLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        val token = driveHelper.getTokenFromResult(requireActivity(), result)
+        if (token != null) {
+            when (pendingDriveAction) {
+                DriveAction.BACKUP -> performDriveBackup(token)
+                DriveAction.RESTORE -> performDriveRestore(token)
+                null -> {}
+            }
+        } else {
+            Toast.makeText(requireContext(), "Authorization failed", Toast.LENGTH_SHORT).show()
+        }
+        pendingDriveAction = null
     }
 
     override fun onCreateView(
@@ -41,6 +69,8 @@ class SettingsFragment : Fragment() {
         val repository = (requireActivity().application as com.example.additioapp.AdditioApplication).repository
         val factory = com.example.additioapp.ui.AdditioViewModelFactory(repository)
         viewModel = androidx.lifecycle.ViewModelProvider(this, factory)[com.example.additioapp.ui.viewmodel.SettingsViewModel::class.java]
+        
+        driveHelper = DriveBackupHelper(requireContext())
 
         val btnBackup = view.findViewById<android.widget.LinearLayout>(R.id.btnBackupData)
         btnBackup.setOnClickListener {
@@ -60,6 +90,17 @@ class SettingsFragment : Fragment() {
                 .show()
         }
 
+        // Google Drive Backup
+        val btnDriveBackup = view.findViewById<android.widget.LinearLayout>(R.id.btnDriveBackup)
+        btnDriveBackup.setOnClickListener {
+            startDriveBackup()
+        }
+
+        // Manage Backups
+        val btnManageBackups = view.findViewById<android.widget.LinearLayout>(R.id.btnManageBackups)
+        btnManageBackups.setOnClickListener {
+            findNavController().navigate(R.id.driveBackupsFragment)
+        }
         // Language selector
         val btnLanguage = view.findViewById<android.widget.LinearLayout>(R.id.btnLanguage)
         val textCurrentLanguage = view.findViewById<android.widget.TextView>(R.id.textCurrentLanguage)
@@ -427,5 +468,145 @@ class SettingsFragment : Fragment() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun startDriveBackup() {
+        pendingDriveAction = DriveAction.BACKUP
+        lifecycleScope.launch {
+            try {
+                val token = driveHelper.authorize(requireActivity(), driveAuthLauncher)
+                if (token != null) {
+                    performDriveBackup(token)
+                }
+                // If null, consent is needed and will be handled by driveAuthLauncher
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Authorization error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun startDriveRestore() {
+        pendingDriveAction = DriveAction.RESTORE
+        lifecycleScope.launch {
+            try {
+                val token = driveHelper.authorize(requireActivity(), driveAuthLauncher)
+                if (token != null) {
+                    performDriveRestore(token)
+                }
+                // If null, consent is needed and will be handled by driveAuthLauncher
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Authorization error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun performDriveBackup(accessToken: String) {
+        lifecycleScope.launch {
+            val progressDialog = android.app.ProgressDialog(requireContext()).apply {
+                setMessage("Backing up to Google Drive...")
+                setCancelable(false)
+                show()
+            }
+            
+            try {
+                val repository = (requireActivity().application as com.example.additioapp.AdditioApplication).repository
+                val backupData = repository.getAllData()
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val json = gson.toJson(backupData)
+                
+                val success = driveHelper.uploadBackup(accessToken, json)
+                
+                progressDialog.dismiss()
+                
+                if (success) {
+                    Toast.makeText(requireContext(), "Backup uploaded to Google Drive", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Backup upload failed", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                progressDialog.dismiss()
+                Toast.makeText(requireContext(), "Backup error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun performDriveRestore(accessToken: String) {
+        lifecycleScope.launch {
+            val progressDialog = android.app.ProgressDialog(requireContext()).apply {
+                setMessage("Loading backups...")
+                setCancelable(false)
+                show()
+            }
+            
+            try {
+                val backups = driveHelper.listBackups(accessToken)
+                progressDialog.dismiss()
+                
+                if (backups.isEmpty()) {
+                    Toast.makeText(requireContext(), "No backups found in Google Drive", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+                
+                // Show backup selection dialog
+                val backupNames = backups.map { 
+                    "${it.name}\n${it.modifiedTime.take(10)}" 
+                }.toTypedArray()
+                
+                androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Select Backup to Restore")
+                    .setItems(backupNames) { _, which ->
+                        val selectedBackup = backups[which]
+                        downloadAndRestoreBackup(accessToken, selectedBackup.id)
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            } catch (e: Exception) {
+                progressDialog.dismiss()
+                Toast.makeText(requireContext(), "Error loading backups: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun downloadAndRestoreBackup(accessToken: String, fileId: String) {
+        lifecycleScope.launch {
+            val progressDialog = android.app.ProgressDialog(requireContext()).apply {
+                setMessage("Restoring from Google Drive...")
+                setCancelable(false)
+                show()
+            }
+            
+            try {
+                val json = driveHelper.downloadBackup(accessToken, fileId)
+                progressDialog.dismiss()
+                
+                if (json == null) {
+                    Toast.makeText(requireContext(), "Failed to download backup", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+                
+                // Show confirmation dialog
+                androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Restore Data?")
+                    .setMessage("This will replace all current data. Are you sure?")
+                    .setPositiveButton("Restore") { _, _ ->
+                        lifecycleScope.launch {
+                            try {
+                                val repository = (requireActivity().application as com.example.additioapp.AdditioApplication).repository
+                                val gson = GsonBuilder().create()
+                                val backupData = gson.fromJson(json, com.example.additioapp.data.model.BackupData::class.java)
+                                repository.restoreData(backupData)
+                                Toast.makeText(requireContext(), "Data restored successfully", Toast.LENGTH_SHORT).show()
+                            } catch (e: Exception) {
+                                Toast.makeText(requireContext(), "Restore error: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            } catch (e: Exception) {
+                progressDialog.dismiss()
+                Toast.makeText(requireContext(), "Download error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

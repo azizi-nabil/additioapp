@@ -20,7 +20,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_assignment"
-            app:tint="?attr/colorPrimary"
+            app:tint="?attr/colorOnPrimaryContainer"
             android:background="@drawable/bg_circle_primary_container"
             android:padding="8dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
             android:text="Midterm Exam"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textColor="?attr/colorOnSurface"
             app:layout_constraintStart_toEndOf="@id/imgGradeIcon"
             app:layout_constraintTop_toTopOf="@id/imgGradeIcon"
             app:layout_constraintEnd_toStartOf="@id/btnMoreOptions" />
@@ -72,10 +72,11 @@
                 android:layout_height="wrap_content"
                 android:text="Exam"
                 android:textSize="12sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:background="?attr/colorSurfaceVariant"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="2dp"
+                android:textColor="?attr/colorOnSecondaryContainer"
+                android:background="@drawable/bg_chip_rounded"
+                android:backgroundTint="?attr/colorSecondaryContainer"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
                 android:layout_marginEnd="8dp"/>
 
             <TextView
@@ -95,8 +96,8 @@
                 android:layout_height="wrap_content"
                 android:text="Σ Calculated"
                 android:textSize="11sp"
-                android:textColor="#7B1FA2"
-                android:background="#F3E5F5"
+                android:textColor="@color/text_purple_accent"
+                android:background="@color/item_background_purple"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="2dp"
                 android:visibility="gone"/>

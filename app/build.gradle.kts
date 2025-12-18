@@ -9,7 +9,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.additioapp"
+        applicationId = "com.example.teacherhub"
         minSdk = 24
         targetSdk = 34
         versionCode = 16
@@ -81,4 +81,7 @@ dependencies {
 
     // Charts
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    // Google Drive API authorization
+    implementation("com.google.android.gms:play-services-auth:21.4.0")
 }

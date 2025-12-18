@@ -36,4 +36,7 @@ interface SessionDao {
     
     @Query("SELECT COUNT(*) FROM sessions WHERE classId = :classId AND type = :type")
     suspend fun getSessionCountByType(classId: Long, type: String): Int
+    
+    @Query("UPDATE sessions SET notes = :notes WHERE classId = :classId AND date = :date")
+    suspend fun updateSessionNotes(classId: Long, date: Long, notes: String?)
 }

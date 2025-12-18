@@ -8,5 +8,6 @@ data class AttendanceSessionSummary(
     val lateCount: Int,
     val excusedCount: Int,
     val totalCount: Int,
-    val type: String = "Cours"
+    val type: String = "Cours",
+    val notes: String? = null
 )

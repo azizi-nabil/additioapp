@@ -56,15 +56,20 @@ class GradeItemAdapter(
                 gradeIcon.setImageResource(R.drawable.ic_sigma_orange)
                 gradeIcon.imageTintList = null // Remove tint for PNG
                 gradeIcon.background = null // Remove circle background
-                cardView.setCardBackgroundColor(android.graphics.Color.parseColor("#E8F5E9")) // Soft green
+                
+                val softGreen = androidx.core.content.ContextCompat.getColor(itemView.context, R.color.soft_green)
+                cardView.setCardBackgroundColor(softGreen)
             } else {
                 calculatedIndicator.visibility = View.GONE
                 gradeIcon.setImageResource(R.drawable.ic_assignment)
-                gradeIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                    androidx.core.content.ContextCompat.getColor(itemView.context, R.color.primary)
-                )
+                
+                val onPrimaryContainer = androidx.core.content.ContextCompat.getColor(itemView.context, R.color.on_primary_container)
+                gradeIcon.imageTintList = android.content.res.ColorStateList.valueOf(onPrimaryContainer)
+                
                 gradeIcon.setBackgroundResource(R.drawable.bg_circle_primary_container)
-                cardView.setCardBackgroundColor(androidx.core.content.ContextCompat.getColor(itemView.context, android.R.color.white))
+                
+                val surfaceColor = androidx.core.content.ContextCompat.getColor(itemView.context, R.color.surface)
+                cardView.setCardBackgroundColor(surfaceColor)
             }
             
             itemView.setOnClickListener { onItemClick(item) }

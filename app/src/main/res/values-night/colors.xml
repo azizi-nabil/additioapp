@@ -29,4 +29,17 @@
     <color name="soft_blue">#0D47A1</color>
     <color name="soft_orange">#E65100</color>
     <color name="soft_pink">#880E4F</color>
+
+    <!-- Semantic Colors for Layouts -->
+    <color name="divider_color">#424242</color>
+    <color name="accent_blue">#90CAF9</color>
+    <color name="accent_purple">#CE93D8</color>
+    <color name="status_present">#81C784</color>
+    <color name="status_absent">#E57373</color>
+    <color name="status_late">#FFF176</color>
+    <color name="status_excused">#64B5F6</color>
+    <color name="item_background_purple">#4A148C</color>
+    <color name="home_header_overlay">#1F000000</color>
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_purple_accent">#E1BEE7</color>
 </resources>

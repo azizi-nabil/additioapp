@@ -260,6 +260,7 @@ class AppRepository(
     suspend fun deleteSession(session: SessionEntity) = sessionDao.deleteSession(session)
     suspend fun getOldestSessionDate(classId: Long): Long? = sessionDao.getOldestSessionDate(classId)
     suspend fun getSessionCountByType(classId: Long, type: String): Int = sessionDao.getSessionCountByType(classId, type)
+    suspend fun updateSessionNotes(classId: Long, date: Long, notes: String?) = sessionDao.updateSessionNotes(classId, date, notes)
 
     // Units
     fun getUnitsForClass(classId: Long): LiveData<List<UnitEntity>> = unitDao.getUnitsForClass(classId)

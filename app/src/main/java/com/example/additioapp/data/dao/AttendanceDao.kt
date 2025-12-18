@@ -85,7 +85,8 @@ interface AttendanceDao {
             SUM(CASE WHEN ar.status = 'L' THEN 1 ELSE 0 END) AS lateCount,
             SUM(CASE WHEN ar.status = 'E' THEN 1 ELSE 0 END) AS excusedCount,
             COUNT(*) AS totalCount,
-            COALESCE(ses.type, 'Cours') AS type
+            COALESCE(ses.type, 'Cours') AS type,
+            ses.notes AS notes
         FROM attendance_records ar
         INNER JOIN students s ON ar.studentId = s.id
         LEFT JOIN sessions ses ON ses.classId = s.classId AND ses.date = ar.date

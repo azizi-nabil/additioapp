@@ -14,7 +14,8 @@ import java.util.Locale
 class AttendanceHistoryAdapter(
     private var items: List<AttendanceSessionSummary> = emptyList(),
     private val onItemClick: (sessionId: String, date: Long) -> Unit,
-    private val onDeleteClick: (String) -> Unit
+    private val onDeleteClick: (String) -> Unit,
+    private val onNotesClick: (sessionId: String, currentNotes: String?, date: Long) -> Unit = { _, _, _ -> }
 ) : RecyclerView.Adapter<AttendanceHistoryAdapter.HistoryViewHolder>() {
 
     private val dateFormat = SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault())
@@ -31,7 +32,7 @@ class AttendanceHistoryAdapter(
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        holder.bind(items[position], dateFormat, onItemClick, onDeleteClick)
+        holder.bind(items[position], dateFormat, onItemClick, onDeleteClick, onNotesClick)
     }
 
     override fun getItemCount(): Int = items.size
@@ -47,12 +48,14 @@ class AttendanceHistoryAdapter(
         private val textType: TextView = itemView.findViewById(R.id.textSessionType)
         private val textTotals: TextView = itemView.findViewById(R.id.textTotals)
         private val btnDelete: android.widget.ImageButton = itemView.findViewById(R.id.btnDeleteSession)
+        private val btnNotes: android.widget.ImageButton = itemView.findViewById(R.id.btnSessionNotes)
 
         fun bind(
             item: AttendanceSessionSummary, 
             formatter: SimpleDateFormat,
             onItemClick: (sessionId: String, date: Long) -> Unit,
-            onDeleteClick: (String) -> Unit
+            onDeleteClick: (String) -> Unit,
+            onNotesClick: (sessionId: String, currentNotes: String?, date: Long) -> Unit
         ) {
             textDate.text = formatter.format(Date(item.date))
             textType.text = item.type
@@ -64,9 +67,16 @@ class AttendanceHistoryAdapter(
             chipL.text = "L:${item.lateCount}"
             chipE.text = "E:${item.excusedCount}"
             textTotals.text = "${item.totalCount} Students"
+            
+            // Highlight notes button if session has notes
+            val hasNotes = !item.notes.isNullOrEmpty()
+            btnNotes.alpha = if (hasNotes) 1.0f else 0.5f
 
             itemView.setOnClickListener { onItemClick(item.sessionId, item.date) }
             btnDelete.setOnClickListener { onDeleteClick(item.sessionId) }
+            btnNotes.setOnClickListener { onNotesClick(item.sessionId, item.notes, item.date) }
         }
     }
 }
+
+

@@ -65,6 +65,15 @@
             </LinearLayout>
 
             <ImageButton
+                android:id="@+id/btnSessionNotes"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_notes"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="Session Notes" />
+
+            <ImageButton
                 android:id="@+id/btnDeleteSession"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -130,7 +139,7 @@
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="6dp"
                     android:background="@drawable/bg_chip_rounded"
-                    android:backgroundTint="#4CAF50"
+                    android:backgroundTint="@color/status_present"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
                     android:textStyle="bold"
@@ -144,7 +153,7 @@
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="6dp"
                     android:background="@drawable/bg_chip_rounded"
-                    android:backgroundTint="#F44336"
+                    android:backgroundTint="@color/status_absent"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
                     android:textStyle="bold"
@@ -158,8 +167,8 @@
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="6dp"
                     android:background="@drawable/bg_chip_rounded"
-                    android:backgroundTint="#FFC107"
-                    android:textColor="@android:color/black"
+                    android:backgroundTint="@color/status_late"
+                    android:textColor="?attr/colorOnSurface"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:layout_marginEnd="4dp"/>
@@ -172,7 +181,7 @@
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="6dp"
                     android:background="@drawable/bg_chip_rounded"
-                    android:backgroundTint="#2196F3"
+                    android:backgroundTint="@color/status_excused"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
                     android:textStyle="bold"/>

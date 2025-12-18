@@ -12,7 +12,7 @@
         android:id="@+id/colorIndicator"
         android:layout_width="4dp"
         android:layout_height="36dp"
-        android:background="#2196F3"/>
+        android:background="@color/accent_blue"/>
     
     <ImageView
         android:id="@+id/iconRow"
@@ -60,7 +60,7 @@
         android:textSize="11sp"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:background="@drawable/bg_rounded_gray"
-        android:backgroundTint="#E0E0E0"
+        android:backgroundTint="@color/divider_color"
         android:paddingHorizontal="8dp"
         android:paddingVertical="2dp"
         android:visibility="gone"/>

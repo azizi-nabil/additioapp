@@ -402,6 +402,8 @@
     <string name="action_report">Report</string>
     <string name="action_marks">Marks</string>
     <string name="action_notes">Notes</string>
+    <string name="hint_notes_optional">Notes (optional)</string>
+    <string name="dialog_session_notes">Session Notes</string>
     
     <!-- Fragment Common Strings -->
     <string name="hint_search">Search...</string>
@@ -462,9 +464,37 @@
     <string name="settings_backup_desc">Export your data to a JSON file</string>
     <string name="settings_restore_title">Restore Data</string>
     <string name="settings_restore_desc">Import data from a backup file</string>
+    <string name="settings_drive_backup_title">Backup to Google Drive</string>
+    <string name="settings_drive_backup_desc">Save your data to your Google account</string>
+    <string name="settings_drive_restore_title">Restore from Google Drive</string>
+    <string name="settings_drive_restore_desc">Restore data from your Google account</string>
+    <string name="settings_manage_backups_title">Manage Backups</string>
+    <string name="settings_manage_backups_desc">View and manage your cloud backups</string>
+    <string name="no_backups_found">No backups yet</string>
+    <string name="create_first_backup_hint">Tap the button below to create your first cloud backup</string>
+    <string name="cloud_backups_header">Google Drive Backups</string>
+    <string name="backups_synced_count">%d backup(s) synced</string>
+    <string name="your_backups">Your Backups</string>
+    <string name="action_backup_now">Backup Now</string>
+    <string name="dialog_restore_backup_title">Restore Backup?</string>
+    <string name="dialog_restore_backup_message">This will replace all current data with %1$s. Are you sure?</string>
+    <string name="dialog_delete_backup_title">Delete Backup?</string>
+    <string name="dialog_delete_backup_message">Are you sure you want to delete %1$s? This cannot be undone.</string>
+    <string name="toast_backup_deleted">Backup deleted</string>
+    <string name="toast_restore_success">Data restored successfully</string>
+    <string name="toast_backup_success">Backup uploaded successfully</string>
+    <string name="toast_backup_failed">Backup upload failed</string>
     <string name="settings_name_display_title">Student Name Display</string>
     <string name="settings_sort_order_title">Default Sort Order</string>
     <string name="settings_list_size_title">Student List Size</string>
+
+    <!-- Grades Page -->
+    <string name="header_assessments_title">Assessments</string>
+    <string name="header_assessments_subtitle">%d items</string>
+    <string name="empty_grades_title">No assessments yet</string>
+    <string name="empty_grades_subtitle">Add your first assessment to this class by tapping the button below</string>
+    <string name="action_toggle_fab_show">Show Add Button</string>
+    <string name="action_toggle_fab_hide">Hide Add Button</string>
     <string name="settings_show_search_title">Show Global Search</string>
     <string name="settings_show_search_desc">Display search button on main screens</string>
     <string name="settings_edit_positive">Edit Positive Behaviors</string>
@@ -679,7 +709,6 @@
     <string name="dialog_edit_positive_behaviors">Edit Positive Behaviors</string>
     <string name="dialog_edit_negative_behaviors">Edit Negative Behaviors</string>
     <string name="dialog_edit_grade_categories">Edit Grade Categories</string>
-    <string name="toast_backup_failed">Backup Failed: %s</string>
     <string name="toast_restore_failed">Restore Failed: %s</string>
     <string name="version_format">Version %s</string>
     <string name="lang_french">French</string>

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,8 +42,10 @@ class GradesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewGradeItems)
+        val emptyStateLayout = view.findViewById<LinearLayout>(R.id.emptyStateLayout)
         val fab = view.findViewById<ExtendedFloatingActionButton>(R.id.fabAddGradeItem)
         val btnToggleFab = view.findViewById<android.widget.ImageButton>(R.id.btnToggleFab)
+        val textAssessmentCount = view.findViewById<android.widget.TextView>(R.id.textAssessmentCount)
         
         // FAB toggle functionality
         val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
@@ -52,11 +55,11 @@ class GradesFragment : Fragment() {
             if (isFabVisible) {
                 fab.show()
                 btnToggleFab.setImageResource(R.drawable.ic_visibility)
-                btnToggleFab.alpha = 1.0f
+                btnToggleFab.contentDescription = getString(R.string.action_toggle_fab_hide)
             } else {
                 fab.hide()
                 btnToggleFab.setImageResource(R.drawable.ic_visibility_off)
-                btnToggleFab.alpha = 0.6f
+                btnToggleFab.contentDescription = getString(R.string.action_toggle_fab_show)
             }
         }
         updateFabVisibility()
@@ -115,11 +118,19 @@ class GradesFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val textAssessmentCount = view.findViewById<android.widget.TextView>(R.id.textAssessmentCount)
-
         viewModel.getGradeItemsForClass(classId).observe(viewLifecycleOwner) { items ->
-            adapter.submitList(items)
-            textAssessmentCount.text = "${items.size} Assessments"
+            // Update Text
+            textAssessmentCount.text = getString(R.string.header_assessments_subtitle, items.size)
+            
+            // Handle Empty State
+            if (items.isEmpty()) {
+                emptyStateLayout.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+            } else {
+                emptyStateLayout.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+                adapter.submitList(items)
+            }
         }
 
         fab.setOnClickListener {

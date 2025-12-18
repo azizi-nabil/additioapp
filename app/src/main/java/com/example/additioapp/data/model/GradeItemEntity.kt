@@ -27,5 +27,6 @@ data class GradeItemEntity(
     val gradingType: String = "NUMERIC", // NUMERIC, LETTER, PASS_FAIL, RUBRIC, CUSTOM_SCALE
     val weight: Float = 1.0f, // Default weight 1.0 (100% if single item, or relative weight)
     val date: Long = System.currentTimeMillis(),
-    val formula: String? = null // e.g. "max([Item1], [Item2])"
+    val formula: String? = null, // e.g. "max([Item1], [Item2])"
+    val notes: String? = null
 )

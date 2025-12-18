@@ -70,7 +70,7 @@
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnPrimary"
                         android:background="@drawable/bg_rounded_gray"
-                        android:backgroundTint="#33FFFFFF"
+                        android:backgroundTint="@color/home_header_overlay"
                         android:paddingHorizontal="8dp"
                         android:paddingVertical="2dp"
                         android:layout_marginStart="12dp"/>
