@@ -131,6 +131,23 @@ class SettingsViewModel(private val repository: AppRepository) : ViewModel() {
                                 gson.fromJson(it, com.example.additioapp.data.model.ScheduleItemClassCrossRef::class.java)
                             } ?: emptyList()
                             
+                            // Parse v3 data (absences, notes, units) with defaults for older backups
+                            val teacherAbsences = jsonObject.getAsJsonArray("teacherAbsences")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.TeacherAbsenceEntity::class.java)
+                            } ?: emptyList()
+                            
+                            val studentNotes = jsonObject.getAsJsonArray("studentNotes")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.StudentNoteEntity::class.java)
+                            } ?: emptyList()
+                            
+                            val classNotes = jsonObject.getAsJsonArray("classNotes")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.ClassNoteEntity::class.java)
+                            } ?: emptyList()
+                            
+                            val units = jsonObject.getAsJsonArray("units")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.UnitEntity::class.java)
+                            } ?: emptyList()
+                            
                             BackupData(
                                 version = version,
                                 timestamp = timestamp,
@@ -146,7 +163,11 @@ class SettingsViewModel(private val repository: AppRepository) : ViewModel() {
                                 scheduleItems = scheduleItems,
                                 eventClassRefs = eventClassRefs,
                                 taskClassRefs = taskClassRefs,
-                                scheduleItemClassRefs = scheduleItemClassRefs
+                                scheduleItemClassRefs = scheduleItemClassRefs,
+                                teacherAbsences = teacherAbsences,
+                                studentNotes = studentNotes,
+                                classNotes = classNotes,
+                                units = units
                             )
                         }
                     }

@@ -18,4 +18,11 @@ interface UnitDao {
 
     @Delete
     suspend fun deleteUnit(unit: UnitEntity)
+    
+    // Backup/Restore
+    @Query("SELECT * FROM units")
+    suspend fun getAllUnitsSync(): List<UnitEntity>
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(units: List<UnitEntity>)
 }

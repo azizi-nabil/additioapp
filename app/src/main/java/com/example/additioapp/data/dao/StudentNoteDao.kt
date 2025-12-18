@@ -27,4 +27,11 @@ interface StudentNoteDao {
     
     @Query("DELETE FROM student_notes WHERE id = :noteId")
     suspend fun deleteById(noteId: Long)
+    
+    // Backup/Restore
+    @Query("SELECT * FROM student_notes")
+    suspend fun getAllNotesSync(): List<StudentNoteEntity>
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(notes: List<StudentNoteEntity>)
 }

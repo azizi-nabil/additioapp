@@ -268,7 +268,7 @@ class AppRepository(
     // Backup & Restore
     suspend fun getAllData(): com.example.additioapp.data.model.BackupData {
         return com.example.additioapp.data.model.BackupData(
-            version = 2,
+            version = 3,
             timestamp = System.currentTimeMillis(),
             classes = classDao.getAllClassesSync(),
             students = studentDao.getAllStudentsSync(),
@@ -278,13 +278,19 @@ class AppRepository(
             gradeRecords = gradeDao.getAllGradeRecordsSync(),
             behaviorRecords = behaviorDao.getAllBehaviorsSync(),
             
-            // New v2 data
+            // v2 data
             events = eventDao.getAllEventsSync(),
             tasks = taskDao.getAllTasksSync(),
             scheduleItems = scheduleItemDao.getAllScheduleItemsSync(),
             eventClassRefs = eventDao.getAllEventClassRefs(),
             taskClassRefs = taskDao.getAllTaskClassRefs(),
-            scheduleItemClassRefs = scheduleItemDao.getAllScheduleItemClassRefs()
+            scheduleItemClassRefs = scheduleItemDao.getAllScheduleItemClassRefs(),
+            
+            // v3 data
+            teacherAbsences = teacherAbsenceDao.getAllAbsencesSync(),
+            studentNotes = studentNoteDao.getAllNotesSync(),
+            classNotes = classNoteDao.getAllNotesSync(),
+            units = unitDao.getAllUnitsSync()
         )
     }
 
@@ -412,6 +418,40 @@ class AppRepository(
         if (data.eventClassRefs.isNotEmpty()) eventDao.insertEventClassRefs(data.eventClassRefs)
         if (data.taskClassRefs.isNotEmpty()) taskDao.insertTaskClassRefs(data.taskClassRefs)
         if (data.scheduleItemClassRefs.isNotEmpty()) scheduleItemDao.insertScheduleItemClassRefs(data.scheduleItemClassRefs)
+        
+        // Restore v3 data (only if present)
+        if (data.teacherAbsences.isNotEmpty()) {
+            try {
+                android.util.Log.d("AppRepository", "Inserting ${data.teacherAbsences.size} teacher absences")
+                teacherAbsenceDao.insertAll(data.teacherAbsences)
+            } catch (e: Exception) {
+                android.util.Log.e("AppRepository", "Failed to restore teacher absences: ${e.message}", e)
+            }
+        }
+        if (data.studentNotes.isNotEmpty()) {
+            try {
+                android.util.Log.d("AppRepository", "Inserting ${data.studentNotes.size} student notes")
+                studentNoteDao.insertAll(data.studentNotes)
+            } catch (e: Exception) {
+                android.util.Log.e("AppRepository", "Failed to restore student notes: ${e.message}", e)
+            }
+        }
+        if (data.classNotes.isNotEmpty()) {
+            try {
+                android.util.Log.d("AppRepository", "Inserting ${data.classNotes.size} class notes")
+                classNoteDao.insertAll(data.classNotes)
+            } catch (e: Exception) {
+                android.util.Log.e("AppRepository", "Failed to restore class notes: ${e.message}", e)
+            }
+        }
+        if (data.units.isNotEmpty()) {
+            try {
+                android.util.Log.d("AppRepository", "Inserting ${data.units.size} units")
+                unitDao.insertAll(data.units)
+            } catch (e: Exception) {
+                android.util.Log.e("AppRepository", "Failed to restore units: ${e.message}", e)
+            }
+        }
         
         android.util.Log.d("AppRepository", "Restore completed successfully")
     }
