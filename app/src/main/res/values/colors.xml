@@ -44,6 +44,7 @@
 
     <!-- Semantic Colors for Layouts -->
     <color name="divider_color">#E0E0E0</color>
+    <color name="divider">#E0E0E0</color>
     <color name="accent_blue">#2196F3</color>
     <color name="accent_purple">#9C27B0</color>
     <color name="status_present">#4CAF50</color>

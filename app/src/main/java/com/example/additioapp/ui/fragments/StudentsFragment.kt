@@ -200,6 +200,10 @@ class StudentsFragment : Fragment() {
                 val dialog = com.example.additioapp.ui.dialogs.BehaviorReportDialog.newInstance(student.id, student.name, type)
                 dialog.show(parentFragmentManager, "BehaviorReportDialog")
             },
+            onBehaviorFullReportClick = { student ->
+                val dialog = com.example.additioapp.ui.dialogs.BehaviorFullReportDialog.newInstance(student.id, student.name)
+                dialog.show(parentFragmentManager, "BehaviorFullReportDialog")
+            },
             onSelectionChanged = { count ->
                 updateSelectionUI(count)
             }

@@ -91,10 +91,10 @@ class AddGradeItemDialog(
 • <b>Comparison:</b> &gt; &lt; &gt;= &lt;= ==<br/><br/>
 
 <b>📋 Attendance Variables:</b><br/>
-• <b>abs-td</b> - TD absences<br/>
-• <b>abs-tp</b> - TP absences<br/>
-• <b>pres-c</b> - Course presences<br/>
-• <b>tot-td</b>, <b>tot-tp</b>, <b>tot-c</b> - Session totals<br/><br/>
+• <b>abs_td</b>, <b>abs_tp</b> - Total Absences<br/>
+• <b>just_td</b>, <b>just_tp</b> - Justified Absences<br/>
+• <b>pres_c</b> - Course presences<br/>
+• <b>tot_td</b>, <b>tot_tp</b>, <b>tot_c</b> - Session totals<br/><br/>
 
 <b>🌟 Behavior Variables:</b><br/>
 • <b>pos</b> - Positive behavior count<br/>
@@ -102,7 +102,7 @@ class AddGradeItemDialog(
 
 <b>📝 Examples:</b><br/>
 • avg(Test1, Test2, Exam)<br/>
-• if(abs-td>3, 0, 20-abs-td*2)<br/>
+• if(abs_td>3, 0, 20-abs_td*2)<br/>
 • if(neg>0, Score-neg*2, Score+pos)
             """.trimIndent()
             

@@ -64,18 +64,35 @@ class GradeEntryFragment : Fragment() {
 
         titleTextView.text = gradeItemName ?: "Enter Grades"
 
-        val adapter = GradeEntryAdapter { item, score, status ->
-            val existingId = item.gradeRecord?.id ?: 0L
-            // score of -1 means "blank/no grade" - stored as -1 in DB
-            val record = GradeRecordEntity(
-                id = existingId,
-                studentId = item.student.id,
-                gradeItemId = gradeItemId,
-                score = score,
-                status = status
-            )
-            gradeViewModel.saveGradeAndRecalculate(record, classId)
-        }
+        val adapter = GradeEntryAdapter(
+            onGradeChanged = { item, score, status ->
+                val existingId = item.gradeRecord?.id ?: 0L
+                // score of -1 means "blank/no grade" - stored as -1 in DB
+                val record = GradeRecordEntity(
+                    id = existingId,
+                    studentId = item.student.id,
+                    gradeItemId = gradeItemId,
+                    score = score,
+                    status = status
+                )
+                gradeViewModel.saveGradeAndRecalculate(record, classId)
+            },
+            onAbsenceReport = { item ->
+                val dialog = com.example.additioapp.ui.dialogs.AbsenceReportDialog.newInstance(
+                    item.student.id, 
+                    item.student.displayNameFr, 
+                    classId
+                )
+                dialog.show(parentFragmentManager, "AbsenceReportDialog")
+            },
+            onBehaviorReport = { item ->
+                val dialog = com.example.additioapp.ui.dialogs.BehaviorFullReportDialog.newInstance(
+                    item.student.id, 
+                    item.student.displayNameFr
+                )
+                dialog.show(parentFragmentManager, "BehaviorFullReportDialog")
+            }
+        )
 
         val editFilterMin = view.findViewById<EditText>(R.id.editFilterMin)
         val editFilterMax = view.findViewById<EditText>(R.id.editFilterMax)

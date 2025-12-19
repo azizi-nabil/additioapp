@@ -97,7 +97,7 @@ class FormulaEditorFragment : DialogFragment() {
         // Initial Data (Variables)
         val variables = variableNames
         val functions = listOf("avg(", "max(", "min(", "if(")
-        val system = listOf("abs-td", "abs-tp", "pres-c", "tot-td", "tot-tp", "tot-c", "pos", "neg")
+        val system = listOf("abs_td", "abs_tp", "just_td", "just_tp", "pres_c", "tot_td", "tot_tp", "tot_c", "pos", "neg")
 
         fun updateList(position: Int) {
             when (position) {

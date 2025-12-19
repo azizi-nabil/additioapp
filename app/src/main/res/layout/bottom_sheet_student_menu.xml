@@ -95,14 +95,38 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_assignment"
+            android:src="@drawable/ic_calendar_today_24dp"
             app:tint="@color/blue_500"/>
         
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="@string/action_report"
+            android:text="@string/menu_absence_report"
+            android:textSize="15sp"
+            android:textColor="?attr/colorOnSurface"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menuBehaviorReport"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:background="?attr/selectableItemBackground">
+        
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_star_24dp"
+            app:tint="@color/orange_500"/>
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/menu_behavior_report"
             android:textSize="15sp"
             android:textColor="?attr/colorOnSurface"/>
     </LinearLayout>

@@ -383,7 +383,7 @@ class SettingsFragment : Fragment() {
 &nbsp;&nbsp;- max([Item1], [Item2])<br/>
 &nbsp;&nbsp;- avg([Exam], [Test])<br/>
 &nbsp;&nbsp;- [Score] * 0.5 + [Bonus]<br/>
-• <b>Attendance variables</b>: abs-td, abs-tp, pres-c, tot-td, tot-tp, tot-c<br/>
+• <b>Attendance variables</b>: abs_td, abs_tp, just_td, just_tp, pres_c, tot_td, tot_tp, tot_c<br/>
 • <b>Duplicate</b>: Use menu ⋮ to copy grade items to other classes<br/><br/>
 
 <h3>🌟 BEHAVIOR</h3>

@@ -34,6 +34,7 @@ class StudentAdapter(
     private val onGradesClick: (StudentEntity) -> Unit = {},
     private val onNotesClick: (StudentEntity) -> Unit = {},
     private val onBehaviorClick: (StudentEntity, String) -> Unit = { _, _ -> },
+    private val onBehaviorFullReportClick: (StudentEntity) -> Unit = {},
     private val onSelectionChanged: ((Int) -> Unit)? = null
 ) : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() {
 
@@ -133,6 +134,7 @@ class StudentAdapter(
             onGradesClick,
             onNotesClick,
             onBehaviorClick,
+            onBehaviorFullReportClick,
             { enterSelectionMode(student.id) },
             { toggleSelection(student.id) }
         )
@@ -172,6 +174,7 @@ class StudentAdapter(
             onGradesClick: (StudentEntity) -> Unit,
             onNotesClick: (StudentEntity) -> Unit,
             onBehaviorClick: (StudentEntity, String) -> Unit,
+            onBehaviorFullReportClick: (StudentEntity) -> Unit,
             onLongPress: () -> Unit,
             onToggleSelection: () -> Unit
         ) {
@@ -366,6 +369,10 @@ class StudentAdapter(
                 menuView.findViewById<View>(com.example.additioapp.R.id.menuNotes).setOnClickListener {
                     bottomSheet.dismiss()
                     onNotesClick(student)
+                }
+                menuView.findViewById<View>(com.example.additioapp.R.id.menuBehaviorReport).setOnClickListener {
+                    bottomSheet.dismiss()
+                    onBehaviorFullReportClick(student)
                 }
                 menuView.findViewById<View>(com.example.additioapp.R.id.menuDelete).setOnClickListener {
                     bottomSheet.dismiss()

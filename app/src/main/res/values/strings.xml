@@ -300,6 +300,8 @@
     <string name="status_absent">Absent</string>
     <string name="status_late">Late</string>
     <string name="status_excused">Excused</string>
+    <string name="status_missing">Missing</string>
+    <string name="label_reports">Reports</string>
     <string name="label_grade_avg">Grade Avg:</string>
     <string name="label_attendance">Attendance:</string>
     <string name="label_date_range">Date Range</string>
@@ -503,6 +505,12 @@
     <string name="tab_variables">Variables</string>
     <string name="tab_functions">Functions</string>
     <string name="tab_system">System</string>
+
+    <!-- Grade Entry Menu - Report Options -->
+    <string name="menu_absence_report">Absence Report</string>
+    <string name="menu_behavior_report">Behavior Report</string>
+    <string name="behavior_summary_format">✅ %1$d positive (+%2$d pts) | ❌ %3$d negative (-%4$d pts) | Net: %5$d pts</string>
+    <string name="label_notes">Notes</string>
     <string name="settings_show_search_title">Show Global Search</string>
     <string name="settings_show_search_desc">Display search button on main screens</string>
     <string name="settings_edit_positive">Edit Positive Behaviors</string>

@@ -21,7 +21,9 @@ class GradeEntryAdapter(
     private var items: List<StudentGradeItem> = emptyList(),
     private var isCalculated: Boolean = false,
     private var maxScore: Float = 10.0f, // Default, will be updated
-    private val onGradeChanged: (StudentGradeItem, Float, String) -> Unit
+    private val onGradeChanged: (StudentGradeItem, Float, String) -> Unit,
+    private val onAbsenceReport: ((StudentGradeItem) -> Unit)? = null,
+    private val onBehaviorReport: ((StudentGradeItem) -> Unit)? = null
 ) : RecyclerView.Adapter<GradeEntryAdapter.GradeEntryViewHolder>() {
 
     init {
@@ -71,7 +73,7 @@ class GradeEntryAdapter(
     }
 
     override fun onBindViewHolder(holder: GradeEntryViewHolder, position: Int) {
-        holder.bind(items[position], position, isCalculated, maxScore, onGradeChanged)
+        holder.bind(items[position], position, isCalculated, maxScore, onGradeChanged, onAbsenceReport, onBehaviorReport)
     }
 
     override fun getItemCount(): Int = items.size
@@ -85,7 +87,7 @@ class GradeEntryAdapter(
         private val statusButton: com.google.android.material.button.MaterialButton = itemView.findViewById(R.id.btnStatus)
         private var textWatcher: TextWatcher? = null
 
-        fun bind(item: StudentGradeItem, position: Int, isCalculated: Boolean, maxScore: Float, onGradeChanged: (StudentGradeItem, Float, String) -> Unit) {
+        fun bind(item: StudentGradeItem, position: Int, isCalculated: Boolean, maxScore: Float, onGradeChanged: (StudentGradeItem, Float, String) -> Unit, onAbsenceReport: ((StudentGradeItem) -> Unit)?, onBehaviorReport: ((StudentGradeItem) -> Unit)?) {
             val maxScoreLocal = maxScore // Capture for use in inner functions
             // Check preferences
             val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(itemView.context)
@@ -200,20 +202,17 @@ class GradeEntryAdapter(
                 }
             }
 
-            // Status Button Click
+            // Status Button Click - Modern BottomSheet
             statusButton.setOnClickListener {
-                val popup = androidx.appcompat.widget.PopupMenu(itemView.context, statusButton)
-                popup.menu.add("Present")
-                popup.menu.add("Absent")
-                popup.menu.add("Missing")
-                popup.menu.add("Excused")
-
-                popup.setOnMenuItemClickListener { menuItem ->
-                    val newStatus = menuItem.title.toString().uppercase()
-                    // If switching to PRESENT, keep existing score or 0. If others, score is 0.
+                val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(itemView.context)
+                val menuView = android.view.LayoutInflater.from(itemView.context).inflate(R.layout.bottom_sheet_grade_status, null)
+                
+                menuView.findViewById<android.widget.TextView>(R.id.textMenuTitle).text = displayName
+                
+                fun handleStatus(newStatus: String) {
+                    bottomSheet.dismiss()
                     val scoreStr = if (newStatus == "PRESENT") scoreEditText.text.toString() else "0"
                     
-                    // Update UI immediately (optimistic)
                     if (newStatus == "PRESENT") {
                         scoreInputLayout.visibility = View.VISIBLE
                         statusTextView.visibility = View.GONE
@@ -222,11 +221,26 @@ class GradeEntryAdapter(
                         statusTextView.visibility = View.VISIBLE
                         statusTextView.text = newStatus
                     }
-
                     saveGrade(item, scoreStr, newStatus, onGradeChanged)
-                    true
                 }
-                popup.show()
+                
+                menuView.findViewById<View>(R.id.menuPresent).setOnClickListener { handleStatus("PRESENT") }
+                menuView.findViewById<View>(R.id.menuAbsent).setOnClickListener { handleStatus("ABSENT") }
+                menuView.findViewById<View>(R.id.menuMissing).setOnClickListener { handleStatus("MISSING") }
+                menuView.findViewById<View>(R.id.menuExcused).setOnClickListener { handleStatus("EXCUSED") }
+                
+                menuView.findViewById<View>(R.id.menuAbsenceReport).setOnClickListener {
+                    bottomSheet.dismiss()
+                    onAbsenceReport?.invoke(item)
+                }
+                
+                menuView.findViewById<View>(R.id.menuBehaviorReport).setOnClickListener {
+                    bottomSheet.dismiss()
+                    onBehaviorReport?.invoke(item)
+                }
+                
+                bottomSheet.setContentView(menuView)
+                bottomSheet.show()
             }
         }
 

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?attr/colorSurface">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_star_24dp"
+            app:tint="?attr/colorPrimary" />
+
+        <TextView
+            android:id="@+id/textStudentName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface"
+            android:text="Student Name" />
+    </LinearLayout>
+
+    <!-- Summary Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="?attr/colorSurfaceVariant"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp">
+
+        <TextView
+            android:id="@+id/textBehaviorSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:textSize="14sp"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:text="Summary" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Positive Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/behavior_positive_title"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#388E3C"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/textNoPositive"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_none"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textStyle="italic"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/layoutPositiveList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Negative Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/behavior_negative_title"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#D32F2F"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/textNoNegative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_none"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textStyle="italic"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/layoutNegativeList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Notes Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_notes"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/textNoNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_none"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textStyle="italic"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/layoutNotesList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnClose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/action_close"
+        style="@style/Widget.Material3.Button.TonalButton" />
+
+</LinearLayout>

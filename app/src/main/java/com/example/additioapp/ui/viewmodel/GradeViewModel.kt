@@ -135,8 +135,10 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
             
             // Calculate attendance stats for this student
             val studentAttendance = attendanceByStudent[studentId] ?: emptyList()
-            val absTD = studentAttendance.count { it.type == "TD" && it.status in listOf("A", "E") }
-            val absTP = studentAttendance.count { it.type == "TP" && it.status in listOf("A", "E") }
+            val absTD = studentAttendance.count { it.type == "TD" && (it.status == "A" || it.status == "E") }
+            val absTP = studentAttendance.count { it.type == "TP" && (it.status == "A" || it.status == "E") }
+            val justTD = studentAttendance.count { it.type == "TD" && it.status == "E" }
+            val justTP = studentAttendance.count { it.type == "TP" && it.status == "E" }
             val presCours = studentAttendance.count { (it.type == "Cours" || it.type.isEmpty()) && it.status == "P" }
             
             // Calculate behavior stats for this student
@@ -157,18 +159,27 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
                     }
                     
                     // Add attendance variables
-                    variables["abs-td"] = absTD.toFloat()
-                    variables["abs-tp"] = absTP.toFloat()
-                    variables["pres-c"] = presCours.toFloat()
-                    variables["tot-td"] = totalTD.toFloat()
-                    variables["tot-tp"] = totalTP.toFloat()
-                    variables["tot-c"] = totalCours.toFloat()
+                    variables["abs_td"] = absTD.toFloat()
+                    variables["abs_tp"] = absTP.toFloat()
+                    variables["just_td"] = justTD.toFloat()
+                    variables["just_tp"] = justTP.toFloat()
+                    variables["pres_c"] = presCours.toFloat()
+                    variables["tot_td"] = totalTD.toFloat()
+                    variables["tot_tp"] = totalTP.toFloat()
+                    variables["tot_c"] = totalCours.toFloat()
                     
                     // Add behavior variables
                     variables["pos"] = posCount.toFloat()
                     variables["neg"] = negCount.toFloat()
                     
-                    val result = com.example.additioapp.util.FormulaEvaluator.evaluate(formula, variables)
+                    var result = com.example.additioapp.util.FormulaEvaluator.evaluate(formula, variables)
+                    
+                    // Safeguard against NaN or Infinity which would crash the DB
+                    if (result.isNaN() || result.isInfinite()) {
+                        android.util.Log.w("GradeViewModel", "Formula result was NaN/Infinite for student $studentId item ${calcItem.name}, defaulting to 0")
+                        result = 0f
+                    }
+                    
                     android.util.Log.d("GradeViewModel", "Calculated grade for student $studentId item ${calcItem.name}: $result")
                     
                     // Update or Insert record

@@ -136,8 +136,8 @@ object FormulaEvaluator {
                 } else if (ch >= '0'.code && ch <= '9'.code || ch == '.'.code) { // numbers
                     while (ch >= '0'.code && ch <= '9'.code || ch == '.'.code) nextChar()
                     x = expression.substring(startPos, pos).toFloat()
-                } else if (ch >= 'a'.code && ch <= 'z'.code) { // functions
-                    while (ch >= 'a'.code && ch <= 'z'.code) nextChar()
+                } else if ((ch >= 'a'.code && ch <= 'z'.code) || (ch >= 'A'.code && ch <= 'Z'.code) || ch == '_'.code) { // functions or variables
+                    while ((ch >= 'a'.code && ch <= 'z'.code) || (ch >= 'A'.code && ch <= 'Z'.code) || ch == '_'.code || (ch >= '0'.code && ch <= '9'.code)) nextChar()
                     val func = expression.substring(startPos, pos)
                     if (eat('('.code)) {
                         val args = ArrayList<Float>()
