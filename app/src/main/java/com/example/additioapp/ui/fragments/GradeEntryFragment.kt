@@ -99,7 +99,10 @@ class GradeEntryFragment : Fragment() {
                 dialog.show(parentFragmentManager, "BehaviorFullReportDialog")
             },
             onGroupGrade = { clickedItem ->
-                showGroupMembersBottomSheet(clickedItem.student)
+                showGroupMembersBottomSheet(initialStudent = clickedItem.student)
+            },
+            onGroupBadgeClick = { groupNum ->
+                showGroupMembersBottomSheet(readOnly = true, targetGroup = groupNum)
             }
         )
 
@@ -272,7 +275,11 @@ class GradeEntryFragment : Fragment() {
         }
     }
     
-    private fun showGroupMembersBottomSheet(initialStudent: com.example.additioapp.data.model.StudentEntity) {
+    private fun showGroupMembersBottomSheet(
+        initialStudent: com.example.additioapp.data.model.StudentEntity? = null,
+        readOnly: Boolean = false,
+        targetGroup: Int? = null
+    ) {
         val repository = (requireActivity().application as AdditioApplication).repository
         
         val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(requireContext())
@@ -285,6 +292,14 @@ class GradeEntryFragment : Fragment() {
         val btnDeleteGroup = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeleteGroup)
         val tabLayout = sheetView.findViewById<com.google.android.material.tabs.TabLayout>(R.id.tabLayoutGroups)
         val imgHeaderIcon = sheetView.findViewById<android.widget.ImageView>(R.id.imgHeaderIcon)
+        val textHeaderTitle = sheetView.findViewById<android.widget.TextView>(R.id.textHeaderTitle)
+        
+        if (readOnly) {
+            btnAddMember.visibility = View.GONE
+            btnNewGroup.visibility = View.GONE
+            btnDeleteGroup.visibility = View.GONE
+            textHeaderTitle.text = "Group Details"
+        }
         
         val groupColors = listOf(
             "#2196F3", "#4CAF50", "#FF9800", "#9C27B0", 
@@ -294,7 +309,7 @@ class GradeEntryFragment : Fragment() {
         
         recyclerMembers.layoutManager = LinearLayoutManager(requireContext())
         
-        var currentGroupNumber = 1
+        var currentGroupNumber = targetGroup ?: 1
         var allGroups: List<com.example.additioapp.data.model.GradeItemGroupEntity> = emptyList()
 
         val memberAdapter = com.example.additioapp.ui.adapters.GroupMemberAdapter { studentToRemove ->
@@ -302,6 +317,7 @@ class GradeEntryFragment : Fragment() {
                 repository.deleteStudentFromGradeItemGroup(gradeItemId, studentToRemove.id)
             }
         }
+        memberAdapter.isReadOnly = readOnly
         recyclerMembers.adapter = memberAdapter
 
         fun updateMemberList() {
@@ -375,14 +391,20 @@ class GradeEntryFragment : Fragment() {
         }
         
         // Switch to student's group if they are already in one
-        lifecycleScope.launch {
-            val existingInAnyGroup = repository.getGroupForStudent(gradeItemId, initialStudent.id)
-            if (existingInAnyGroup != null) {
-                withContext(Dispatchers.Main) {
-                    currentGroupNumber = existingInAnyGroup.groupNumber
-                    // Refresh tabs and select the student's group
-                    updateTabs(allGroups)
-                    applyGroupTint(currentGroupNumber)
+        if (targetGroup != null) {
+            currentGroupNumber = targetGroup
+            updateTabs(allGroups)
+            applyGroupTint(currentGroupNumber)
+        } else if (initialStudent != null) {
+            lifecycleScope.launch {
+                val existingInAnyGroup = repository.getGroupForStudent(gradeItemId, initialStudent.id)
+                if (existingInAnyGroup != null) {
+                    withContext(Dispatchers.Main) {
+                        currentGroupNumber = existingInAnyGroup.groupNumber
+                        // Refresh tabs and select the student's group
+                        updateTabs(allGroups)
+                        applyGroupTint(currentGroupNumber)
+                    }
                 }
             }
         }

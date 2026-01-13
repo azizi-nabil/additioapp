@@ -15,6 +15,7 @@ class GroupMemberAdapter(
 ) : RecyclerView.Adapter<GroupMemberAdapter.ViewHolder>() {
 
     private var members: List<StudentEntity> = emptyList()
+    var isReadOnly: Boolean = false
     
     // Color palette for avatars
     private val avatarColors = listOf(
@@ -59,6 +60,7 @@ class GroupMemberAdapter(
             bgDrawable.setTint(Color.parseColor(avatarColors[colorIndex]))
             viewAvatarBg.background = bgDrawable
             
+            btnRemove.visibility = if (isReadOnly) View.GONE else View.VISIBLE
             btnRemove.setOnClickListener {
                 onRemove(student)
             }

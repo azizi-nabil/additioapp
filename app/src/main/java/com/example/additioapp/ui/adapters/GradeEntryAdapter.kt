@@ -25,7 +25,8 @@ class GradeEntryAdapter(
     private val onGradeChanged: (StudentGradeItem, Float, String) -> Unit,
     private val onAbsenceReport: ((StudentGradeItem) -> Unit)? = null,
     private val onBehaviorReport: ((StudentGradeItem) -> Unit)? = null,
-    private val onGroupGrade: ((StudentGradeItem) -> Unit)? = null
+    private val onGroupGrade: ((StudentGradeItem) -> Unit)? = null,
+    private val onGroupBadgeClick: ((Int) -> Unit)? = null
 ) : RecyclerView.Adapter<GradeEntryAdapter.GradeEntryViewHolder>() {
 
     private val groupColors = listOf(
@@ -135,8 +136,13 @@ class GradeEntryAdapter(
                 
                 cardView?.strokeWidth = 3
                 cardView?.strokeColor = groupColor
+                
+                groupBadgeTextView.setOnClickListener {
+                    onGroupBadgeClick?.invoke(groupNumber)
+                }
             } else {
                 groupBadgeTextView.visibility = View.GONE
+                groupBadgeTextView.setOnClickListener(null)
                 cardView?.strokeWidth = 0
             }
             
