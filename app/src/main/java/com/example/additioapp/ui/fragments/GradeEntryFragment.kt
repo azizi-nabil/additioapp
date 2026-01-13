@@ -284,6 +284,13 @@ class GradeEntryFragment : Fragment() {
         val btnNewGroup = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnNewGroup)
         val btnDeleteGroup = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeleteGroup)
         val tabLayout = sheetView.findViewById<com.google.android.material.tabs.TabLayout>(R.id.tabLayoutGroups)
+        val imgHeaderIcon = sheetView.findViewById<android.widget.ImageView>(R.id.imgHeaderIcon)
+        
+        val groupColors = listOf(
+            "#2196F3", "#4CAF50", "#FF9800", "#9C27B0", 
+            "#F44336", "#00BCD4", "#E91E63", "#3F51B5", 
+            "#795548", "#607D8B"
+        )
         
         recyclerMembers.layoutManager = LinearLayoutManager(requireContext())
         
@@ -312,6 +319,23 @@ class GradeEntryFragment : Fragment() {
             }
         }
 
+        fun applyGroupTint(groupNum: Int) {
+            val colorStr = groupColors[(groupNum - 1) % groupColors.size]
+            val colorValue = android.graphics.Color.parseColor(colorStr)
+            
+            imgHeaderIcon.imageTintList = android.content.res.ColorStateList.valueOf(colorValue)
+            tabLayout.setSelectedTabIndicatorColor(colorValue)
+            
+            val normalColor = tabLayout.tabTextColors?.defaultColor ?: android.graphics.Color.GRAY
+            tabLayout.setTabTextColors(normalColor, colorValue)
+            
+            btnAddMember.iconTint = android.content.res.ColorStateList.valueOf(colorValue)
+            btnAddMember.setTextColor(colorValue)
+            
+            btnNewGroup.iconTint = android.content.res.ColorStateList.valueOf(colorValue)
+            btnNewGroup.setTextColor(colorValue)
+        }
+
         fun updateTabs(groups: List<com.example.additioapp.data.model.GradeItemGroupEntity>) {
             val groupNumbers = (groups.map { it.groupNumber } + 1 + currentGroupNumber).distinct().sorted()
             
@@ -320,7 +344,7 @@ class GradeEntryFragment : Fragment() {
             
             tabLayout.removeAllTabs()
             groupNumbers.forEach { num ->
-                val tab = tabLayout.newTab().setText("Group $num")
+                val tab = tabLayout.newTab().setText("G$num")
                 tab.tag = num
                 tabLayout.addTab(tab)
                 if (num == currentTabGroup) {
@@ -335,7 +359,9 @@ class GradeEntryFragment : Fragment() {
 
         tabLayout.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab?) {
-                currentGroupNumber = tab?.tag as? Int ?: 1
+                val num = tab?.tag as? Int ?: 1
+                currentGroupNumber = num
+                applyGroupTint(num)
                 updateMemberList()
             }
             override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
@@ -354,7 +380,9 @@ class GradeEntryFragment : Fragment() {
             if (existingInAnyGroup != null) {
                 withContext(Dispatchers.Main) {
                     currentGroupNumber = existingInAnyGroup.groupNumber
-                    // Tabs will be updated by observer
+                    // Refresh tabs and select the student's group
+                    updateTabs(allGroups)
+                    applyGroupTint(currentGroupNumber)
                 }
             }
         }
@@ -404,7 +432,7 @@ class GradeEntryFragment : Fragment() {
                 
                 withContext(Dispatchers.Main) {
                     androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                        .setTitle("Add to Group $currentGroupNumber")
+                        .setTitle("Add to G$currentGroupNumber")
                         .setMultiChoiceItems(names, selectedItems) { _, which, isChecked ->
                             selectedItems[which] = isChecked
                         }
@@ -429,7 +457,7 @@ class GradeEntryFragment : Fragment() {
         
         btnDeleteGroup.setOnClickListener {
             androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Delete Group $currentGroupNumber?")
+                .setTitle("Delete G$currentGroupNumber?")
                 .setMessage("This will remove all members from this group.")
                 .setPositiveButton(R.string.action_delete) { _, _ ->
                     lifecycleScope.launch {
@@ -439,6 +467,7 @@ class GradeEntryFragment : Fragment() {
                             if (currentGroupNumber > 1) {
                                 currentGroupNumber = 1
                                 updateTabs(allGroups)
+                                applyGroupTint(1)
                             }
                         }
                     }

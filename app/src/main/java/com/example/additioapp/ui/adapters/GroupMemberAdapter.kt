@@ -40,9 +40,10 @@ class GroupMemberAdapter(
     override fun getItemCount(): Int = members.size
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val viewAvatarBg: View = itemView.findViewById(R.id.viewAvatarBg)
         private val textInitial: TextView = itemView.findViewById(R.id.textInitial)
         private val textName: TextView = itemView.findViewById(R.id.textStudentName)
-        private val btnRemove: ImageButton = itemView.findViewById(R.id.btnRemove)
+        private val btnRemove: View = itemView.findViewById(R.id.btnRemove)
 
         fun bind(student: StudentEntity, position: Int) {
             val displayName = student.displayNameFr ?: student.name
@@ -54,9 +55,9 @@ class GroupMemberAdapter(
             
             // Set avatar background color
             val colorIndex = position % avatarColors.size
-            val bgDrawable = textInitial.background.mutate()
+            val bgDrawable = viewAvatarBg.background.mutate()
             bgDrawable.setTint(Color.parseColor(avatarColors[colorIndex]))
-            textInitial.background = bgDrawable
+            viewAvatarBg.background = bgDrawable
             
             btnRemove.setOnClickListener {
                 onRemove(student)

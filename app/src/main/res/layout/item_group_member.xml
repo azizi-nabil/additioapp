@@ -16,18 +16,28 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="12dp">
+        android:padding="16dp">
 
         <!-- Student avatar/initial -->
-        <TextView
-            android:id="@+id/textInitial"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:background="@drawable/bg_circle"/>
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="44dp">
+            
+            <View
+                android:id="@+id/viewAvatarBg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_circle"/>
+                
+            <TextView
+                android:id="@+id/textInitial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"/>
+        </FrameLayout>
 
         <!-- Student name -->
         <TextView
@@ -35,21 +45,27 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="16dp"
             android:textSize="16sp"
+            android:textStyle="normal"
             android:textColor="?attr/colorOnSurface"
             android:maxLines="1"
             android:ellipsize="end"/>
 
         <!-- Remove button -->
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRemove"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/ic_close"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:icon="@drawable/ic_close"
+            app:iconSize="20dp"
+            app:iconTint="@color/behavior_negative"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/action_remove"
-            app:tint="@color/behavior_negative"/>
+            android:padding="0dp"
+            app:iconPadding="0dp"
+            android:minWidth="0dp"/>
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
