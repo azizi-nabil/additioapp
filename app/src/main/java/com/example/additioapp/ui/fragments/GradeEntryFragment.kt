@@ -9,9 +9,13 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import com.example.additioapp.AdditioApplication
 import com.example.additioapp.R
 import com.example.additioapp.data.model.GradeRecordEntity
@@ -28,6 +32,8 @@ class GradeEntryFragment : Fragment() {
     private var classId: Long = -1
     private var gradeItemId: Long = -1
     private var gradeItemName: String? = null
+    private var currentStudents: List<com.example.additioapp.data.model.StudentEntity> = emptyList()
+    private var gradeAdapter: GradeEntryAdapter? = null
 
     private val gradeViewModel: GradeViewModel by viewModels {
         AdditioViewModelFactory((requireActivity().application as AdditioApplication).repository)
@@ -64,7 +70,7 @@ class GradeEntryFragment : Fragment() {
 
         titleTextView.text = gradeItemName ?: "Enter Grades"
 
-        val adapter = GradeEntryAdapter(
+        gradeAdapter = GradeEntryAdapter(
             onGradeChanged = { item, score, status ->
                 val existingId = item.gradeRecord?.id ?: 0L
                 // score of -1 means "blank/no grade" - stored as -1 in DB
@@ -91,6 +97,9 @@ class GradeEntryFragment : Fragment() {
                     item.student.displayNameFr
                 )
                 dialog.show(parentFragmentManager, "BehaviorFullReportDialog")
+            },
+            onGroupGrade = { clickedItem ->
+                showGroupMembersBottomSheet(clickedItem.student)
             }
         )
 
@@ -98,7 +107,7 @@ class GradeEntryFragment : Fragment() {
         val editFilterMax = view.findViewById<EditText>(R.id.editFilterMax)
         val btnClearFilter = view.findViewById<View>(R.id.btnClearFilter)
 
-        recyclerView.adapter = adapter
+        recyclerView.adapter = gradeAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Load default sort order from preferences
@@ -155,10 +164,11 @@ class GradeEntryFragment : Fragment() {
             }
             
             textStudentCount.text = "${sortedItems.size} Students"
-            adapter.submitList(sortedItems)
+            gradeAdapter?.submitList(sortedItems)
         }
 
         studentViewModel.getStudentsForClass(classId).observe(viewLifecycleOwner) { students ->
+            currentStudents = students // Store for group grading
             gradeViewModel.getGradesForItem(gradeItemId).observe(viewLifecycleOwner) { records ->
                 
                 fun filterAndUpdate() {
@@ -249,9 +259,195 @@ class GradeEntryFragment : Fragment() {
         gradeViewModel.getGradeItemById(gradeItemId).observe(viewLifecycleOwner) { item ->
             if (item != null) {
                 val isCalculated = !item.formula.isNullOrEmpty()
-                adapter.setIsCalculated(isCalculated)
-                adapter.setMaxScore(item.maxScore)
+                gradeAdapter?.setIsCalculated(isCalculated)
+                gradeAdapter?.setMaxScore(item.maxScore)
             }
         }
+        
+        // Load saved groups from database and highlight them
+        val repository = (requireActivity().application as AdditioApplication).repository
+        repository.getGroupsForGradeItem(gradeItemId).observe(viewLifecycleOwner) { groups ->
+            val groupMap = groups.associate { it.studentId to it.groupNumber }
+            gradeAdapter?.setStudentGroups(groupMap)
+        }
+    }
+    
+    private fun showGroupMembersBottomSheet(initialStudent: com.example.additioapp.data.model.StudentEntity) {
+        val repository = (requireActivity().application as AdditioApplication).repository
+        
+        val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(requireContext())
+        val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_group_members, null)
+        
+        val recyclerMembers = sheetView.findViewById<RecyclerView>(R.id.recyclerGroupMembers)
+        val emptyState = sheetView.findViewById<View>(R.id.emptyState)
+        val btnAddMember = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAddMember)
+        val btnNewGroup = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnNewGroup)
+        val btnDeleteGroup = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDeleteGroup)
+        val tabLayout = sheetView.findViewById<com.google.android.material.tabs.TabLayout>(R.id.tabLayoutGroups)
+        
+        recyclerMembers.layoutManager = LinearLayoutManager(requireContext())
+        
+        var currentGroupNumber = 1
+        var allGroups: List<com.example.additioapp.data.model.GradeItemGroupEntity> = emptyList()
+
+        val memberAdapter = com.example.additioapp.ui.adapters.GroupMemberAdapter { studentToRemove ->
+            lifecycleScope.launch {
+                repository.deleteStudentFromGradeItemGroup(gradeItemId, studentToRemove.id)
+            }
+        }
+        recyclerMembers.adapter = memberAdapter
+
+        fun updateMemberList() {
+            val membersInCurrentGroup = allGroups.filter { it.groupNumber == currentGroupNumber }
+            val memberIds = membersInCurrentGroup.map { it.studentId }.toSet()
+            val members = currentStudents.filter { it.id in memberIds }
+            memberAdapter.submitList(members)
+            
+            if (members.isEmpty()) {
+                emptyState.visibility = View.VISIBLE
+                recyclerMembers.visibility = View.GONE
+            } else {
+                emptyState.visibility = View.GONE
+                recyclerMembers.visibility = View.VISIBLE
+            }
+        }
+
+        fun updateTabs(groups: List<com.example.additioapp.data.model.GradeItemGroupEntity>) {
+            val groupNumbers = (groups.map { it.groupNumber } + 1 + currentGroupNumber).distinct().sorted()
+            
+            // Remember selected tab if possible
+            val currentTabGroup = currentGroupNumber
+            
+            tabLayout.removeAllTabs()
+            groupNumbers.forEach { num ->
+                val tab = tabLayout.newTab().setText("Group $num")
+                tab.tag = num
+                tabLayout.addTab(tab)
+                if (num == currentTabGroup) {
+                    tab.select()
+                }
+            }
+            
+            if (tabLayout.selectedTabPosition == -1 && tabLayout.tabCount > 0) {
+                tabLayout.getTabAt(0)?.select()
+            }
+        }
+
+        tabLayout.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab?) {
+                currentGroupNumber = tab?.tag as? Int ?: 1
+                updateMemberList()
+            }
+            override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
+            override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
+        })
+
+        repository.getGroupsForGradeItem(gradeItemId).observe(viewLifecycleOwner) { groups ->
+            allGroups = groups
+            updateTabs(groups)
+            updateMemberList()
+        }
+        
+        // Switch to student's group if they are already in one
+        lifecycleScope.launch {
+            val existingInAnyGroup = repository.getGroupForStudent(gradeItemId, initialStudent.id)
+            if (existingInAnyGroup != null) {
+                withContext(Dispatchers.Main) {
+                    currentGroupNumber = existingInAnyGroup.groupNumber
+                    // Tabs will be updated by observer
+                }
+            }
+        }
+
+        btnNewGroup.setOnClickListener {
+            lifecycleScope.launch {
+                val existingGroups = repository.getGroupsForGradeItemSync(gradeItemId)
+                val maxGroup = existingGroups.maxByOrNull { it.groupNumber }?.groupNumber ?: 0
+                val nextGroup = maxGroup + 1
+                
+                withContext(Dispatchers.Main) {
+                    currentGroupNumber = nextGroup
+                    // Force rebuild tabs to include the new group if it wasn't there
+                    updateTabs(allGroups)
+                    
+                    // Explicitly select the tab for nextGroup
+                    for (i in 0 until tabLayout.tabCount) {
+                        val tab = tabLayout.getTabAt(i)
+                        if (tab?.tag == nextGroup) {
+                            tab.select()
+                            break
+                        }
+                    }
+                }
+            }
+        }
+        
+        btnAddMember.setOnClickListener {
+            lifecycleScope.launch {
+                val currentGroups = repository.getGroupsForGradeItemSync(gradeItemId)
+                val allMemberIds = currentGroups.map { it.studentId }.toSet()
+                val availableStudents = currentStudents.filter { it.id !in allMemberIds }
+                
+                if (availableStudents.isEmpty()) {
+                    withContext(Dispatchers.Main) {
+                        com.google.android.material.snackbar.Snackbar.make(
+                            sheetView, 
+                            "All students are already assigned to groups", 
+                            com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                    return@launch
+                }
+                
+                val names = availableStudents.map { it.displayNameFr ?: it.name }.toTypedArray()
+                val selectedItems = BooleanArray(availableStudents.size)
+                
+                withContext(Dispatchers.Main) {
+                    androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                        .setTitle("Add to Group $currentGroupNumber")
+                        .setMultiChoiceItems(names, selectedItems) { _, which, isChecked ->
+                            selectedItems[which] = isChecked
+                        }
+                        .setPositiveButton(R.string.action_save) { _, _ ->
+                            lifecycleScope.launch {
+                                val toAdd = availableStudents.filterIndexed { index, _ -> selectedItems[index] }
+                                val entities = toAdd.map {
+                                    com.example.additioapp.data.model.GradeItemGroupEntity(
+                                        gradeItemId = gradeItemId,
+                                        groupNumber = currentGroupNumber,
+                                        studentId = it.id
+                                    )
+                                }
+                                repository.insertGradeItemGroups(entities)
+                            }
+                        }
+                        .setNegativeButton(R.string.action_cancel, null)
+                        .show()
+                }
+            }
+        }
+        
+        btnDeleteGroup.setOnClickListener {
+            androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Delete Group $currentGroupNumber?")
+                .setMessage("This will remove all members from this group.")
+                .setPositiveButton(R.string.action_delete) { _, _ ->
+                    lifecycleScope.launch {
+                        repository.deleteGroup(gradeItemId, currentGroupNumber)
+                        withContext(Dispatchers.Main) {
+                            // After deletion, if it's not group 1, switch back to previous group or group 1
+                            if (currentGroupNumber > 1) {
+                                currentGroupNumber = 1
+                                updateTabs(allGroups)
+                            }
+                        }
+                    }
+                }
+                .setNegativeButton(R.string.action_cancel, null)
+                .show()
+        }
+        
+        bottomSheet.setContentView(sheetView)
+        bottomSheet.show()
     }
 }

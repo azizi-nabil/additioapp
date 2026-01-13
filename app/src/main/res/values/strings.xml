@@ -18,7 +18,14 @@
     <string name="action_save">Save</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_close">Close</string>
+    <string name="action_next">Next</string>
+    <string name="hint_group_grade">This grade will be applied to all selected students</string>
     <string name="action_help">Help</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_new_group">New Group</string>
+    <string name="title_group_members">Group Members</string>
+    <string name="empty_group">No group members yet. Tap Add to add students.</string>
+    <string name="dialog_add_to_group">Add to Group</string>
     <string name="action_search">Search</string>
     <string name="action_filter">Filter</string>
     <string name="action_export">Export</string>
@@ -302,6 +309,10 @@
     <string name="status_excused">Excused</string>
     <string name="status_missing">Missing</string>
     <string name="label_reports">Reports</string>
+    <string name="label_group">Group</string>
+    <string name="menu_group_grade">Grade as Group</string>
+    <string name="dialog_select_group_title">Select Group Members</string>
+    <string name="dialog_group_grade_title">Enter Group Grade</string>
     <string name="label_grade_avg">Grade Avg:</string>
     <string name="label_attendance">Attendance:</string>
     <string name="label_date_range">Date Range</string>
@@ -511,6 +522,10 @@
     <string name="menu_behavior_report">Behavior Report</string>
     <string name="behavior_summary_format">✅ %1$d positive (+%2$d pts) | ❌ %3$d negative (-%4$d pts) | Net: %5$d pts</string>
     <string name="label_notes">Notes</string>
+    <string name="label_day">Day</string>
+    <string name="label_month">Month</string>
+    <string name="planner_no_events_month">No events this month</string>
+    <string name="planner_events_count_month">%1$d events in %2$s</string>
     <string name="settings_show_search_title">Show Global Search</string>
     <string name="settings_show_search_desc">Display search button on main screens</string>
     <string name="settings_edit_positive">Edit Positive Behaviors</string>

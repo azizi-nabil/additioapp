@@ -21,6 +21,7 @@ data class EventEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val title: String,
     val description: String = "",
+    val location: String = "",                // Location of the event
     val date: Long,                          // Date as timestamp (start of day)
     val startTime: String? = null,           // "09:00" format
     val endTime: String? = null,             // "10:30" format

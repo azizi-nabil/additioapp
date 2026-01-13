@@ -24,6 +24,20 @@
             android:textColor="?attr/colorOnSurfaceVariant"/>
 
         <TextView
+            android:id="@+id/textGroupBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="2dp"
+            android:text="G1"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@drawable/bg_badge_group"
+            android:visibility="gone"/>
+
+        <TextView
             android:id="@+id/textStudentName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

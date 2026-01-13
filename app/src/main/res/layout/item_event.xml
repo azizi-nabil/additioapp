@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="?attr/colorOutlineVariant"
-    android:layout_marginVertical="6dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+    android:layout_marginVertical="3dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
@@ -16,15 +16,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="10dp">
 
-        <!-- Color Strip -->
+        <!-- Color Strip (thinner) -->
         <View
             android:id="@+id/colorStrip"
-            android:layout_width="4dp"
+            android:layout_width="3dp"
             android:layout_height="match_parent"
-            android:layout_marginEnd="12dp"
-            android:background="@color/accent_blue"/>
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_rounded_strip"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -32,21 +32,23 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textEventTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="Event Title"
-                android:ellipsize="end"
-                android:maxLines="1"/>
-
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="4dp">
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textEventTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnSurface"
+                    android:text="Event Title"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
 
                 <TextView
                     android:id="@+id/textEventTime"
@@ -54,14 +56,21 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:textColor="?attr/colorOnSurfaceVariant"
-                    android:text="09:00 - 10:30"/>
+                    android:layout_marginStart="8dp"
+                    android:text="09:00"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:id="@+id/iconRecurrence"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:src="@drawable/ic_repeat"
                     app:tint="?attr/colorOnSurfaceVariant"
                     android:visibility="gone"
@@ -71,30 +80,68 @@
                     android:id="@+id/textEventType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="11sp"
                     android:textColor="?attr/colorPrimary"
-                    android:layout_marginStart="8dp"
                     android:text="EXAM"/>
+
+                <TextView
+                    android:id="@+id/textEventClass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone"
+                    android:text="Class A"/>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textEventClass"
-                android:layout_width="wrap_content"
+                android:id="@+id/textEventDescription"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:layout_marginTop="2dp"
-                android:visibility="gone"
-                android:text="Class A"/>
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/layoutEventLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="2dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_location"
+                    app:tint="?attr/colorOnSurfaceVariant"/>
+
+                <TextView
+                    android:id="@+id/textEventLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:layout_marginStart="4dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+            </LinearLayout>
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/btnDeleteEvent"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_delete"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Delete event"
-            app:tint="?attr/colorOnSurfaceVariant"/>
+            app:tint="?attr/colorOnSurfaceVariant"
+            android:padding="4dp"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

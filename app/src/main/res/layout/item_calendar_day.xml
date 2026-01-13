@@ -2,12 +2,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="2dp">
+    android:padding="1dp">
 
     <LinearLayout
         android:id="@+id/dayContainer"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="40dp"
         android:orientation="vertical"
         android:gravity="center"
         android:background="@drawable/bg_calendar_day">
@@ -16,10 +16,10 @@
             android:id="@+id/textDay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:text="1"/>
 
-        <!-- Event Indicators -->
+        <!-- Event Indicators (compact) -->
         <LinearLayout
             android:id="@+id/layoutIndicators"
             android:layout_width="wrap_content"
@@ -29,24 +29,24 @@
 
             <View
                 android:id="@+id/indicator1"
-                android:layout_width="6dp"
-                android:layout_height="6dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
                 android:layout_margin="1dp"
                 android:background="@drawable/bg_circle"
                 android:visibility="gone"/>
 
             <View
                 android:id="@+id/indicator2"
-                android:layout_width="6dp"
-                android:layout_height="6dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
                 android:layout_margin="1dp"
                 android:background="@drawable/bg_circle"
                 android:visibility="gone"/>
 
             <View
                 android:id="@+id/indicator3"
-                android:layout_width="6dp"
-                android:layout_height="6dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
                 android:layout_margin="1dp"
                 android:background="@drawable/bg_circle"
                 android:visibility="gone"/>

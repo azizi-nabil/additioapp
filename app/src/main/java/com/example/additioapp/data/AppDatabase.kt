@@ -43,6 +43,8 @@ import com.example.additioapp.data.model.TeacherAbsenceEntity
 import com.example.additioapp.data.model.UnitEntity
 import com.example.additioapp.data.model.StudentNoteEntity
 import com.example.additioapp.data.model.ClassNoteEntity
+import com.example.additioapp.data.model.GradeItemGroupEntity
+import com.example.additioapp.data.dao.GradeItemGroupDao
 
 @Database(
     entities = [
@@ -65,9 +67,10 @@ import com.example.additioapp.data.model.ClassNoteEntity
         ScheduleItemClassCrossRef::class,
         TeacherAbsenceEntity::class,
         StudentNoteEntity::class,
-        ClassNoteEntity::class
+        ClassNoteEntity::class,
+        GradeItemGroupEntity::class
     ],
-    version = 22,
+    version = 24,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -87,6 +90,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun teacherAbsenceDao(): TeacherAbsenceDao
     abstract fun studentNoteDao(): StudentNoteDao
     abstract fun classNoteDao(): ClassNoteDao
+    abstract fun gradeItemGroupDao(): GradeItemGroupDao
 
     companion object {
         @Volatile
@@ -386,6 +390,32 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // Migration from v22 to v23: Add location to events
+        private val MIGRATION_22_23 = object : androidx.room.migration.Migration(22, 23) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE events ADD COLUMN location TEXT NOT NULL DEFAULT ''")
+            }
+        }
+
+        // Migration from v23 to v24: Add grade_item_groups table for student groups
+        private val MIGRATION_23_24 = object : androidx.room.migration.Migration(23, 24) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS grade_item_groups (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        gradeItemId INTEGER NOT NULL,
+                        groupNumber INTEGER NOT NULL DEFAULT 1,
+                        studentId INTEGER NOT NULL,
+                        FOREIGN KEY (gradeItemId) REFERENCES grade_items(id) ON DELETE CASCADE,
+                        FOREIGN KEY (studentId) REFERENCES students(id) ON DELETE CASCADE
+                    )
+                """)
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_grade_item_groups_gradeItemId ON grade_item_groups(gradeItemId)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS index_grade_item_groups_studentId ON grade_item_groups(studentId)")
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_grade_item_groups_gradeItemId_studentId ON grade_item_groups(gradeItemId, studentId)")
+            }
+        }
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -394,7 +424,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "additio_database"
                 )
                 // Use proper migrations to preserve data
-                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22)
+                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22, MIGRATION_22_23, MIGRATION_23_24)
                 // Only use destructive migration as last resort for older versions
                 .fallbackToDestructiveMigrationFrom(1, 2, 3, 4, 5)
                 .build()

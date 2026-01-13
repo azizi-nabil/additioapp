@@ -37,6 +37,7 @@ class AdditioApplication : Application() {
             database.teacherAbsenceDao(),
             database.studentNoteDao(),
             database.classNoteDao(),
+            database.gradeItemGroupDao(),
             getSharedPreferences("additio_prefs", MODE_PRIVATE)
         ) 
     }

@@ -55,6 +55,7 @@ class PlannerFragment : Fragment() {
 
     private lateinit var calendarAdapter: CalendarAdapter
     private lateinit var eventAdapter: EventAdapter
+    private lateinit var monthEventAdapter: com.example.additioapp.ui.adapters.MonthEventAdapter
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var completedTaskAdapter: TaskAdapter
     private lateinit var scheduleAdapter: ScheduleAdapter
@@ -67,6 +68,7 @@ class PlannerFragment : Fragment() {
     private var currentTab = 0 // 0 = Events, 1 = Tasks, 2 = Schedule, 3 = Absences
     private var selectedScheduleDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) // 1=Sun, 2=Mon...
     private var searchQuery = ""
+    private var isMonthView = false
 
     private lateinit var dayNames: List<String>
     private lateinit var fullDayNames: List<String>
@@ -100,6 +102,8 @@ class PlannerFragment : Fragment() {
         val textCurrentMonth = view.findViewById<TextView>(R.id.textCurrentMonth)
         val btnPrevMonth = view.findViewById<ImageButton>(R.id.btnPrevMonth)
         val btnNextMonth = view.findViewById<ImageButton>(R.id.btnNextMonth)
+        val btnToday = view.findViewById<com.google.android.material.card.MaterialCardView>(R.id.btnToday)
+        val textTodayNumber = view.findViewById<TextView>(R.id.textTodayNumber)
         val calendarSection = view.findViewById<LinearLayout>(R.id.calendarSection)
         val recyclerCalendar = view.findViewById<RecyclerView>(R.id.recyclerCalendar)
         val eventsView = view.findViewById<LinearLayout>(R.id.eventsView)
@@ -128,16 +132,7 @@ class PlannerFragment : Fragment() {
         val iconExpandCompleted = view.findViewById<ImageView>(R.id.iconExpandCompleted)
         val recyclerCompletedTasks = view.findViewById<RecyclerView>(R.id.recyclerCompletedTasks)
         val btnClearCompleted = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnClearCompleted)
-        val editSearch = view.findViewById<TextInputEditText>(R.id.editSearch)
-        
-        val searchLayout = view.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.searchLayout)
-        searchLayout.endIconMode = com.google.android.material.textfield.TextInputLayout.END_ICON_CLEAR_TEXT
-        searchLayout.setEndIconOnClickListener {
-            editSearch.text?.clear()
-            val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-            imm.hideSoftInputFromWindow(editSearch.windowToken, 0)
-            editSearch.clearFocus()
-        }
+        val editSearch = view.findViewById<EditText>(R.id.editSearch)
         
         // Calendar visibility state (visible by default)
         var isCalendarVisible = true
@@ -158,6 +153,46 @@ class PlannerFragment : Fragment() {
             isCalendarVisible = !isCalendarVisible
             updateCalendarVisibility()
         }
+        
+        // Swipe gesture to toggle calendar (swipe up = hide, swipe down = show)
+        val gestureDetector = android.view.GestureDetector(requireContext(), object : android.view.GestureDetector.SimpleOnGestureListener() {
+            private val SWIPE_THRESHOLD = 50
+            private val SWIPE_VELOCITY_THRESHOLD = 50
+            
+            override fun onDown(e: android.view.MotionEvent): Boolean = true
+            
+            override fun onFling(e1: android.view.MotionEvent?, e2: android.view.MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+                val diffY = e2.y - (e1?.y ?: 0f)
+                val diffX = e2.x - (e1?.x ?: 0f)
+                // Only trigger if vertical swipe is dominant
+                if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffY < 0 && isCalendarVisible) {
+                        // Swipe up - hide calendar
+                        isCalendarVisible = false
+                        updateCalendarVisibility()
+                        return true
+                    } else if (diffY > 0 && !isCalendarVisible) {
+                        // Swipe down - show calendar
+                        isCalendarVisible = true
+                        updateCalendarVisibility()
+                        return true
+                    }
+                }
+                return false
+            }
+        })
+        
+        // Apply gesture to event list areas (swipe on the list to toggle calendar)
+        val touchListener = View.OnTouchListener { v, event ->
+            val result = gestureDetector.onTouchEvent(event)
+            if (result) {
+                true
+            } else {
+                false
+            }
+        }
+        recyclerEvents.setOnTouchListener(touchListener)
+        eventsView.setOnTouchListener(touchListener)
 
         val btnToggleFab = view.findViewById<ImageButton>(R.id.btnToggleFab)
         val plannerPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
@@ -284,6 +319,36 @@ class PlannerFragment : Fragment() {
         recyclerEvents.adapter = eventAdapter
         recyclerEvents.layoutManager = LinearLayoutManager(requireContext())
 
+        // Month event adapter
+        val recyclerMonthEvents = view.findViewById<RecyclerView>(R.id.recyclerMonthEvents)
+        monthEventAdapter = com.example.additioapp.ui.adapters.MonthEventAdapter(
+            onEventClick = { event -> showAddEventDialog(event) }
+        )
+        recyclerMonthEvents.adapter = monthEventAdapter
+        recyclerMonthEvents.layoutManager = LinearLayoutManager(requireContext())
+
+        // Day/Month toggle
+        val chipViewDay = view.findViewById<com.google.android.material.chip.Chip>(R.id.chipViewDay)
+        val chipViewMonth = view.findViewById<com.google.android.material.chip.Chip>(R.id.chipViewMonth)
+        val dayViewContent = view.findViewById<LinearLayout>(R.id.dayViewContent)
+        val monthViewContent = view.findViewById<LinearLayout>(R.id.monthViewContent)
+        val textMonthTitle = view.findViewById<TextView>(R.id.textMonthTitle)
+        val textNoMonthEvents = view.findViewById<TextView>(R.id.textNoMonthEvents)
+        
+        chipViewDay.setOnClickListener {
+            isMonthView = false
+            dayViewContent.visibility = View.VISIBLE
+            monthViewContent.visibility = View.GONE
+            loadEventsForDate(recyclerEvents, textNoEvents)
+        }
+        
+        chipViewMonth.setOnClickListener {
+            isMonthView = true
+            dayViewContent.visibility = View.GONE
+            monthViewContent.visibility = View.VISIBLE
+            loadEventsForMonth(recyclerMonthEvents, textMonthTitle, textNoMonthEvents)
+        }
+
         // Task adapter
         taskAdapter = TaskAdapter(
             onTaskChecked = { task, isChecked -> toggleTaskComplete(task, isChecked, recyclerTasks, textNoTasks) },
@@ -408,10 +473,55 @@ class PlannerFragment : Fragment() {
         btnPrevMonth.setOnClickListener {
             currentMonth.add(Calendar.MONTH, -1)
             updateCalendar(textCurrentMonth)
+            // Refresh month view if active
+            if (isMonthView && currentTab == 0) {
+                loadEventsForMonth(
+                    requireView().findViewById(R.id.recyclerMonthEvents),
+                    requireView().findViewById(R.id.textMonthTitle),
+                    requireView().findViewById(R.id.textNoMonthEvents)
+                )
+            }
         }
         btnNextMonth.setOnClickListener {
             currentMonth.add(Calendar.MONTH, 1)
             updateCalendar(textCurrentMonth)
+            // Refresh month view if active
+            if (isMonthView && currentTab == 0) {
+                loadEventsForMonth(
+                    requireView().findViewById(R.id.recyclerMonthEvents),
+                    requireView().findViewById(R.id.textMonthTitle),
+                    requireView().findViewById(R.id.textNoMonthEvents)
+                )
+            }
+        }
+
+        // Today button - set day number and click handler
+        textTodayNumber.text = Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toString()
+        btnToday.setOnClickListener {
+            val today = Calendar.getInstance()
+            // Update current month to today's month
+            currentMonth.timeInMillis = today.timeInMillis
+            // Update selected date to today
+            selectedDate.timeInMillis = today.timeInMillis
+            selectedDate.set(Calendar.HOUR_OF_DAY, 0)
+            selectedDate.set(Calendar.MINUTE, 0)
+            selectedDate.set(Calendar.SECOND, 0)
+            selectedDate.set(Calendar.MILLISECOND, 0)
+            
+            // Refresh calendar and events
+            updateCalendar(textCurrentMonth)
+            calendarAdapter.setSelectedDate(selectedDate.timeInMillis)
+            updateSelectedDateLabel(textSelectedDate)
+            
+            if (isMonthView && currentTab == 0) {
+                loadEventsForMonth(
+                    requireView().findViewById(R.id.recyclerMonthEvents),
+                    requireView().findViewById(R.id.textMonthTitle),
+                    requireView().findViewById(R.id.textNoMonthEvents)
+                )
+            } else if (currentTab == 0) {
+                loadEventsForDate(recyclerEvents, textNoEvents)
+            }
         }
 
         // FAB - add based on current tab
@@ -937,6 +1047,48 @@ class PlannerFragment : Fragment() {
         }
     }
 
+    private fun loadEventsForMonth(recyclerMonthEvents: RecyclerView, textMonthTitle: TextView, textNoMonthEvents: TextView) {
+        lifecycleScope.launch {
+            // Get start and end of month
+            val monthStart = Calendar.getInstance().apply {
+                timeInMillis = currentMonth.timeInMillis
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            val monthEnd = Calendar.getInstance().apply {
+                timeInMillis = monthStart.timeInMillis
+                add(Calendar.MONTH, 1)
+                add(Calendar.MILLISECOND, -1)
+            }
+
+            val allEvents = withContext(Dispatchers.IO) {
+                repository.getEventsInRangeSync(monthStart.timeInMillis, monthEnd.timeInMillis)
+            }
+            
+            // Filter by search query
+            val events = if (searchQuery.isBlank()) allEvents else allEvents.filter { 
+                it.title.lowercase().contains(searchQuery) 
+            }
+            
+            monthEventAdapter.submitGroupedEvents(events)
+            
+            // Update title
+            val monthFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
+            textMonthTitle.text = getString(R.string.planner_events_count_month, events.size, monthFormat.format(currentMonth.time))
+            
+            if (events.isEmpty()) {
+                recyclerMonthEvents.visibility = View.GONE
+                textNoMonthEvents.visibility = View.VISIBLE
+            } else {
+                recyclerMonthEvents.visibility = View.VISIBLE
+                textNoMonthEvents.visibility = View.GONE
+            }
+        }
+    }
+
     private fun loadTasks(recyclerTasks: RecyclerView, textNoTasks: TextView) {
         repository.getPendingTasks().observe(viewLifecycleOwner) { allTasks ->
             // Filter by search query
@@ -1059,6 +1211,14 @@ class PlannerFragment : Fragment() {
                             }
                         }
                         loadEventsForDate(recyclerEvents, textNoEvents)
+                        // Also refresh month view if active
+                        if (isMonthView) {
+                            loadEventsForMonth(
+                                requireView().findViewById(R.id.recyclerMonthEvents),
+                                requireView().findViewById(R.id.textMonthTitle),
+                                requireView().findViewById(R.id.textNoMonthEvents)
+                            )
+                        }
                         updateCalendar(view?.findViewById(R.id.textCurrentMonth)!!)
                     }
                 }
@@ -1074,6 +1234,14 @@ class PlannerFragment : Fragment() {
                             repository.deleteEvent(event)
                         }
                         loadEventsForDate(recyclerEvents, textNoEvents)
+                        // Also refresh month view if active
+                        if (isMonthView) {
+                            loadEventsForMonth(
+                                requireView().findViewById(R.id.recyclerMonthEvents),
+                                requireView().findViewById(R.id.textMonthTitle),
+                                requireView().findViewById(R.id.textNoMonthEvents)
+                            )
+                        }
                         updateCalendar(view?.findViewById(R.id.textCurrentMonth)!!)
                     }
                 }
@@ -1104,6 +1272,7 @@ class PlannerFragment : Fragment() {
 
         val editTitle = dialogView.findViewById<TextInputEditText>(R.id.editEventTitle)
         val editDescription = dialogView.findViewById<TextInputEditText>(R.id.editEventDescription)
+        val editLocation = dialogView.findViewById<TextInputEditText>(R.id.editEventLocation)
         val editDate = dialogView.findViewById<TextInputEditText>(R.id.inputEventDate)
         val editStartTime = dialogView.findViewById<TextInputEditText>(R.id.inputStartTime)
         val editEndTime = dialogView.findViewById<TextInputEditText>(R.id.inputEndTime)
@@ -1172,6 +1341,7 @@ class PlannerFragment : Fragment() {
         existingEvent?.let {
             editTitle.setText(it.title)
             editDescription.setText(it.description)
+            editLocation.setText(it.location)
             eventDate = it.date
             startTime = it.startTime ?: "09:00"
             endTime = it.endTime ?: "10:00"
@@ -1276,6 +1446,7 @@ class PlannerFragment : Fragment() {
                     id = existingEvent?.id ?: 0,
                     title = title,
                     description = editDescription.text.toString().trim(),
+                    location = editLocation.text.toString().trim(),
                     date = eventDate,
                     startTime = if (checkAllDay.isChecked) null else startTime,
                     endTime = if (checkAllDay.isChecked) null else endTime,
@@ -1321,6 +1492,14 @@ class PlannerFragment : Fragment() {
                                     }
                                 }
                                 loadEventsForDate(requireView().findViewById(R.id.recyclerEvents), requireView().findViewById(R.id.textNoEvents))
+                                // Also refresh month view if active
+                                if (isMonthView) {
+                                    loadEventsForMonth(
+                                        requireView().findViewById(R.id.recyclerMonthEvents),
+                                        requireView().findViewById(R.id.textMonthTitle),
+                                        requireView().findViewById(R.id.textNoMonthEvents)
+                                    )
+                                }
                                 updateCalendar(requireView().findViewById(R.id.textCurrentMonth))
                              }
                         }
@@ -1339,6 +1518,14 @@ class PlannerFragment : Fragment() {
                             }
                         }
                         loadEventsForDate(requireView().findViewById(R.id.recyclerEvents), requireView().findViewById(R.id.textNoEvents))
+                        // Also refresh month view if active
+                        if (isMonthView) {
+                            loadEventsForMonth(
+                                requireView().findViewById(R.id.recyclerMonthEvents),
+                                requireView().findViewById(R.id.textMonthTitle),
+                                requireView().findViewById(R.id.textNoMonthEvents)
+                            )
+                        }
                         updateCalendar(requireView().findViewById(R.id.textCurrentMonth))
                     }
                 }

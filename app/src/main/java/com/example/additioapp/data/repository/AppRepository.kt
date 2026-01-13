@@ -34,6 +34,8 @@ import com.example.additioapp.data.model.TeacherAbsenceEntity
 import com.example.additioapp.data.model.UnitEntity
 import com.example.additioapp.data.model.StudentNoteEntity
 import com.example.additioapp.data.model.ClassNoteEntity
+import com.example.additioapp.data.model.GradeItemGroupEntity
+import com.example.additioapp.data.dao.GradeItemGroupDao
 import kotlinx.coroutines.flow.Flow
 
 class AppRepository(
@@ -53,6 +55,7 @@ class AppRepository(
     private val teacherAbsenceDao: TeacherAbsenceDao,
     private val studentNoteDao: StudentNoteDao,
     private val classNoteDao: ClassNoteDao,
+    private val gradeItemGroupDao: GradeItemGroupDao,
     private val sharedPreferences: android.content.SharedPreferences
 ) {
     
@@ -722,4 +725,35 @@ class AppRepository(
 
     suspend fun deleteClassNoteById(noteId: Long) =
         classNoteDao.deleteById(noteId)
+
+    // Grade Item Groups
+    fun getGroupsForGradeItem(gradeItemId: Long): LiveData<List<GradeItemGroupEntity>> =
+        gradeItemGroupDao.getGroupsForGradeItem(gradeItemId)
+
+    suspend fun getGroupsForGradeItemSync(gradeItemId: Long): List<GradeItemGroupEntity> =
+        gradeItemGroupDao.getGroupsForGradeItemSync(gradeItemId)
+
+    suspend fun getGroupForStudent(gradeItemId: Long, studentId: Long): GradeItemGroupEntity? =
+        gradeItemGroupDao.getGroupForStudent(gradeItemId, studentId)
+
+    suspend fun insertGradeItemGroup(entity: GradeItemGroupEntity): Long =
+        gradeItemGroupDao.insert(entity)
+
+    suspend fun insertGradeItemGroups(entities: List<GradeItemGroupEntity>) =
+        gradeItemGroupDao.insertAll(entities)
+
+    suspend fun deleteGradeItemGroup(entity: GradeItemGroupEntity) =
+        gradeItemGroupDao.delete(entity)
+
+    suspend fun deleteStudentFromGradeItemGroup(gradeItemId: Long, studentId: Long) =
+        gradeItemGroupDao.deleteByGradeItemAndStudent(gradeItemId, studentId)
+
+    suspend fun deleteGroup(gradeItemId: Long, groupNumber: Int) =
+        gradeItemGroupDao.deleteGroup(gradeItemId, groupNumber)
+
+    suspend fun deleteAllGroupsForGradeItem(gradeItemId: Long) =
+        gradeItemGroupDao.deleteAllForGradeItem(gradeItemId)
+
+    suspend fun updateStudentGroupNumber(gradeItemId: Long, studentId: Long, groupNumber: Int) =
+        gradeItemGroupDao.updateGroupNumber(gradeItemId, studentId, groupNumber)
 }

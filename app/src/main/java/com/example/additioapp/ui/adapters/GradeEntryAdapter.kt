@@ -1,5 +1,6 @@
 package com.example.additioapp.ui.adapters
 
+import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -23,8 +24,22 @@ class GradeEntryAdapter(
     private var maxScore: Float = 10.0f, // Default, will be updated
     private val onGradeChanged: (StudentGradeItem, Float, String) -> Unit,
     private val onAbsenceReport: ((StudentGradeItem) -> Unit)? = null,
-    private val onBehaviorReport: ((StudentGradeItem) -> Unit)? = null
+    private val onBehaviorReport: ((StudentGradeItem) -> Unit)? = null,
+    private val onGroupGrade: ((StudentGradeItem) -> Unit)? = null
 ) : RecyclerView.Adapter<GradeEntryAdapter.GradeEntryViewHolder>() {
+
+    private val groupColors = listOf(
+        "#2196F3", // Blue
+        "#4CAF50", // Green
+        "#FF9800", // Orange
+        "#9C27B0", // Purple
+        "#F44336", // Red
+        "#00BCD4", // Cyan
+        "#E91E63", // Pink
+        "#3F51B5", // Indigo
+        "#795548", // Brown
+        "#607D8B"  // Grey
+    )
 
     init {
         setHasStableIds(true)
@@ -62,6 +77,22 @@ class GradeEntryAdapter(
         notifyDataSetChanged()
     }
 
+    private var studentGroupsMap: Map<Long, Int> = emptyMap()
+
+    fun setStudentGroups(groups: Map<Long, Int>) {
+        studentGroupsMap = groups
+        notifyDataSetChanged()
+    }
+
+    // Keep for backward compatibility or simple highlighting if needed
+    fun isStudentHighlighted(studentId: Long): Boolean {
+        return studentGroupsMap.containsKey(studentId)
+    }
+
+    fun getStudentGroup(studentId: Long): Int? {
+        return studentGroupsMap[studentId]
+    }
+
     override fun getItemId(position: Int): Long {
         return items[position].student.id
     }
@@ -73,22 +104,42 @@ class GradeEntryAdapter(
     }
 
     override fun onBindViewHolder(holder: GradeEntryViewHolder, position: Int) {
-        holder.bind(items[position], position, isCalculated, maxScore, onGradeChanged, onAbsenceReport, onBehaviorReport)
+        val groupNumber = studentGroupsMap[items[position].student.id]
+        holder.bind(items[position], position, isCalculated, maxScore, groupNumber, onGradeChanged, onAbsenceReport, onBehaviorReport, onGroupGrade)
     }
 
     override fun getItemCount(): Int = items.size
 
-    class GradeEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class GradeEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val orderTextView: TextView = itemView.findViewById(R.id.textStudentOrder)
         private val nameTextView: TextView = itemView.findViewById(R.id.textStudentName)
         private val scoreEditText: com.google.android.material.textfield.TextInputEditText = itemView.findViewById(R.id.editScore)
         private val scoreInputLayout: com.google.android.material.textfield.TextInputLayout = itemView.findViewById(R.id.inputLayoutScore)
         private val statusTextView: TextView = itemView.findViewById(R.id.textStatus)
         private val statusButton: com.google.android.material.button.MaterialButton = itemView.findViewById(R.id.btnStatus)
+        private val groupBadgeTextView: TextView = itemView.findViewById(R.id.textGroupBadge)
         private var textWatcher: TextWatcher? = null
 
-        fun bind(item: StudentGradeItem, position: Int, isCalculated: Boolean, maxScore: Float, onGradeChanged: (StudentGradeItem, Float, String) -> Unit, onAbsenceReport: ((StudentGradeItem) -> Unit)?, onBehaviorReport: ((StudentGradeItem) -> Unit)?) {
+        fun bind(item: StudentGradeItem, position: Int, isCalculated: Boolean, maxScore: Float, groupNumber: Int?, onGradeChanged: (StudentGradeItem, Float, String) -> Unit, onAbsenceReport: ((StudentGradeItem) -> Unit)?, onBehaviorReport: ((StudentGradeItem) -> Unit)?, onGroupGrade: ((StudentGradeItem) -> Unit)?) {
             val maxScoreLocal = maxScore // Capture for use in inner functions
+            
+            // Highlight group members
+            val cardView = itemView as? com.google.android.material.card.MaterialCardView
+            if (groupNumber != null) {
+                val groupColorStr = groupColors[(groupNumber - 1) % groupColors.size]
+                val groupColor = Color.parseColor(groupColorStr)
+                
+                groupBadgeTextView.visibility = View.VISIBLE
+                groupBadgeTextView.text = "G$groupNumber"
+                groupBadgeTextView.background.mutate().setTint(groupColor)
+                
+                cardView?.strokeWidth = 3
+                cardView?.strokeColor = groupColor
+            } else {
+                groupBadgeTextView.visibility = View.GONE
+                cardView?.strokeWidth = 0
+            }
+            
             // Check preferences
             val prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(itemView.context)
             val nameLang = prefs.getString("pref_name_language", "french") ?: "french"
@@ -237,6 +288,11 @@ class GradeEntryAdapter(
                 menuView.findViewById<View>(R.id.menuBehaviorReport).setOnClickListener {
                     bottomSheet.dismiss()
                     onBehaviorReport?.invoke(item)
+                }
+                
+                menuView.findViewById<View>(R.id.menuGroupGrade).setOnClickListener {
+                    bottomSheet.dismiss()
+                    onGroupGrade?.invoke(item)
                 }
                 
                 bottomSheet.setContentView(menuView)

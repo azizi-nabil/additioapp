@@ -59,6 +59,9 @@ class EventAdapter(
         private val textTime: TextView = itemView.findViewById(R.id.textEventTime)
         private val textType: TextView = itemView.findViewById(R.id.textEventType)
         private val textClass: TextView = itemView.findViewById(R.id.textEventClass)
+        private val textDescription: TextView = itemView.findViewById(R.id.textEventDescription)
+        private val layoutLocation: View = itemView.findViewById(R.id.layoutEventLocation)
+        private val textLocation: TextView = itemView.findViewById(R.id.textEventLocation)
         private val btnDelete: ImageButton = itemView.findViewById(R.id.btnDeleteEvent)
 
         fun bind(event: EventEntity) {
@@ -83,6 +86,22 @@ class EventAdapter(
             // Type
             textType.text = event.eventType
             textType.visibility = if (event.eventType != "OTHER") View.VISIBLE else View.GONE
+            
+            // Description
+            if (event.description.isNotEmpty()) {
+                textDescription.text = event.description
+                textDescription.visibility = View.VISIBLE
+            } else {
+                textDescription.visibility = View.GONE
+            }
+            
+            // Location
+            if (event.location.isNotEmpty()) {
+                textLocation.text = event.location
+                layoutLocation.visibility = View.VISIBLE
+            } else {
+                layoutLocation.visibility = View.GONE
+            }
 
             // Color
             val color = when {
