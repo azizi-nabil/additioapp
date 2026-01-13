@@ -57,6 +57,7 @@ class DriveBackupsAdapter(
             val formattedDate = try {
                 // Drive API returns ISO 8601 format: 2024-12-18T20:30:00.000Z
                 val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+                inputFormat.timeZone = java.util.TimeZone.getTimeZone("UTC")
                 val outputFormat = SimpleDateFormat("EEEE, MMM dd, yyyy 'at' HH:mm", Locale.getDefault())
                 val date = inputFormat.parse(backup.modifiedTime.take(19))
                 date?.let { outputFormat.format(it) } ?: backup.modifiedTime.take(10)
