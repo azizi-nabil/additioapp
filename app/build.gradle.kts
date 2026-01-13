@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.teacherhub"
         minSdk = 24
         targetSdk = 34
-        versionCode = 16
-        versionName = "3.5.2"
+        versionCode = 17
+        versionName = "3.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
