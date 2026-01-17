@@ -4,5 +4,6 @@ import androidx.room.Embedded
 
 data class ClassWithSummary(
     @Embedded val classEntity: ClassEntity,
-    val studentCount: Int
+    val studentCount: Int,
+    val noteCount: Int = 0
 )

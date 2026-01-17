@@ -18,4 +18,10 @@ interface BehaviorTypeDao {
 
     @Delete
     suspend fun deleteBehaviorType(type: BehaviorTypeEntity)
+
+    @Query("SELECT * FROM behavior_types")
+    suspend fun getAllBehaviorTypesSync(): List<BehaviorTypeEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(types: List<BehaviorTypeEntity>)
 }

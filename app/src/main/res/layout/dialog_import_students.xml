@@ -126,6 +126,15 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnManualMatch"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="🔗 Match"
+            android:enabled="false"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnImport"
             android:layout_width="0dp"
             android:layout_weight="1"

@@ -18,9 +18,10 @@ interface ClassDao {
     fun getAllClassesIncludingArchived(): LiveData<List<ClassEntity>>
 
     @Query("""
-        SELECT c.*, COUNT(s.id) as studentCount 
+        SELECT c.*, COUNT(DISTINCT s.id) as studentCount, COUNT(DISTINCT n.id) as noteCount 
         FROM classes c 
         LEFT JOIN students s ON c.id = s.classId 
+        LEFT JOIN class_notes n ON c.id = n.classId
         WHERE c.isArchived = 0 
         GROUP BY c.id 
         ORDER BY c.name ASC
@@ -34,9 +35,10 @@ interface ClassDao {
     fun getClassesBySemesterAndYear(semester: String, year: String): LiveData<List<ClassEntity>>
 
     @Query("""
-        SELECT c.*, COUNT(s.id) as studentCount 
+        SELECT c.*, COUNT(DISTINCT s.id) as studentCount, COUNT(DISTINCT n.id) as noteCount 
         FROM classes c 
         LEFT JOIN students s ON c.id = s.classId 
+        LEFT JOIN class_notes n ON c.id = n.classId
         WHERE c.isArchived = 0 AND c.semester = :semester AND c.year = :year 
         GROUP BY c.id 
         ORDER BY c.name ASC
@@ -47,9 +49,10 @@ interface ClassDao {
     fun getArchivedClassesByYear(year: String): LiveData<List<ClassEntity>>
 
     @Query("""
-        SELECT c.*, COUNT(s.id) as studentCount 
+        SELECT c.*, COUNT(DISTINCT s.id) as studentCount, COUNT(DISTINCT n.id) as noteCount
         FROM classes c 
         LEFT JOIN students s ON c.id = s.classId 
+        LEFT JOIN class_notes n ON c.id = n.classId
         WHERE c.isArchived = 1 AND c.year = :year 
         GROUP BY c.id 
         ORDER BY c.name ASC

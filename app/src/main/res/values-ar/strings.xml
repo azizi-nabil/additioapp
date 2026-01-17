@@ -437,6 +437,9 @@
     <string name="settings_section_customization">🎨 التخصيص</string>
     <string name="settings_section_help">💡 المساعدة والنصائح</string>
     <string name="settings_section_about">ℹ️ حول التطبيق</string>
+    <string name="excel_export_action">تصدير إلى إكسل</string>
+    <string name="excel_export_success">تم التصدير بنجاح إلى %s</string>
+    <string name="excel_export_failed">فشل التصدير</string>
     <string name="settings_backup_title">نسخ احتياطي للبيانات</string>
     <string name="settings_backup_desc">تصدير بياناتك إلى ملف JSON</string>
     <string name="settings_restore_title">استعادة البيانات</string>

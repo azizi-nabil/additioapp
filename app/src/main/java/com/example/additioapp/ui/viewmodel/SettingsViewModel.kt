@@ -144,8 +144,25 @@ class SettingsViewModel(private val repository: AppRepository) : ViewModel() {
                                 gson.fromJson(it, com.example.additioapp.data.model.ClassNoteEntity::class.java)
                             } ?: emptyList()
                             
-                            val units = jsonObject.getAsJsonArray("units")?.map {
+                                val units = jsonObject.getAsJsonArray("units")?.map {
                                 gson.fromJson(it, com.example.additioapp.data.model.UnitEntity::class.java)
+                            } ?: emptyList()
+
+                            // Parse v4 data (Groups & Customizations)
+                            val gradeItemGroups = jsonObject.getAsJsonArray("gradeItemGroups")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.GradeItemGroupEntity::class.java)
+                            } ?: emptyList()
+
+                            val attendanceStatuses = jsonObject.getAsJsonArray("attendanceStatuses")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.AttendanceStatusEntity::class.java)
+                            } ?: emptyList()
+
+                            val behaviorTypes = jsonObject.getAsJsonArray("behaviorTypes")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.BehaviorTypeEntity::class.java)
+                            } ?: emptyList()
+
+                            val gradeCategories = jsonObject.getAsJsonArray("gradeCategories")?.map {
+                                gson.fromJson(it, com.example.additioapp.data.model.GradeCategoryEntity::class.java)
                             } ?: emptyList()
                             
                             BackupData(
@@ -167,7 +184,11 @@ class SettingsViewModel(private val repository: AppRepository) : ViewModel() {
                                 teacherAbsences = teacherAbsences,
                                 studentNotes = studentNotes,
                                 classNotes = classNotes,
-                                units = units
+                                units = units,
+                                gradeItemGroups = gradeItemGroups,
+                                attendanceStatuses = attendanceStatuses,
+                                behaviorTypes = behaviorTypes,
+                                gradeCategories = gradeCategories
                             )
                         }
                     }

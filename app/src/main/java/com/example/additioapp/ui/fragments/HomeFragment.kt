@@ -326,7 +326,8 @@ class HomeFragment : Fragment() {
         row.findViewById<TextView>(R.id.textRowTitle).text = event.title
         
         val timeStr = if (event.isAllDay) "All day" else event.startTime ?: ""
-        row.findViewById<TextView>(R.id.textRowMeta).text = "${dateFormat.format(Date(event.date))} • $timeStr"
+        val locationStr = if (event.location.isNotEmpty()) " • 📍 ${event.location}" else ""
+        row.findViewById<TextView>(R.id.textRowMeta).text = "${dateFormat.format(Date(event.date))} • $timeStr$locationStr"
         
         val typeView = row.findViewById<TextView>(R.id.textRowExtra)
         typeView.text = event.eventType

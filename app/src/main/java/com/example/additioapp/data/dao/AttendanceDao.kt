@@ -198,4 +198,18 @@ interface AttendanceDao {
     // Check for any records matching a sessionId pattern (for duplicate detection)
     @Query("SELECT COUNT(*) FROM attendance_records WHERE sessionId LIKE :sessionIdPattern")
     suspend fun countRecordsBySessionIdPattern(sessionIdPattern: String): Int
+
+    // Get all distinct sessions for a class (for marking new students as absent)
+    @Query("""
+        SELECT DISTINCT ar.sessionId, ar.date
+        FROM attendance_records ar
+        INNER JOIN students s ON ar.studentId = s.id
+        WHERE s.classId = :classId
+    """)
+    suspend fun getDistinctSessionsForClass(classId: Long): List<SessionInfo>
 }
+
+data class SessionInfo(
+    val sessionId: String,
+    val date: Long
+)

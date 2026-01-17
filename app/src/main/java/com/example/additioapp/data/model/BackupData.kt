@@ -9,7 +9,7 @@ import com.example.additioapp.data.model.GradeRecordEntity
 import com.example.additioapp.data.model.BehaviorRecordEntity
 
 data class BackupData(
-    val version: Int = 3,
+    val version: Int = 4,
     val timestamp: Long = System.currentTimeMillis(),
     val classes: List<ClassEntity> = emptyList(),
     val students: List<StudentEntity> = emptyList(),
@@ -31,6 +31,12 @@ data class BackupData(
     val teacherAbsences: List<com.example.additioapp.data.model.TeacherAbsenceEntity> = emptyList(),
     val studentNotes: List<com.example.additioapp.data.model.StudentNoteEntity> = emptyList(),
     val classNotes: List<com.example.additioapp.data.model.ClassNoteEntity> = emptyList(),
-    val units: List<com.example.additioapp.data.model.UnitEntity> = emptyList()
+    val units: List<com.example.additioapp.data.model.UnitEntity> = emptyList(),
+
+    // Version 4: Groups & Customizations
+    val gradeItemGroups: List<com.example.additioapp.data.model.GradeItemGroupEntity> = emptyList(),
+    val attendanceStatuses: List<com.example.additioapp.data.model.AttendanceStatusEntity> = emptyList(),
+    val behaviorTypes: List<com.example.additioapp.data.model.BehaviorTypeEntity> = emptyList(),
+    val gradeCategories: List<com.example.additioapp.data.model.GradeCategoryEntity> = emptyList()
 )
 

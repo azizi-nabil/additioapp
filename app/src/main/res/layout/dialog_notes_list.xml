@@ -91,5 +91,6 @@
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_add"
         app:fabSize="mini"
+        app:backgroundTint="?attr/colorPrimary"
         app:tint="@android:color/white"/>
 </LinearLayout>

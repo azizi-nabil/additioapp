@@ -121,9 +121,13 @@ class AppRepository(
     fun getStudentsForClass(classId: Long) = studentDao.getStudentsForClass(classId)
     suspend fun getStudentById(id: Long) = studentDao.getStudentById(id)
     suspend fun insertStudent(student: StudentEntity) = studentDao.insertStudent(student)
+    suspend fun insertStudentAndGetId(student: StudentEntity): Long = studentDao.insertStudent(student)
     suspend fun insertStudents(students: List<StudentEntity>) = studentDao.insertStudents(students)
     suspend fun updateStudent(student: StudentEntity) = studentDao.updateStudent(student)
     suspend fun deleteStudent(student: StudentEntity) = studentDao.deleteStudent(student)
+
+    // Attendance bulk insert
+    suspend fun insertAttendanceRecords(records: List<AttendanceRecordEntity>) = attendanceDao.insertAttendanceList(records)
 
     // Attendance
     fun getAttendanceForStudent(studentId: Long) = attendanceDao.getAttendanceForStudent(studentId)
@@ -154,6 +158,8 @@ class AppRepository(
     suspend fun getAllAttendanceForClassOnce(classId: Long): List<AttendanceRecordEntity> {
         return attendanceDao.getAllAttendanceForClassSync(classId)
     }
+
+    suspend fun getDistinctSessionsForClass(classId: Long) = attendanceDao.getDistinctSessionsForClass(classId)
     
     /**
      * Deduplicate attendance records by keeping only one record per (studentId, sessionId).
@@ -217,7 +223,13 @@ class AppRepository(
     fun getGradeItemsForClass(classId: Long) = gradeDao.getGradeItemsForClass(classId)
     fun getGradeItemById(id: Long) = gradeDao.getGradeItemById(id)
     suspend fun getGradeItemsForClassSync(classId: Long) = gradeDao.getGradeItemsForClassSync(classId)
-    suspend fun insertGradeItem(item: GradeItemEntity) = gradeDao.insertGradeItem(item)
+    suspend fun insertGradeItem(item: GradeItemEntity) {
+        if (item.id == 0L) {
+            gradeDao.insertGradeItem(item)
+        } else {
+            gradeDao.updateGradeItem(item)
+        }
+    }
     suspend fun deleteGradeItem(item: GradeItemEntity) = gradeDao.deleteGradeItem(item)
 
     fun getGradesForStudent(studentId: Long) = gradeDao.getGradesForStudent(studentId)
@@ -294,7 +306,13 @@ class AppRepository(
             teacherAbsences = teacherAbsenceDao.getAllAbsencesSync(),
             studentNotes = studentNoteDao.getAllNotesSync(),
             classNotes = classNoteDao.getAllNotesSync(),
-            units = unitDao.getAllUnitsSync()
+            units = unitDao.getAllUnitsSync(),
+
+            // v4 data
+            gradeItemGroups = gradeItemGroupDao.getAllGroupsSync(),
+            attendanceStatuses = attendanceStatusDao.getAllStatusesSync(),
+            behaviorTypes = behaviorTypeDao.getAllBehaviorTypesSync(),
+            gradeCategories = gradeCategoryDao.getAllCategoriesSync()
         )
     }
 
@@ -448,12 +466,50 @@ class AppRepository(
                 android.util.Log.e("AppRepository", "Failed to restore class notes: ${e.message}", e)
             }
         }
+        
         if (data.units.isNotEmpty()) {
             try {
                 android.util.Log.d("AppRepository", "Inserting ${data.units.size} units")
                 unitDao.insertAll(data.units)
             } catch (e: Exception) {
                 android.util.Log.e("AppRepository", "Failed to restore units: ${e.message}", e)
+            }
+        }
+        
+        // Restore v4 data (Groups & Customizations)
+        if (data.gradeItemGroups.isNotEmpty()) {
+            try {
+                android.util.Log.d("AppRepository", "Inserting ${data.gradeItemGroups.size} grade item groups")
+                gradeItemGroupDao.insertAll(data.gradeItemGroups)
+            } catch (e: Exception) {
+                android.util.Log.e("AppRepository", "Failed to restore grade item groups: ${e.message}", e)
+            }
+        }
+        
+        if (data.attendanceStatuses.isNotEmpty()) {
+            try {
+                android.util.Log.d("AppRepository", "Inserting ${data.attendanceStatuses.size} attendance statuses")
+                attendanceStatusDao.insertAll(data.attendanceStatuses)
+            } catch (e: Exception) {
+                android.util.Log.e("AppRepository", "Failed to restore attendance statuses: ${e.message}", e)
+            }
+        }
+        
+        if (data.behaviorTypes.isNotEmpty()) {
+            try {
+                android.util.Log.d("AppRepository", "Inserting ${data.behaviorTypes.size} behavior types")
+                behaviorTypeDao.insertAll(data.behaviorTypes)
+            } catch (e: Exception) {
+                android.util.Log.e("AppRepository", "Failed to restore behavior types: ${e.message}", e)
+            }
+        }
+        
+        if (data.gradeCategories.isNotEmpty()) {
+            try {
+                android.util.Log.d("AppRepository", "Inserting ${data.gradeCategories.size} grade categories")
+                gradeCategoryDao.insertAll(data.gradeCategories)
+            } catch (e: Exception) {
+                android.util.Log.e("AppRepository", "Failed to restore grade categories: ${e.message}", e)
             }
         }
         

@@ -473,6 +473,9 @@
     <string name="settings_section_customization">🎨 Customization</string>
     <string name="settings_section_help">💡 Help &amp; Tips</string>
     <string name="settings_section_about">ℹ️ About</string>
+    <string name="excel_export_action">Export to Excel</string>
+    <string name="excel_export_success">Exported successfully to %s</string>
+    <string name="excel_export_failed">Export failed</string>
     <string name="settings_backup_title">Backup Data</string>
     <string name="settings_backup_desc">Export your data to a JSON file</string>
     <string name="settings_restore_title">Restore Data</string>
@@ -565,7 +568,7 @@
     <string name="classes_toolbar_title">📚 My Classes</string>
     <string name="classes_filter">Filter Classes</string>
     <string name="classes_class_list">📋 Class List</string>
-    <string name="classes_add_btn">+ Add</string>
+    <string name="classes_add_btn">Add</string>
     <string name="classes_archived">Archived</string>
     <string name="classes_no_classes">No classes yet</string>
     <string name="classes_create_first">Tap + Add to create your first class</string>

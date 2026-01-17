@@ -42,8 +42,9 @@ class ClassesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val btnAddInline = view.findViewById<Button>(R.id.btnAddClassInline)
+        val btnYearSelectorContainer = view.findViewById<View>(R.id.btnYearSelectorContainer)
+        val textYearSelector = view.findViewById<TextView>(R.id.textYearSelector)
         val chipGroupFilter = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.chipGroupFilter)
-        val btnYearSelector = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnYearSelector)
         val emptyState = view.findViewById<View>(R.id.emptyState)
         val containerClasses = view.findViewById<LinearLayout>(R.id.containerClassesList)
         val containerQuickStats = view.findViewById<LinearLayout>(R.id.containerQuickStats)
@@ -104,28 +105,28 @@ class ClassesFragment : Fragment() {
                 if (selectedYear == null || !years.contains(selectedYear)) {
                     selectedYear = years.first()
                 }
-                btnYearSelector.text = selectedYear
+                textYearSelector.text = selectedYear
                 updateStats()
                 updateEmptyStateAndAddButton(chipGroupFilter.checkedChipId)
                 updateList(chipGroupFilter.checkedChipId, selectedYear, containerClasses, emptyState, containerQuickStats)
             } else {
-                btnYearSelector.text = "No Years"
+                textYearSelector.text = "No Years"
                 selectedYear = null
                 updateStats()
                 updateList(chipGroupFilter.checkedChipId, null, containerClasses, emptyState, containerQuickStats)
             }
         }
 
-        btnYearSelector.setOnClickListener {
+        btnYearSelectorContainer.setOnClickListener {
             if (availableYears.isEmpty()) return@setOnClickListener
             
-            val popup = android.widget.PopupMenu(requireContext(), btnYearSelector)
+            val popup = android.widget.PopupMenu(requireContext(), btnYearSelectorContainer)
             availableYears.forEach { year ->
                 popup.menu.add(year)
             }
             popup.setOnMenuItemClickListener { item ->
                 selectedYear = item.title.toString()
-                btnYearSelector.text = selectedYear
+                textYearSelector.text = selectedYear
                 updateStats()
                 updateList(chipGroupFilter.checkedChipId, selectedYear, containerClasses, emptyState, containerQuickStats)
                 true
@@ -192,7 +193,7 @@ class ClassesFragment : Fragment() {
 
         classes.forEach { classSummary ->
             val classEntity = classSummary.classEntity
-            val row = layoutInflater.inflate(R.layout.item_home_row, container, false)
+            val row = layoutInflater.inflate(R.layout.item_class, container, false) // Use item_class
 
             val color = try {
                 Color.parseColor(classEntity.color)
@@ -200,16 +201,45 @@ class ClassesFragment : Fragment() {
                 Color.parseColor("#2196F3")
             }
 
-            row.findViewById<View>(R.id.colorIndicator).setBackgroundColor(color)
-            row.findViewById<TextView>(R.id.textRowTitle).text = classEntity.name
-            row.findViewById<TextView>(R.id.textRowMeta).text = "${classSummary.studentCount} students • ${classEntity.location.ifEmpty { "No location" }}"
-            row.findViewById<TextView>(R.id.textRowExtra).apply {
-                text = if (classEntity.semester == "Semester 1") "S1" else "S2"
-                visibility = View.VISIBLE
-                setBackgroundColor(Color.parseColor("#E3F2FD"))
-                setTextColor(Color.parseColor("#1976D2"))
+            // Bind data to item_class views
+            row.findViewById<View>(R.id.colorStrip).setBackgroundColor(color)
+            row.findViewById<TextView>(R.id.textClassName).text = classEntity.name
+            
+            // Location
+            val locationView = row.findViewById<TextView>(R.id.textClassLocation)
+            if (classEntity.location.isNotEmpty()) {
+                locationView.text = "📍 ${classEntity.location}"
+                locationView.visibility = View.VISIBLE
+            } else {
+                locationView.visibility = View.GONE
             }
 
+            // Year Tag
+            val yearView = row.findViewById<TextView>(R.id.textClassYear)
+            yearView.text = classEntity.year
+            yearView.visibility = if (classEntity.year.isNotEmpty()) View.VISIBLE else View.GONE
+
+            // Semester Tag
+            val semesterView = row.findViewById<TextView>(R.id.textClassSemester)
+            semesterView.text = if (classEntity.semester == "Semester 1") "S1" else "S2"
+            semesterView.background.setTint(if (classEntity.semester == "Semester 1") Color.parseColor("#2196F3") else Color.parseColor("#9C27B0"))
+
+            // Student Count
+            row.findViewById<TextView>(R.id.textStudentCount).text = classSummary.studentCount.toString()
+
+            // Notes Icon
+            val iconHasNotes = row.findViewById<View>(R.id.iconHasNotes)
+            if (classSummary.noteCount > 0) {
+                iconHasNotes.visibility = View.VISIBLE
+                iconHasNotes.setOnClickListener {
+                    val dialog = com.example.additioapp.ui.dialogs.ClassNotesDialog.newInstance(classEntity.id, classEntity.name)
+                    dialog.show(parentFragmentManager, "ClassNotesDialog")
+                }
+            } else {
+                iconHasNotes.visibility = View.GONE
+            }
+
+            // Click listener on the CardView itself
             row.setOnClickListener {
                 val bundle = Bundle().apply {
                     putLong("classId", classEntity.id)
@@ -217,6 +247,12 @@ class ClassesFragment : Fragment() {
                 androidx.navigation.Navigation.findNavController(requireView()).navigate(R.id.classDetailFragment, bundle)
             }
 
+            // Menu Options Click
+            row.findViewById<View>(R.id.btnMoreOptions).setOnClickListener {
+                showClassOptions(classSummary)
+            }
+            
+            // Long click on card also shows options
             row.setOnLongClickListener {
                 showClassOptions(classSummary)
                 true

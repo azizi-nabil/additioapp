@@ -19,15 +19,20 @@ import java.io.InputStreamReader
 
 class ImportStudentsDialog(
     private val classId: Long,
-    private val onImport: (List<StudentEntity>) -> Unit
+    private val existingStudents: List<StudentEntity> = emptyList(),
+    private val onImport: (List<StudentEntity>) -> Unit,
+    private val onUpdate: ((List<StudentEntity>) -> Unit)? = null
 ) : DialogFragment() {
 
     private lateinit var textStatus: TextView
     private lateinit var btnSelectFile: Button
     private lateinit var btnImport: Button
+    private lateinit var btnManualMatch: Button
     private lateinit var layoutInstructions: View
     private lateinit var layoutResult: View
     private var parsedStudents: List<StudentEntity> = emptyList()
+    private var studentsToUpdate: List<StudentEntity> = emptyList()
+    private var studentsToInsert: List<StudentEntity> = emptyList()
 
     private val filePickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -57,6 +62,7 @@ class ImportStudentsDialog(
         layoutResult = view.findViewById(R.id.layoutResult)
         val btnCancel = view.findViewById<Button>(R.id.btnCancel)
         val btnShowFormat = view.findViewById<Button>(R.id.btnShowFormat)
+        btnManualMatch = view.findViewById(R.id.btnManualMatch)
 
         // Initially show instructions, hide result
         layoutInstructions.visibility = View.VISIBLE
@@ -76,15 +82,45 @@ class ImportStudentsDialog(
         }
 
         btnImport.setOnClickListener {
-            if (parsedStudents.isNotEmpty()) {
-                onImport(parsedStudents)
-                Toast.makeText(context, getString(R.string.import_success_toast, parsedStudents.size), Toast.LENGTH_SHORT).show()
+            if (studentsToInsert.isNotEmpty() || studentsToUpdate.isNotEmpty()) {
+                // Update existing students
+                if (studentsToUpdate.isNotEmpty() && onUpdate != null) {
+                    onUpdate.invoke(studentsToUpdate)
+                }
+                // Insert new students
+                if (studentsToInsert.isNotEmpty()) {
+                    onImport(studentsToInsert)
+                }
+                val total = studentsToInsert.size + studentsToUpdate.size
+                Toast.makeText(context, getString(R.string.import_success_toast, total), Toast.LENGTH_SHORT).show()
                 dismiss()
             }
         }
 
         btnCancel.setOnClickListener {
             dismiss()
+        }
+
+        // Manual matching button
+        btnManualMatch.setOnClickListener {
+            if (parsedStudents.isNotEmpty() && existingStudents.isNotEmpty()) {
+                val matchDialog = MatchStudentsDialog(
+                    importedStudents = parsedStudents,
+                    existingStudents = existingStudents,
+                    onComplete = { toUpdate, toInsert ->
+                        // Update existing students
+                        toUpdate.forEach { (_, updated) ->
+                            onUpdate?.invoke(listOf(updated))
+                        }
+                        // Insert new students
+                        if (toInsert.isNotEmpty()) {
+                            onImport(toInsert)
+                        }
+                    }
+                )
+                matchDialog.show(parentFragmentManager, "MatchStudentsDialog")
+                dismiss()
+            }
         }
     }
 
@@ -101,19 +137,24 @@ class ImportStudentsDialog(
             val inputStream = requireContext().contentResolver.openInputStream(uri)
             val reader = BufferedReader(InputStreamReader(inputStream))
             val students = mutableListOf<StudentEntity>()
-            var skippedHeader = false
+            var headerFound = false
 
             reader.forEachLine { line ->
                 if (line.isBlank()) return@forEachLine
 
-                // Skip header row
-                if (!skippedHeader && (line.contains("Matricule", ignoreCase = true) || 
-                    line.contains("Nom", ignoreCase = true))) {
-                    skippedHeader = true
+                // Skip metadata rows (class info, etc.) - they don't start with a numeric matricule
+                val parts = line.split(",", ";", "\t").map { it.trim() }
+                val firstPart = parts.getOrNull(0) ?: ""
+                
+                // Skip if first column is not a numeric matricule (metadata or header row)
+                if (!firstPart.all { it.isDigit() } || firstPart.length < 5) {
+                    // Mark header as found if this looks like a header row
+                    if (line.contains("Matricule", ignoreCase = true) || line.contains("Nom", ignoreCase = true)) {
+                        headerFound = true
+                    }
                     return@forEachLine
                 }
 
-                val parts = line.split(",", ";", "\t").map { it.trim() }
                 if (parts.size >= 3) {
                     val matricule = parts[0]
                     val nomFull = parts[1]
@@ -151,15 +192,68 @@ class ImportStudentsDialog(
 
             reader.close()
             parsedStudents = students
+            
+            // Match with existing students by Arabic name
+            studentsToUpdate = mutableListOf()
+            studentsToInsert = mutableListOf()
+            
+            students.forEach { csvStudent ->
+                // Try to find a matching existing student by Arabic name
+                val arabicFullName = "${csvStudent.lastNameAr ?: ""} ${csvStudent.firstNameAr ?: ""}".trim()
+                val matchedStudent = if (arabicFullName.isNotEmpty()) {
+                    existingStudents.find { existing ->
+                        // Check 1: Match against existing Arabic name fields
+                        val existingArabicName = "${existing.lastNameAr ?: ""} ${existing.firstNameAr ?: ""}".trim()
+                        val matchByArabicFields = existingArabicName.isNotEmpty() && existingArabicName == arabicFullName
+                        
+                        // Check 2: Match against lastNameFr (where user stores full Arabic name)
+                        val matchByLastNameFr = existing.lastNameFr.isNotEmpty() && 
+                            (existing.lastNameFr == arabicFullName || existing.lastNameFr.contains(csvStudent.lastNameAr ?: "###"))
+                        
+                        matchByArabicFields || matchByLastNameFr
+                    }
+                } else null
+                
+                if (matchedStudent != null) {
+                    // Update existing student with new info, preserving ID
+                    val updatedStudent = matchedStudent.copy(
+                        matricule = csvStudent.matricule.ifEmpty { matchedStudent.matricule },
+                        firstNameFr = csvStudent.firstNameFr.ifEmpty { matchedStudent.firstNameFr },
+                        lastNameFr = csvStudent.lastNameFr.ifEmpty { matchedStudent.lastNameFr },
+                        firstNameAr = csvStudent.firstNameAr ?: matchedStudent.firstNameAr,
+                        lastNameAr = csvStudent.lastNameAr ?: matchedStudent.lastNameAr,
+                        name = "${csvStudent.lastNameFr.ifEmpty { matchedStudent.lastNameFr }} ${csvStudent.firstNameFr.ifEmpty { matchedStudent.firstNameFr }}".trim(),
+                        studentId = csvStudent.matricule.ifEmpty { matchedStudent.studentId }
+                    )
+                    (studentsToUpdate as MutableList).add(updatedStudent)
+                } else {
+                    (studentsToInsert as MutableList).add(csvStudent)
+                }
+            }
 
             // Show result section, hide instructions
             layoutInstructions.visibility = View.GONE
             layoutResult.visibility = View.VISIBLE
 
             if (students.isNotEmpty()) {
-                textStatus.text = getString(R.string.import_status_found, students.size) +
-                    students.take(5).mapIndexed { i, s -> "${i+1}. ${s.displayNameFr} (${s.matricule})" }.joinToString("\n")
+                val updateCount = studentsToUpdate.size
+                val insertCount = studentsToInsert.size
+                val previewList = students.take(5).mapIndexed { i, s -> "${i+1}. ${s.displayNameFr} (${s.matricule})" }.joinToString("\n")
+                
+                val statusText = StringBuilder()
+                statusText.append(getString(R.string.import_status_found, students.size))
+                statusText.append(previewList)
+                if (updateCount > 0) {
+                    statusText.append("\n\n✅ Will update $updateCount existing student(s)")
+                }
+                if (insertCount > 0) {
+                    statusText.append("\n➕ Will add $insertCount new student(s)")
+                }
+                
+                textStatus.text = statusText.toString()
                 btnImport.isEnabled = true
+                // Enable manual match if there are existing students
+                btnManualMatch.isEnabled = existingStudents.isNotEmpty()
             } else {
                 textStatus.text = getString(R.string.import_status_empty)
                 btnImport.isEnabled = false

@@ -18,4 +18,10 @@ interface GradeCategoryDao {
 
     @Delete
     suspend fun deleteCategory(category: GradeCategoryEntity)
+
+    @Query("SELECT * FROM grade_categories")
+    suspend fun getAllCategoriesSync(): List<GradeCategoryEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(categories: List<GradeCategoryEntity>)
 }

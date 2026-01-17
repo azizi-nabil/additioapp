@@ -14,8 +14,15 @@ import com.example.additioapp.R
 import com.example.additioapp.ui.AdditioViewModelFactory
 import com.example.additioapp.ui.adapters.GradeItemAdapter
 import com.example.additioapp.ui.dialogs.AddGradeItemDialog
+import com.example.additioapp.data.model.GradeItemEntity
+import com.example.additioapp.data.model.GradeRecordEntity
+import com.example.additioapp.data.model.StudentEntity
 import com.example.additioapp.ui.viewmodel.GradeViewModel
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import androidx.lifecycle.lifecycleScope
 
 class GradesFragment : Fragment() {
 
@@ -23,7 +30,113 @@ class GradesFragment : Fragment() {
     private val viewModel: GradeViewModel by viewModels {
         AdditioViewModelFactory((requireActivity().application as AdditioApplication).repository)
     }
-    private var currentGradeItems: List<com.example.additioapp.data.model.GradeItemEntity> = emptyList()
+    private var currentGradeItems: List<GradeItemEntity> = emptyList()
+
+    private val exportLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.CreateDocument("text/csv")
+    ) { uri ->
+        uri?.let { exportGradesToCsv(it) }
+    }
+
+    private fun exportGradesToCsv(uri: android.net.Uri) {
+        lifecycleScope.launch {
+            try {
+                val repository = (requireActivity().application as AdditioApplication).repository
+                
+                // Fetch all necessary data
+                val students = withContext(Dispatchers.IO) { repository.getStudentsForClassOnce(classId) }
+                // Sort by date ASC so the latest is last
+                val items = withContext(Dispatchers.IO) { repository.getGradeItemsForClassSync(classId).sortedBy { it.date } }
+                val records = withContext(Dispatchers.IO) { repository.getGradeRecordsForClassSync(classId) }
+
+                if (students.isEmpty()) {
+                    withContext(Dispatchers.Main) {
+                        android.widget.Toast.makeText(requireContext(), getString(R.string.toast_no_students), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                    return@launch
+                }
+
+                withContext(Dispatchers.IO) {
+                    requireContext().contentResolver.openOutputStream(uri)?.use { outputStream ->
+                        val writer = outputStream.bufferedWriter(Charsets.UTF_8)
+                        
+                        // Write UTF-8 BOM for Excel
+                        outputStream.write(0xEF)
+                        outputStream.write(0xBB)
+                        outputStream.write(0xBF)
+                        
+                        // Header: Matricule, Nom, Prénom, [Items...]
+                        val header = mutableListOf("Matricule", "Nom", "Prénom")
+                        items.forEach { header.add(it.name) }
+                        writer.write(header.joinToString(","))
+                        writer.newLine()
+
+                        // Data rows
+                        val recordsMap = records.groupBy { it.studentId to it.gradeItemId }
+                        
+                        students.forEach { student ->
+                            val row = mutableListOf<String>()
+                            row.add(student.displayMatricule)
+                            
+                            // Use displayNameFr which combines lastNameFr + firstNameFr
+                            // The user stores Arabic names in the French fields
+                            val lastName = if (student.lastNameFr.isNotEmpty()) {
+                                if (!student.lastNameAr.isNullOrEmpty()) "${student.lastNameFr}/${student.lastNameAr}" else student.lastNameFr
+                            } else {
+                                student.name.ifEmpty { "N/A" }
+                            }
+                            
+                            val firstName = if (student.firstNameFr.isNotEmpty()) {
+                                if (!student.firstNameAr.isNullOrEmpty()) "${student.firstNameFr}/${student.firstNameAr}" else student.firstNameFr
+                            } else {
+                                ""
+                            }
+                            
+                            // Sanitize for CSV: Replace comma with space, remove newlines
+                            fun sanitize(s: String): String = s.replace(",", " ").replace("\n", " ").trim()
+                            
+                            row.add(sanitize(lastName))
+                            row.add(sanitize(firstName))
+
+                            items.forEach { item ->
+                                val record = recordsMap[student.id to item.id]?.firstOrNull()
+                                val cellValue = if (record != null) {
+                                    when (record.status) {
+                                        "ABSENT" -> "Absent"
+                                        "EXCUSED" -> "Excused"
+                                        "MISSING" -> "Missing"
+                                        else -> {
+                                            // PRESENT
+                                            if (record.score >= 0) {
+                                                String.format(java.util.Locale.US, "%.2f", record.score).trimEnd('0').trimEnd('.')
+                                            } else {
+                                                ""
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    ""
+                                }
+                                row.add(cellValue)
+                            }
+                            
+                            writer.write(row.joinToString(","))
+                            writer.newLine()
+                        }
+                        writer.flush()
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    android.widget.Toast.makeText(requireContext(), getString(R.string.excel_export_success, uri.path), android.widget.Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    android.widget.Toast.makeText(requireContext(), getString(R.string.excel_export_failed) + ": ${e.message}", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +159,8 @@ class GradesFragment : Fragment() {
         val emptyStateLayout = view.findViewById<LinearLayout>(R.id.emptyStateLayout)
         val fab = view.findViewById<ExtendedFloatingActionButton>(R.id.fabAddGradeItem)
         val btnToggleFab = view.findViewById<android.widget.ImageButton>(R.id.btnToggleFab)
+
+        val btnExportCsv = view.findViewById<android.widget.ImageButton>(R.id.btnExportCsv)
         val textAssessmentCount = view.findViewById<android.widget.TextView>(R.id.textAssessmentCount)
         
         // FAB toggle functionality
@@ -143,6 +258,19 @@ class GradesFragment : Fragment() {
                 viewModel.insertGradeItem(itemWithClassId)
             }
             dialog.show(parentFragmentManager, "AddGradeItemDialog")
+        }
+
+        btnExportCsv.setOnClickListener {
+            if (currentGradeItems.isNotEmpty()) {
+                lifecycleScope.launch {
+                    val repository = (requireActivity().application as AdditioApplication).repository
+                    val classEntity = withContext(Dispatchers.IO) { repository.getClassById(classId) }
+                    val className = classEntity?.name?.replace(" ", "_") ?: "Export"
+                    exportLauncher.launch("Grades_${className}.csv")
+                }
+            } else {
+                android.widget.Toast.makeText(requireContext(), getString(R.string.grades_empty), android.widget.Toast.LENGTH_SHORT).show()
+            }
         }
     }
     

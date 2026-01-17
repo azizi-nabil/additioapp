@@ -18,6 +18,10 @@ import com.example.additioapp.data.model.StudentEntity
 import com.example.additioapp.ui.viewmodel.AttendanceViewModel
 import com.example.additioapp.ui.viewmodel.StudentViewModel
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
 
 class StudentsFragment : Fragment() {
 
@@ -48,24 +52,36 @@ class StudentsFragment : Fragment() {
     private fun exportToCsv(uri: android.net.Uri) {
         try {
             requireContext().contentResolver.openOutputStream(uri)?.use { outputStream ->
-                val writer = outputStream.bufferedWriter()
-                // Write header
+                val writer = outputStream.bufferedWriter(Charsets.UTF_8)
+                
+                // Write UTF-8 BOM for Excel
+                outputStream.write(0xEF)
+                outputStream.write(0xBB)
+                outputStream.write(0xBF)
+
+                // Write header with Comma
                 writer.write("Matricule,Nom,Prénom,Notes")
                 writer.newLine()
                 // Write student data
                 currentStudents.forEach { student ->
-                    val lastName = if (!student.lastNameAr.isNullOrEmpty()) {
-                        "${student.lastNameFr}/${student.lastNameAr}"
+                    // Use lastNameFr + firstNameFr
+                    val lastName = if (student.lastNameFr.isNotEmpty()) {
+                        if (!student.lastNameAr.isNullOrEmpty()) "${student.lastNameFr}/${student.lastNameAr}" else student.lastNameFr
                     } else {
-                        student.lastNameFr
+                        student.name.ifEmpty { "N/A" }
                     }
-                    val firstName = if (!student.firstNameAr.isNullOrEmpty()) {
-                        "${student.firstNameFr}/${student.firstNameAr}"
+                    
+                    val firstName = if (student.firstNameFr.isNotEmpty()) {
+                        if (!student.firstNameAr.isNullOrEmpty()) "${student.firstNameFr}/${student.firstNameAr}" else student.firstNameFr
                     } else {
-                        student.firstNameFr
+                        ""
                     }
-                    val notes = student.notes?.replace(",", ";")?.replace("\n", " ") ?: ""
-                    writer.write("${student.displayMatricule},$lastName,$firstName,$notes")
+                    
+                    // Sanitize for CSV: Replace comma with space, remove newlines
+                    fun sanitize(s: String): String = s.replace(",", " ").replace("\n", " ").trim()
+                    
+                    val notes = student.notes?.replace(",", " ")?.replace("\n", " ") ?: ""
+                    writer.write("${student.displayMatricule},${sanitize(lastName)},${sanitize(firstName)},$notes")
                     writer.newLine()
                 }
                 writer.flush()
@@ -463,15 +479,52 @@ class StudentsFragment : Fragment() {
                         1 -> {
                             val importDialog = com.example.additioapp.ui.dialogs.ImportStudentsDialog(
                                 classId = classId,
+                                existingStudents = currentStudents,
                                 onImport = { students ->
-                                    students.forEach { studentViewModel.insertStudent(it) }
+                                    lifecycleScope.launch {
+                                        val repository = (requireActivity().application as AdditioApplication).repository
+                                        
+                                        // Get all existing sessions for this class
+                                        val existingSessions = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                                            repository.getDistinctSessionsForClass(classId)
+                                        }
+                                        
+                                        // Insert each student and mark as absent in all existing sessions
+                                        students.forEach { student ->
+                                            // Insert student and get the new ID
+                                            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                                                val newId = repository.insertStudentAndGetId(student)
+                                                
+                                                // Create absent records for all existing sessions
+                                                if (existingSessions.isNotEmpty()) {
+                                                    val absentRecords = existingSessions.map { session ->
+                                                        com.example.additioapp.data.model.AttendanceRecordEntity(
+                                                            studentId = newId,
+                                                            sessionId = session.sessionId,
+                                                            date = session.date,
+                                                            status = "A" // Absent
+                                                        )
+                                                    }
+                                                    repository.insertAttendanceRecords(absentRecords)
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                onUpdate = { students ->
+                                    students.forEach { studentViewModel.updateStudent(it) }
                                 }
                             )
                             importDialog.show(parentFragmentManager, "ImportStudentsDialog")
                         }
                         2 -> {
                             if (currentStudents.isNotEmpty()) {
-                                exportLauncher.launch("students_export.csv")
+                                lifecycleScope.launch {
+                                    val repository = (requireActivity().application as AdditioApplication).repository
+                                    val classEntity = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { repository.getClassById(classId) }
+                                    val className = classEntity?.name?.replace(" ", "_") ?: "Export"
+                                    exportLauncher.launch("Students_${className}.csv")
+                                }
                             } else {
                                 android.widget.Toast.makeText(requireContext(), getString(R.string.toast_no_students_to_export), android.widget.Toast.LENGTH_SHORT).show()
                             }

@@ -37,6 +37,9 @@ interface GradeItemGroupDao {
     @Query("DELETE FROM grade_item_groups WHERE gradeItemId = :gradeItemId")
     suspend fun deleteAllForGradeItem(gradeItemId: Long)
     
+    @Query("SELECT * FROM grade_item_groups")
+    suspend fun getAllGroupsSync(): List<GradeItemGroupEntity>
+
     @Query("UPDATE grade_item_groups SET groupNumber = :groupNumber WHERE gradeItemId = :gradeItemId AND studentId = :studentId")
     suspend fun updateGroupNumber(gradeItemId: Long, studentId: Long, groupNumber: Int)
 }

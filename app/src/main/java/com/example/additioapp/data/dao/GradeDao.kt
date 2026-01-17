@@ -28,8 +28,11 @@ interface GradeDao {
     @Query("SELECT * FROM grade_items WHERE classId = :classId ORDER BY date DESC")
     suspend fun getGradeItemsForClassSync(classId: Long): List<GradeItemEntity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insertGradeItem(gradeItem: GradeItemEntity): Long
+
+    @Update
+    suspend fun updateGradeItem(gradeItem: GradeItemEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGradeItems(gradeItems: List<GradeItemEntity>)

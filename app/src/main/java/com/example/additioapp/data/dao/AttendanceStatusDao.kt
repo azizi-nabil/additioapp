@@ -21,4 +21,10 @@ interface AttendanceStatusDao {
 
     @Query("SELECT COUNT(*) FROM attendance_statuses")
     suspend fun getStatusCount(): Int
+
+    @Query("SELECT * FROM attendance_statuses ORDER BY orderIndex ASC, id ASC")
+    suspend fun getAllStatusesSync(): List<AttendanceStatusEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(statuses: List<AttendanceStatusEntity>)
 }
