@@ -60,6 +60,16 @@ class ClassesFragment : Fragment() {
         var availableYears: List<String> = emptyList()
         var allClassesList: List<com.example.additioapp.data.model.ClassEntity> = emptyList()
 
+        // Restore last filter state from SharedPreferences
+        val prefs = requireContext().getSharedPreferences("classes_filter_prefs", android.content.Context.MODE_PRIVATE)
+        val savedYear = prefs.getString("last_selected_year", null)
+        val savedChipId = prefs.getInt("last_selected_chip", R.id.chipFilterSemester1)
+        
+        // Set the saved chip selection (before observer triggers)
+        if (savedChipId != chipGroupFilter.checkedChipId) {
+            chipGroupFilter.check(savedChipId)
+        }
+
         // Function to update stats based on selected year
         fun updateStats() {
             val yearClasses = if (selectedYear != null) {
@@ -102,8 +112,11 @@ class ClassesFragment : Fragment() {
         viewModel.distinctYears.observe(viewLifecycleOwner) { years ->
             availableYears = years.map { it.trim() }.distinct().sortedDescending()
             if (availableYears.isNotEmpty()) {
-                if (selectedYear == null || !years.contains(selectedYear)) {
-                    selectedYear = years.first()
+                // Use saved year if valid, otherwise default to first available
+                selectedYear = if (savedYear != null && availableYears.contains(savedYear)) {
+                    savedYear
+                } else {
+                    availableYears.first()
                 }
                 textYearSelector.text = selectedYear
                 updateStats()
@@ -127,6 +140,8 @@ class ClassesFragment : Fragment() {
             popup.setOnMenuItemClickListener { item ->
                 selectedYear = item.title.toString()
                 textYearSelector.text = selectedYear
+                // Save year selection
+                prefs.edit().putString("last_selected_year", selectedYear).apply()
                 updateStats()
                 updateList(chipGroupFilter.checkedChipId, selectedYear, containerClasses, emptyState, containerQuickStats)
                 true
@@ -135,6 +150,8 @@ class ClassesFragment : Fragment() {
         }
 
         chipGroupFilter.setOnCheckedChangeListener { _, checkedId ->
+            // Save chip selection
+            prefs.edit().putInt("last_selected_chip", checkedId).apply()
             updateEmptyStateAndAddButton(checkedId)
             updateList(checkedId, selectedYear, containerClasses, emptyState, containerQuickStats)
         }
