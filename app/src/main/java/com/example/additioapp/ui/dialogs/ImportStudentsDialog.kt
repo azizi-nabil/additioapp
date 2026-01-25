@@ -144,14 +144,22 @@ class ImportStudentsDialog(
 
                 // Skip metadata rows (class info, etc.) - they don't start with a numeric matricule
                 val parts = line.split(",", ";", "\t").map { it.trim() }
-                val firstPart = parts.getOrNull(0) ?: ""
+                val firstPart = (parts.getOrNull(0) ?: "").uppercase()
                 
-                // Skip if first column is not a numeric matricule (metadata or header row)
-                if (!firstPart.all { it.isDigit() } || firstPart.length < 5) {
-                    // Mark header as found if this looks like a header row
-                    if (line.contains("Matricule", ignoreCase = true) || line.contains("Nom", ignoreCase = true)) {
-                        headerFound = true
-                    }
+                // Detection logic: skip header or empty rows
+                // Headers usually contain words like "Matricule", "Mle", "ID", "Nom", "Name"
+                val isHeader = line.contains("Matricule", ignoreCase = true) || 
+                              line.contains("Mle", ignoreCase = true) || 
+                              line.contains("Nom", ignoreCase = true) ||
+                              line.contains("ID", ignoreCase = true)
+                
+                if (isHeader) {
+                    headerFound = true
+                    return@forEachLine
+                }
+
+                // If first part is empty or too short (noise), skip
+                if (firstPart.isEmpty() || firstPart.length < 2) {
                     return@forEachLine
                 }
 
