@@ -138,28 +138,39 @@ class ImportStudentsDialog(
             val reader = BufferedReader(InputStreamReader(inputStream))
             val students = mutableListOf<StudentEntity>()
             var headerFound = false
+            var lineNumber = 0
 
             reader.forEachLine { line ->
-                if (line.isBlank()) return@forEachLine
+                lineNumber++
+                android.util.Log.d("ImportCSV", "=== Line $lineNumber: '$line'")
+                
+                if (line.isBlank()) {
+                    android.util.Log.d("ImportCSV", "  -> SKIPPED: blank line")
+                    return@forEachLine
+                }
 
                 // Skip metadata rows (class info, etc.) - they don't start with a numeric matricule
                 val parts = line.split(",", ";", "\t").map { it.trim() }
+                android.util.Log.d("ImportCSV", "  -> Parts count: ${parts.size}, parts: $parts")
                 val firstPart = (parts.getOrNull(0) ?: "").uppercase()
                 
                 // Detection logic: skip header or empty rows
                 // Headers usually contain words like "Matricule", "Mle", "ID", "Nom", "Name"
+                // Use word boundary for "ID" to avoid matching names like HAMIDA, DJAHIDA, OUALID
                 val isHeader = line.contains("Matricule", ignoreCase = true) || 
                               line.contains("Mle", ignoreCase = true) || 
                               line.contains("Nom", ignoreCase = true) ||
-                              line.contains("ID", ignoreCase = true)
+                              Regex("\\bID\\b", RegexOption.IGNORE_CASE).containsMatchIn(line)
                 
                 if (isHeader) {
+                    android.util.Log.d("ImportCSV", "  -> SKIPPED: detected as header")
                     headerFound = true
                     return@forEachLine
                 }
 
                 // If first part is empty or too short (noise), skip
                 if (firstPart.isEmpty() || firstPart.length < 2) {
+                    android.util.Log.d("ImportCSV", "  -> SKIPPED: firstPart too short ('$firstPart')")
                     return@forEachLine
                 }
 
@@ -194,9 +205,13 @@ class ImportStudentsDialog(
                         name = "$lastNameFr $firstNameFr".trim(),
                         studentId = matricule
                     )
+                    android.util.Log.d("ImportCSV", "  -> ADDED: ${student.name} (${student.matricule})")
                     students.add(student)
+                } else {
+                    android.util.Log.d("ImportCSV", "  -> SKIPPED: not enough columns (need 3, got ${parts.size})")
                 }
             }
+            android.util.Log.d("ImportCSV", "=== PARSING COMPLETE: ${students.size} students parsed ===")
 
             reader.close()
             parsedStudents = students
