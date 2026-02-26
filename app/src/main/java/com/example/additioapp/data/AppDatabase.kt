@@ -70,7 +70,7 @@ import com.example.additioapp.data.dao.GradeItemGroupDao
         ClassNoteEntity::class,
         GradeItemGroupEntity::class
     ],
-    version = 24,
+    version = 26,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -416,6 +416,37 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // Migration from v24 to v25: Add groupId to students and grade_items for formula isolation
+        private val MIGRATION_24_25 = object : androidx.room.migration.Migration(24, 25) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE students ADD COLUMN groupId INTEGER")
+                db.execSQL("ALTER TABLE grade_items ADD COLUMN groupId INTEGER")
+            }
+        }
+
+        // Migration from v25 to v26: Deduplicate grade_records and add unique index
+        private val MIGRATION_25_26 = object : androidx.room.migration.Migration(25, 26) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // 1. Delete duplicates, keeping the one with the highest score (to avoid keeping a 0.0 that overwrote a real grade)
+                // If scores are equal, keep the one with the higher ID
+                db.execSQL("""
+                    DELETE FROM grade_records 
+                    WHERE id NOT IN (
+                        SELECT id FROM (
+                            SELECT id, ROW_NUMBER() OVER (
+                                PARTITION BY studentId, gradeItemId 
+                                ORDER BY score DESC, id DESC
+                            ) as row_num 
+                            FROM grade_records
+                        ) WHERE row_num = 1
+                    )
+                """.trimIndent())
+                
+                // 2. Add the unique index
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_grade_records_studentId_gradeItemId ON grade_records(studentId, gradeItemId)")
+            }
+        }
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -424,7 +455,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "additio_database"
                 )
                 // Use proper migrations to preserve data
-                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22, MIGRATION_22_23, MIGRATION_23_24)
+                .addMigrations(MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22, MIGRATION_22_23, MIGRATION_23_24, MIGRATION_24_25, MIGRATION_25_26)
                 // Only use destructive migration as last resort for older versions
                 .fallbackToDestructiveMigrationFrom(1, 2, 3, 4, 5)
                 .build()

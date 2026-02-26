@@ -113,10 +113,21 @@ class GradeEntryFragment : Fragment() {
         recyclerView.adapter = gradeAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Load default sort order from preferences
         val sortPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
         val nameField = sortPrefs.getString("pref_sort_order", "lastname") ?: "lastname"
-        var currentSortMode = if (nameField == "firstname") "FIRSTNAME_ASC" else "NAME_ASC"
+        var currentSortMode = when (nameField) {
+            "firstname" -> "FIRSTNAME_ASC"
+            "id" -> "ID_ASC"
+            else -> "NAME_ASC"
+        }
+        
+        // Update the sort button text to match the initial sort mode
+        when (currentSortMode) {
+            "FIRSTNAME_ASC" -> btnSort.text = getString(R.string.sort_firstname_asc_option)
+            "ID_ASC" -> btnSort.text = getString(R.string.sort_id_matricule_option)
+            else -> btnSort.text = getString(R.string.sort_lastname_asc_option)
+        }
+        
         var currentFilter = "ALL" // ALL, GRADED, NOT_GRADED, NOT_PRESENT
         var searchQuery = ""
         var filterMin: Float? = null

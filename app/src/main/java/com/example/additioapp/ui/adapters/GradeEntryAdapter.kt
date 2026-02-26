@@ -119,6 +119,7 @@ class GradeEntryAdapter(
         private val statusTextView: TextView = itemView.findViewById(R.id.textStatus)
         private val statusButton: com.google.android.material.button.MaterialButton = itemView.findViewById(R.id.btnStatus)
         private val groupBadgeTextView: TextView = itemView.findViewById(R.id.textGroupBadge)
+        private val lateIndicator: android.widget.ImageView = itemView.findViewById(R.id.iconLateIndicator)
         private var textWatcher: TextWatcher? = null
 
         fun bind(item: StudentGradeItem, position: Int, isCalculated: Boolean, maxScore: Float, groupNumber: Int?, onGradeChanged: (StudentGradeItem, Float, String) -> Unit, onAbsenceReport: ((StudentGradeItem) -> Unit)?, onBehaviorReport: ((StudentGradeItem) -> Unit)?, onGroupGrade: ((StudentGradeItem) -> Unit)?) {
@@ -178,11 +179,21 @@ class GradeEntryAdapter(
                 "PRESENT" -> {
                     scoreInputLayout.visibility = View.VISIBLE
                     statusTextView.visibility = View.GONE
+                    lateIndicator.visibility = View.GONE
+                    scoreEditText.isEnabled = !isCalculated
+                }
+                "LATE" -> {
+                    // LATE status: Show grade input WITH late indicator icon
+                    scoreInputLayout.visibility = View.VISIBLE
+                    statusTextView.visibility = View.GONE
+                    lateIndicator.visibility = View.VISIBLE
                     scoreEditText.isEnabled = !isCalculated
                 }
                 else -> {
+                    // ABSENT, MISSING, EXCUSED - hide grade input
                     scoreInputLayout.visibility = View.GONE
                     statusTextView.visibility = View.VISIBLE
+                    lateIndicator.visibility = View.GONE
                     statusTextView.text = currentStatus
                     
                     // Color coding for status
@@ -268,22 +279,31 @@ class GradeEntryAdapter(
                 
                 fun handleStatus(newStatus: String) {
                     bottomSheet.dismiss()
-                    val scoreStr = if (newStatus == "PRESENT") scoreEditText.text.toString() else "0"
                     
-                    if (newStatus == "PRESENT") {
-                        scoreInputLayout.visibility = View.VISIBLE
-                        statusTextView.visibility = View.GONE
-                    } else {
-                        scoreInputLayout.visibility = View.GONE
-                        statusTextView.visibility = View.VISIBLE
-                        statusTextView.text = newStatus
+                    when (newStatus) {
+                        "PRESENT", "LATE" -> {
+                            // Keep grade input visible, use existing score
+                            val scoreStr = scoreEditText.text.toString()
+                            scoreInputLayout.visibility = View.VISIBLE
+                            statusTextView.visibility = View.GONE
+                            lateIndicator.visibility = if (newStatus == "LATE") View.VISIBLE else View.GONE
+                            saveGrade(item, scoreStr, newStatus, onGradeChanged)
+                        }
+                        else -> {
+                            // Hide grade input for ABSENT, MISSING, EXCUSED
+                            scoreInputLayout.visibility = View.GONE
+                            statusTextView.visibility = View.VISIBLE
+                            lateIndicator.visibility = View.GONE
+                            statusTextView.text = newStatus
+                            saveGrade(item, "0", newStatus, onGradeChanged)
+                        }
                     }
-                    saveGrade(item, scoreStr, newStatus, onGradeChanged)
                 }
                 
                 menuView.findViewById<View>(R.id.menuPresent).setOnClickListener { handleStatus("PRESENT") }
                 menuView.findViewById<View>(R.id.menuAbsent).setOnClickListener { handleStatus("ABSENT") }
                 menuView.findViewById<View>(R.id.menuMissing).setOnClickListener { handleStatus("MISSING") }
+                menuView.findViewById<View>(R.id.menuLate).setOnClickListener { handleStatus("LATE") }
                 menuView.findViewById<View>(R.id.menuExcused).setOnClickListener { handleStatus("EXCUSED") }
                 
                 menuView.findViewById<View>(R.id.menuAbsenceReport).setOnClickListener {

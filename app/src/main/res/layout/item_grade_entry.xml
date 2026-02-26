@@ -60,6 +60,16 @@
             android:textColor="?attr/colorError"
             android:visibility="gone"/>
 
+        <!-- Late indicator icon - shows alongside grade input when status is LATE -->
+        <ImageView
+            android:id="@+id/iconLateIndicator"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_schedule_24dp"
+            android:contentDescription="@string/status_late"
+            app:tint="@color/tertiary"
+            android:visibility="gone"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutScore"
             android:layout_width="80dp"

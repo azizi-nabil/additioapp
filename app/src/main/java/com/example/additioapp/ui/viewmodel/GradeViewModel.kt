@@ -51,14 +51,6 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
 
     fun insertGradeRecord(record: GradeRecordEntity) = viewModelScope.launch {
         repository.insertGradeRecord(record)
-        // Trigger recalculation for the class (we need classId, but record doesn't have it directly)
-        // We can get it from the item. This is expensive to do for every insert.
-        // Optimization: Pass classId to this function?
-        // For now, let's look up the item to get the classId.
-        val items = repository.getAllGradeItems().value // This might be null or empty if not observed
-        // Better: Fetch item by ID.
-        // Let's assume the caller knows the classId or we fetch it.
-        // Actually, let's just add a separate method `recalculateGrades(classId)` and call it from UI.
     }
 
     fun updateGradeRecord(record: GradeRecordEntity) = viewModelScope.launch {
@@ -107,6 +99,9 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
         val calculatedItems = items.filter { !it.formula.isNullOrEmpty() }
         if (calculatedItems.isEmpty()) return@launch
 
+        // Topologically sort calculated items by dependencies
+        val sortedCalculated = topologicalSortByDependencies(calculatedItems, items)
+
         // Fetch ALL students in the class
         val students = repository.getStudentsForClassOnce(classId)
         if (students.isEmpty()) return@launch
@@ -130,8 +125,15 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
         // Iterate over ALL students, not just those with records
         students.forEach { student ->
             val studentId = student.id
+            val studentGroupId = student.groupId
             val studentRecords = recordsByStudent[studentId] ?: emptyList()
             val studentRecordsMap = studentRecords.associateBy { it.gradeItemId }
+            
+            // Filter items to only include those matching student's groupId (or null groupId for shared items)
+            val relevantItems = items.filter { item ->
+                item.groupId == null || item.groupId == studentGroupId
+            }
+            
             
             // Calculate attendance stats for this student
             val studentAttendance = attendanceByStudent[studentId] ?: emptyList()
@@ -146,32 +148,38 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
             val posCount = studentBehavior.count { it.type == "POSITIVE" }
             val negCount = studentBehavior.count { it.type == "NEGATIVE" }
             
-            calculatedItems.forEach { calcItem ->
+            // Build initial variables map from relevant items the student has records for
+            // Only use items matching student's groupId
+            val variables = mutableMapOf<String, Float>()
+            relevantItems.forEach { item ->
+                val record = studentRecordsMap[item.id]
+                if (record != null) {
+                    val trimmedName = item.name.trim()
+                    if (!variables.containsKey(trimmedName)) {
+                        variables[trimmedName] = record.score
+                    }
+                }
+            }
+            
+            // Add attendance variables
+            variables["abs_td"] = absTD.toFloat()
+            variables["abs_tp"] = absTP.toFloat()
+            variables["just_td"] = justTD.toFloat()
+            variables["just_tp"] = justTP.toFloat()
+            variables["pres_c"] = presCours.toFloat()
+            variables["tot_td"] = totalTD.toFloat()
+            variables["tot_tp"] = totalTP.toFloat()
+            variables["tot_c"] = totalCours.toFloat()
+            
+            // Add behavior variables
+            variables["pos"] = posCount.toFloat()
+            variables["neg"] = negCount.toFloat()
+            
+            // Process calculated items in dependency order, only for items matching student's group
+            val relevantCalculated = sortedCalculated.filter { it.groupId == null || it.groupId == studentGroupId }
+            relevantCalculated.forEach { calcItem ->
                 val formula = calcItem.formula
                 if (formula != null) {
-                    // Build variables map
-                    val variables = mutableMapOf<String, Float>()
-                    items.forEach { item ->
-                        // Use item name as variable
-                        val record = studentRecordsMap[item.id]
-                        val value = record?.score ?: 0f
-                        variables[item.name] = value
-                    }
-                    
-                    // Add attendance variables
-                    variables["abs_td"] = absTD.toFloat()
-                    variables["abs_tp"] = absTP.toFloat()
-                    variables["just_td"] = justTD.toFloat()
-                    variables["just_tp"] = justTP.toFloat()
-                    variables["pres_c"] = presCours.toFloat()
-                    variables["tot_td"] = totalTD.toFloat()
-                    variables["tot_tp"] = totalTP.toFloat()
-                    variables["tot_c"] = totalCours.toFloat()
-                    
-                    // Add behavior variables
-                    variables["pos"] = posCount.toFloat()
-                    variables["neg"] = negCount.toFloat()
-                    
                     var result = com.example.additioapp.util.FormulaEvaluator.evaluate(formula, variables)
                     
                     // Safeguard against NaN or Infinity which would crash the DB
@@ -180,7 +188,8 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
                         result = 0f
                     }
                     
-                    android.util.Log.d("GradeViewModel", "Calculated grade for student $studentId item ${calcItem.name}: $result")
+                    // Update variables map with trimmed name so dependent formulas see the fresh value
+                    variables[calcItem.name.trim()] = result
                     
                     // Update or Insert record
                     val existingRecord = studentRecordsMap[calcItem.id]
@@ -200,5 +209,66 @@ class GradeViewModel(private val repository: AppRepository) : ViewModel() {
                 }
             }
         }
+    }
+    
+    /**
+     * Topologically sort calculated items so items that depend on others come after their dependencies.
+     * Uses Kahn's algorithm.
+     */
+    private fun topologicalSortByDependencies(
+        calculatedItems: List<GradeItemEntity>,
+        allItems: List<GradeItemEntity>
+    ): List<GradeItemEntity> {
+        
+        // Build dependency graph: for each calculated item, find which other calculated items it depends on
+        val dependencies = mutableMapOf<Long, MutableSet<Long>>() // itemId -> set of itemIds it depends on
+        val dependents = mutableMapOf<Long, MutableSet<Long>>()   // itemId -> set of itemIds that depend on it
+        
+        calculatedItems.forEach { item ->
+            dependencies[item.id] = mutableSetOf()
+            dependents[item.id] = mutableSetOf()
+        }
+        
+        calculatedItems.forEach { item ->
+            val formula = item.formula?.replace(" ", "")?.lowercase() ?: ""
+            // Check if this formula references any other calculated item
+            calculatedItems.forEach { other ->
+                if (other.id != item.id) {
+                    val otherNameNormalized = other.name.replace(" ", "").lowercase()
+                    // Simple check: does the formula contain this item name?
+                    // Use word boundary-like check to avoid false positives
+                    val regex = Regex("\\b${Regex.escape(otherNameNormalized)}\\b", RegexOption.IGNORE_CASE)
+                    if (regex.containsMatchIn(formula)) {
+                        // item depends on other
+                        dependencies[item.id]?.add(other.id)
+                        dependents[other.id]?.add(item.id)
+                    }
+                }
+            }
+        }
+        
+        // Kahn's algorithm for topological sort
+        val inDegree = mutableMapOf<Long, Int>()
+        calculatedItems.forEach { item ->
+            inDegree[item.id] = dependencies[item.id]?.size ?: 0
+        }
+        
+        val queue = ArrayDeque<GradeItemEntity>()
+        calculatedItems.filter { inDegree[it.id] == 0 }.forEach { queue.add(it) }
+        
+        val sorted = mutableListOf<GradeItemEntity>()
+        while (queue.isNotEmpty()) {
+            val current = queue.removeFirst()
+            sorted.add(current)
+            
+            dependents[current.id]?.forEach { depId ->
+                inDegree[depId] = (inDegree[depId] ?: 1) - 1
+                if (inDegree[depId] == 0) {
+                    calculatedItems.find { it.id == depId }?.let { queue.add(it) }
+                }
+            }
+        }
+        
+        return sorted
     }
 }

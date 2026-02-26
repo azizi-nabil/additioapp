@@ -20,6 +20,7 @@ import androidx.room.PrimaryKey
 data class GradeItemEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val classId: Long,
+    val groupId: Long? = null,  // Optional group within class for formula isolation
     val categoryId: Long? = null,
     val name: String,
     val category: String, // "Exam", "Homework", etc.

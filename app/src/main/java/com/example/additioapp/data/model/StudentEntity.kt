@@ -21,6 +21,7 @@ import androidx.room.PrimaryKey
 data class StudentEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val classId: Long,
+    val groupId: Long? = null,                // Optional group within class for formula isolation
     val matricule: String = "",              // Matricule number (e.g., "202034052475")
     val firstNameFr: String = "",            // First name in French
     val lastNameFr: String = "",             // Last name in French

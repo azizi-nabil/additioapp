@@ -112,6 +112,31 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/menuLate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="?attr/selectableItemBackground">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_schedule_24dp"
+            app:tint="@color/secondary" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:text="@string/status_late"
+            android:textSize="16sp"
+            android:textColor="?attr/colorOnSurface" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/menuExcused"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

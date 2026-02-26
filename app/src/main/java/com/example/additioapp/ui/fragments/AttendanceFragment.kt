@@ -558,7 +558,16 @@ class AttendanceFragment : Fragment() {
             // Use HashMap for O(1) lookup instead of O(n) find
             val recordMap = records.associateBy { it.studentId }
             
-            val allItems = students.map { student ->
+            val sortPrefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(requireContext())
+            val sortPref = sortPrefs.getString("pref_sort_order", "lastname") ?: "lastname"
+            
+            val sortedStudents = when (sortPref) {
+                "firstname" -> students.sortedBy { it.firstNameFr }
+                "id" -> students.sortedBy { it.id }
+                else -> students.sortedBy { it.lastNameFr.ifEmpty { it.name } }
+            }
+            
+            val allItems = sortedStudents.map { student ->
                 StudentAttendanceItem(student, recordMap[student.id])
             }
             
